@@ -1,0 +1,6 @@
+{
+  "name": "An-Nur Quran",
+  "description": "Quran recitation and translation dashboard with calligraphy glow, English & Urdu translations, audio bookmarks, offline access, Iman tracker, prayer times, and tafsir commentary.",
+  "requestFramePermissions": ["notifications"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

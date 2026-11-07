@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .font-quran {
+    font-family: 'Amiri Quran', 'Scheherazade New', 'Amiri', serif;
+    letter-spacing: 0.02em;
+    word-spacing: 0.08em;
+  }
+
+  .font-scheherazade {
+    font-family: 'Scheherazade New', 'Amiri Quran', serif;
+  }
+
+  .font-urdu {
+    font-family: 'Noto Nastaliq Urdu', serif;
+    line-height: 2.1;
+  }
+
+  .font-cinzel {
+    font-family: 'Cinzel', serif;
+  }
+
+  .font-sans-ui {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  /* Arabic Glow Styles for Night Mode & Low Light Reading */
+  .arabic-glow-gold {
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.45),
+                 0 0 22px rgba(217, 119, 6, 0.3),
+                 0 0 35px rgba(180, 83, 9, 0.15);
+  }
+
+  .arabic-glow-gold-intense {
+    text-shadow: 0 0 14px rgba(251, 191, 36, 0.75),
+                 0 0 28px rgba(245, 158, 11, 0.55),
+                 0 0 45px rgba(217, 119, 6, 0.35);
+  }
+
+  .arabic-glow-emerald {
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.5),
+                 0 0 22px rgba(5, 150, 105, 0.35),
+                 0 0 35px rgba(4, 120, 87, 0.2);
+  }
+
+  .arabic-glow-lunar {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.65),
+                 0 0 24px rgba(226, 232, 240, 0.45),
+                 0 0 40px rgba(148, 163, 184, 0.25);
+  }
+
+  .arabic-glow-none {
+    text-shadow: none;
+  }
+
+  /* Physical Mushaf Page Flip 3D Turn Animations */
+  .mushaf-page-container {
+    perspective: 1200px;
+  }
+
+  @keyframes flipInNext {
+    0% {
+      opacity: 0.35;
+      transform: rotateY(16deg) translateX(18px);
+    }
+    100% {
+      opacity: 1;
+      transform: rotateY(0deg) translateX(0);
+    }
+  }
+
+  @keyframes flipInPrev {
+    0% {
+      opacity: 0.35;
+      transform: rotateY(-16deg) translateX(-18px);
+    }
+    100% {
+      opacity: 1;
+      transform: rotateY(0deg) translateX(0);
+    }
+  }
+
+  .animate-mushaf-flip-next {
+    animation: flipInNext 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-mushaf-flip-prev {
+    animation: flipInPrev 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* Custom scrollbars for clean dashboard */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.4);
+}
+
