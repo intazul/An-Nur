@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#171717"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="210" fill="none" stroke="url(#gold)" stroke-width="6" opacity="0.4"/>
+  <!-- Elegant Arabic Letter Noon (ن) and Radiant Star -->
+  <path d="M140 250 C140 340, 200 400, 256 400 C312 400, 372 340, 372 250 C372 230, 356 230, 356 250 C356 325, 305 372, 256 372 C207 372, 156 325, 156 250 C156 230, 140 230, 140 250 Z" fill="url(#gold)"/>
+  <circle cx="256" cy="180" r="28" fill="url(#gold)"/>
+  <path d="M256 120 L262 136 L278 136 L265 146 L270 162 L256 152 L242 162 L247 146 L234 136 L250 136 Z" fill="#ffffff" opacity="0.9"/>
+</svg>

@@ -24,6 +24,7 @@ import {
   calculateStreak,
   deleteAudioBookmark,
   deleteOfflineSurah,
+  getCachedAudioUrl,
   getDownloadedSurahsList,
   isSurahOffline,
   loadAudioBookmarks,
@@ -38,6 +39,7 @@ import { fetchSurahDetail } from './utils/quranApi';
 import { getDailyPrayerTimes, PrayerStatus } from './utils/prayerTimes';
 import { getAyahAudioUrl } from './data/reciters';
 import { playGentleChime } from './utils/notifications';
+import { useOnlineStatus } from './hooks/usePWA';
 
 type ActiveView = 'dashboard' | 'reading' | 'recitation' | 'qibla' | 'settings';
 
@@ -160,12 +162,16 @@ export default function App() {
     };
   }, [currentSurahNumber]);
 
-  // Sync Audio Element source
+  // Online / Offline tracking
+  const isOnline = useOnlineStatus();
+
+  // Sync Audio Element source with Cache-first offline resolution
   useEffect(() => {
     if (!currentSurah) return;
+    let isCancelled = false;
     const recMode = profile.recitationLanguageMode || 'arabic';
     const isUrduPhase = recMode === 'urdu' || (recMode === 'both' && currentAudioPhase === 'urdu');
-    const url = getAyahAudioUrl(
+    const rawUrl = getAyahAudioUrl(
       currentSurah.number,
       activeAyahNumber,
       profile.preferredReciter,
@@ -173,15 +179,21 @@ export default function App() {
       profile.preferredUrduReciter || 'shamshad'
     );
 
-    if (audioRef.current) {
+    // Resolve via Cache API for guaranteed 100% offline audio playback
+    getCachedAudioUrl(rawUrl).then((resolvedUrl) => {
+      if (isCancelled || !audioRef.current) return;
       const wasPlaying = isPlayingAudio;
-      audioRef.current.src = url;
+      audioRef.current.src = resolvedUrl;
       audioRef.current.playbackRate = playbackSpeed;
       audioRef.current.load();
       if (wasPlaying) {
         audioRef.current.play().catch(() => setIsPlayingAudio(false));
       }
-    }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [
     currentSurah?.number,
     activeAyahNumber,
@@ -432,10 +444,15 @@ export default function App() {
     }
   };
 
-  // Download Surah Offline
+  // Download Surah Offline (both Arabic and Urdu audio caching)
   const handleDownloadSurah = async (surahNum: number) => {
     if (!currentSurah) return;
-    await saveSurahOffline(currentSurah, true);
+    await saveSurahOffline(
+      currentSurah,
+      true,
+      profile.preferredReciter,
+      profile.preferredUrduReciter || 'shamshad'
+    );
     setDownloadedSurahs(getDownloadedSurahsList());
     playGentleChime();
   };
@@ -456,9 +473,20 @@ export default function App() {
   const isFavorite = (profile.favoriteSurahs || []).includes(currentSurahNumber);
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-stone-950 flex flex-col items-center justify-start sm:p-4 transition-colors">
+    <div className="h-screen sm:min-h-screen bg-stone-100 dark:bg-stone-950 flex flex-col items-center justify-start sm:p-4 transition-colors overflow-hidden">
       {/* Android Device Portrait Frame (Notification Bar removed as requested) */}
-      <div className="w-full max-w-md min-h-screen sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 flex flex-col overflow-x-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800">
+      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 flex flex-col overflow-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800">
+        {/* Offline Mode Status Banner (visible when disconnected from network) */}
+        {!isOnline && (
+          <div className="w-full bg-black text-white dark:bg-white dark:text-black px-4 py-1.5 text-[11px] font-bold flex items-center justify-between border-b border-black/20 dark:border-white/20 shrink-0 select-none z-50">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span>Offline Mode Active • Saved Quran & Recitations Ready</span>
+            </span>
+            <span className="text-[10px] opacity-80 font-mono">100% Offline</span>
+          </div>
+        )}
+
         {/* Hidden Audio Reciter Element */}
         <audio
           ref={audioRef}
@@ -668,6 +696,7 @@ export default function App() {
         onDeleteBookmark={handleDeleteBookmark}
         downloadedSurahs={downloadedSurahs}
         onDeleteDownloadedSurah={handleDeleteDownloadedSurah}
+        onRefreshDownloadedSurahs={() => setDownloadedSurahs(getDownloadedSurahsList())}
         initialTab={profileInitialTab}
       />
 

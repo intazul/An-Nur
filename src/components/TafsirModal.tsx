@@ -2,21 +2,19 @@ import React, { useState } from 'react';
 import {
   X,
   BookOpen,
-  Sparkles,
-  Heart,
-  Quote,
-  FileText,
   Play,
   Bookmark,
   Copy,
   Check,
-  Languages,
+  Quote,
+  Sparkles,
+  Volume2,
   CheckCircle2,
-  Info,
+  Heart,
 } from 'lucide-react';
-import { Ayah, SurahDetail, WaqfSignInfo } from '../types/quran';
-import { getInDepthTafsir, getRelatedHadith } from '../utils/hadithDatabase';
-import { getVerseWaqfSigns } from '../data/tajweedSigns';
+import { Ayah, SurahDetail } from '../types/quran';
+import { getPreciseVerseTafsir, PreciseTafsir } from '../utils/verseTafsir';
+import { getRelatedHadith } from '../utils/hadithDatabase';
 
 interface TafsirModalProps {
   isOpen: boolean;
@@ -27,8 +25,6 @@ interface TafsirModalProps {
   onBookmarkAyah?: (ayahNumber: number) => void;
 }
 
-type TafsirTab = 'overview' | 'tafsir' | 'hadith' | 'tajweed';
-
 export const TafsirModal: React.FC<TafsirModalProps> = ({
   isOpen,
   onClose,
@@ -37,25 +33,21 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
   onPlayAyah,
   onBookmarkAyah,
 }) => {
-  const [activeTab, setActiveTab] = useState<TafsirTab>('overview');
   const [copied, setCopied] = useState(false);
 
   if (!isOpen || !ayah || !surah) return null;
 
-  const deepTafsir =
-    ayah.deepTafsir ||
-    getInDepthTafsir(
-      surah.number,
-      ayah.numberInSurah,
-      surah.nameEnglish,
-      ayah.textArabic,
-      ayah.textEnglish
-    );
+  // Single, precise, particular Tafsir for this exact verse
+  const tafsir: PreciseTafsir = getPreciseVerseTafsir(
+    surah.number,
+    ayah.numberInSurah,
+    surah.nameEnglish,
+    ayah.textArabic,
+    ayah.textEnglish,
+    ayah.textUrdu
+  );
 
-  const relatedHadith =
-    ayah.relatedHadith || getRelatedHadith(surah.number, ayah.numberInSurah);
-
-  const waqfSigns = getVerseWaqfSigns(surah.number, ayah.numberInSurah, ayah.textArabic);
+  const hadith = ayah.relatedHadith || getRelatedHadith(surah.number, ayah.numberInSurah);
 
   const handleCopyAll = () => {
     let text = `${ayah.textArabic}\n\n`;
@@ -63,9 +55,10 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
     if (ayah.textUrdu) {
       text += `Urdu: ${ayah.textUrdu}\n\n`;
     }
-    text += `Tafsir Summary: ${ayah.tafsirSummary || deepTafsir.classicalExegesis}\n\n`;
-    if (relatedHadith) {
-      text += `Related Hadith (${relatedHadith.source}): "${relatedHadith.textEnglish}"\n\n`;
+    text += `Tafsir (Easy Explanation): ${tafsir.explanation}\n\n`;
+    text += `Key Takeaway: ${tafsir.keyLesson}\n\n`;
+    if (hadith) {
+      text += `Related Hadith (${hadith.source}): "${hadith.textEnglish}"\n\n`;
     }
     text += `[Holy Quran ${surah.nameEnglish} ${surah.number}:${ayah.numberInSurah}]`;
 
@@ -75,7 +68,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
       <div
         className="w-full max-w-md h-full sm:h-[92vh] bg-white dark:bg-stone-900 rounded-none sm:rounded-3xl border-0 sm:border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -84,342 +77,197 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
         <div className="w-10 h-1.5 bg-stone-300 dark:bg-stone-700 rounded-full mx-auto mt-2.5 mb-1 sm:hidden" />
 
         {/* Modal Header */}
-        <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between shrink-0 bg-white dark:bg-stone-900">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
-              <BookOpen className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-2xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shrink-0 font-bold shadow-xs">
+              <BookOpen className="w-5 h-5 stroke-[2.5]" />
             </div>
             <div className="min-w-0">
-              <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 font-cinzel truncate">
-                Ayah {ayah.numberInSurah} Details & Tafsir
+              <h3 className="text-base font-bold text-black dark:text-white font-cinzel truncate">
+                Ayah {ayah.numberInSurah} Tafsir
               </h3>
-              <p className="text-xs text-stone-500 truncate">
+              <p className="text-xs text-stone-700 dark:text-stone-400 font-semibold truncate">
                 Surah {surah.nameEnglish} ({surah.nameArabic}) · Juz {ayah.juz || 1}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             {/* Quick Copy */}
             <button
               onClick={handleCopyAll}
-              className="p-2 text-stone-500 hover:text-black dark:hover:text-white rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              title="Copy All Details"
+              className="p-2 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors active:scale-95"
+              title="Copy Verse & Tafsir"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-4 h-4 text-emerald-500 stroke-[3]" /> : <Copy className="w-4 h-4 stroke-[2.5]" />}
             </button>
 
             {/* Close */}
             <button
               onClick={onClose}
-              className="p-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              title="Close Tab"
+              className="p-2 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors active:scale-95"
+              title="Close Tafsir"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 stroke-[2.5]" />
             </button>
           </div>
         </div>
 
-        {/* Segmented Navigation Tabs - Targeted Element with No Vertical Scrolling */}
-        <div className="px-4 py-2 border-b border-stone-200 dark:border-stone-800 bg-stone-50/70 dark:bg-stone-950/40 flex items-center gap-1 overflow-x-auto overflow-y-hidden no-scrollbar select-none shrink-0">
-          {[
-            { id: 'overview', label: 'Translation', icon: Languages },
-            { id: 'tafsir', label: 'Full Tafsir', icon: FileText },
-            { id: 'hadith', label: 'Hadith', icon: Quote },
-            { id: 'tajweed', label: 'Tajweed', icon: Sparkles },
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as TafsirTab)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
-                  isActive
-                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                    : 'text-stone-600 dark:text-stone-400 hover:bg-stone-200/50 dark:hover:bg-stone-800/50'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
+        {/* Scrollable Single Tafsir View Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-stone-50/50 dark:bg-stone-950">
+          {/* 1. Sacred Arabic Verse Card */}
+          <div className="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xs space-y-3">
+            <div className="flex items-center justify-between text-xs font-bold text-stone-600 dark:text-stone-400">
+              <span className="font-cinzel">Verse {ayah.numberInSurah}</span>
+              <div className="flex items-center gap-1.5">
+                {onPlayAyah && (
+                  <button
+                    onClick={() => onPlayAyah(ayah.numberInSurah)}
+                    className="p-1.5 rounded-lg bg-black text-white dark:bg-white dark:text-black hover:bg-stone-800 transition-colors shadow-2xs"
+                    title="Play Verse Recitation"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                  </button>
+                )}
+                {onBookmarkAyah && (
+                  <button
+                    onClick={() => onBookmarkAyah(ayah.numberInSurah)}
+                    className="p-1.5 rounded-lg border border-stone-300 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-black dark:text-white transition-colors"
+                    title="Bookmark Verse"
+                  >
+                    <Bookmark className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
 
-        {/* Tab Content - Zero Vertical Scrolling */}
-        <div className="flex-1 overflow-hidden p-4 sm:p-5 flex flex-col justify-between gap-3">
-          {/* Compact Top Sacred Arabic Verse */}
-          <div
-            className="p-3 rounded-2xl bg-[#fdfbf7] dark:bg-stone-950 border border-amber-600/30 text-right shadow-2xs select-text shrink-0"
-            dir="rtl"
-          >
-            <p className="font-quran text-lg sm:text-xl text-stone-950 dark:text-stone-100 leading-relaxed">
-              {ayah.textArabic}
-              <span className="inline-block mr-2 text-amber-600 dark:text-amber-400 font-cinzel text-sm">
-                ۝ {ayah.numberInSurah}
-              </span>
-            </p>
-          </div>
+            <div className="py-2 text-right" dir="rtl">
+              <p className="font-quran text-2xl sm:text-3xl text-black dark:text-stone-100 leading-[2.5] font-bold">
+                {ayah.textArabic}
+                <span className="inline-block mr-2 text-amber-600 dark:text-amber-400 font-cinzel text-base select-none">
+                  ۝ {ayah.numberInSurah}
+                </span>
+              </p>
+            </div>
 
-          {/* TAB 1: OVERVIEW & TRANSLATIONS - ZERO VERTICAL SCROLL */}
-          {activeTab === 'overview' && (
-            <div className="flex-1 flex flex-col justify-between gap-2.5 animate-in fade-in duration-150 overflow-hidden">
-              {/* Highlighted English Translation (Primary user requirement) */}
-              <div className="p-3.5 rounded-2xl border-2 border-amber-500/30 bg-amber-500/5 dark:bg-amber-950/20 space-y-1 shadow-2xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-widest font-cinzel">
-                    English Translation (Saheeh International)
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-900 dark:text-amber-200 font-semibold">
-                    English
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm font-medium text-stone-900 dark:text-stone-100 leading-relaxed font-sans-ui">
-                  {ayah.textEnglish}
-                </p>
+            {/* Translations */}
+            <div className="pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-2">
+              <div className="text-xs sm:text-sm text-black dark:text-stone-200 font-medium leading-relaxed font-sans-ui">
+                <span className="font-bold text-stone-800 dark:text-stone-400 block text-[10px] uppercase tracking-wider mb-0.5">
+                  English Translation:
+                </span>
+                {ayah.textEnglish}
               </div>
 
-              {/* Urdu Translation */}
               {ayah.textUrdu && (
-                <div
-                  className="p-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-right space-y-0.5 shadow-2xs"
-                  dir="rtl"
-                >
-                  <div className="flex items-center justify-between" dir="ltr">
-                    <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">
-                      اردو ترجمہ (مولانا فتح محمد جالندھری)
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-semibold">
-                      Urdu
-                    </span>
-                  </div>
-                  <p className="text-sm font-urdu text-stone-900 dark:text-stone-100 leading-relaxed">
+                <div className="pt-2 border-t border-stone-100 dark:border-stone-800/60 text-right" dir="rtl">
+                  <span className="font-bold text-stone-800 dark:text-stone-400 block text-[10px] font-sans-ui mb-0.5">
+                    اردو ترجمہ (فاتح محمد جالندھری):
+                  </span>
+                  <p className="font-urdu text-base text-black dark:text-stone-100 font-bold leading-loose">
                     {ayah.textUrdu}
                   </p>
                 </div>
               )}
-
-              {/* Quick Jump Buttons to Tafsir & Hadiths */}
-              <div className="grid grid-cols-2 gap-2 pt-1">
-                <button
-                  onClick={() => setActiveTab('tafsir')}
-                  className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors"
-                >
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-cinzel">
-                    <FileText className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Classical Tafsir →</span>
-                  </div>
-                  <p className="text-[11px] text-stone-500 truncate mt-0.5">
-                    Ibn Kathir & Asbab al-Nuzul
-                  </p>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('hadith')}
-                  className="p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 hover:bg-stone-100 dark:hover:bg-stone-800 text-left transition-colors"
-                >
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 font-cinzel">
-                    <Quote className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Related Hadith →</span>
-                  </div>
-                  <p className="text-[11px] text-stone-500 truncate mt-0.5">
-                    {relatedHadith?.source || 'Prophetic tradition'}
-                  </p>
-                </button>
-              </div>
             </div>
-          )}
+          </div>
 
-          {/* TAB 2: FULL DEPTH TAFSIR - ZERO VERTICAL SCROLL */}
-          {activeTab === 'tafsir' && (
-            <div className="flex-1 flex flex-col justify-between gap-2.5 animate-in fade-in duration-150 overflow-hidden">
-              {/* Classical Exegesis (Ibn Kathir & Scholars) */}
-              <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider font-cinzel">
-                  <FileText className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Classical Exegesis (Ibn Kathir & Al-Qurtubi)</span>
-                </div>
-                <p className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
-                  {deepTafsir.classicalExegesis}
+          {/* 2. ONE PRECISE TAFSIR & PLAIN EXPLANATION (Particular to this verse) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-stone-900 border-2 border-black/10 dark:border-stone-700 shadow-sm space-y-3.5">
+            <div className="flex items-center justify-between pb-2 border-b border-black/10 dark:border-stone-800">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-black dark:text-amber-400 stroke-[2.5]" />
+                <h4 className="text-sm font-bold text-black dark:text-white font-cinzel tracking-tight">
+                  Precise Tafsir & Meaning
+                </h4>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
+                Particular to Ayah {ayah.numberInSurah}
+              </span>
+            </div>
+
+            {/* Core Summary */}
+            <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 block mb-0.5">
+                Core Meaning:
+              </span>
+              <p className="text-xs sm:text-sm font-bold text-black dark:text-white leading-relaxed">
+                {tafsir.summary}
+              </p>
+            </div>
+
+            {/* Plain Detailed Explanation */}
+            <div className="space-y-1.5 text-xs sm:text-sm text-black dark:text-stone-200 leading-relaxed font-normal">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 block">
+                Explanation:
+              </span>
+              <p className="text-stone-900 dark:text-stone-200 font-medium">
+                {tafsir.explanation}
+              </p>
+            </div>
+
+            {/* Urdu Easy Explanation */}
+            {tafsir.urduExplanation && (
+              <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 text-right" dir="rtl">
+                <span className="text-[10px] font-bold font-sans-ui text-stone-700 dark:text-stone-400 block mb-1">
+                  آسان اردو تشریح:
+                </span>
+                <p className="font-urdu text-sm sm:text-base text-black dark:text-stone-100 font-bold leading-relaxed">
+                  {tafsir.urduExplanation}
                 </p>
               </div>
+            )}
 
-              {/* Context of Revelation (Asbab al-Nuzul) */}
-              {deepTafsir.asbabAlNuzul && (
-                <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-stone-800 dark:text-stone-200 uppercase tracking-wider font-cinzel">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                    <span>Context of Revelation (Asbab al-Nuzul)</span>
-                  </div>
-                  <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed">
-                    {deepTafsir.asbabAlNuzul}
-                  </p>
-                </div>
-              )}
-
-              {/* Actionable Spiritual Takeaway */}
-              {deepTafsir.spiritualTakeaway && (
-                <div className="p-3 rounded-xl bg-emerald-500/10 dark:bg-emerald-950/20 border border-emerald-500/30 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider font-cinzel">
-                    <Heart className="w-3.5 h-3.5 fill-emerald-500/20" />
-                    <span>Actionable Spiritual Takeaway</span>
-                  </div>
-                  <p className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
-                    {deepTafsir.spiritualTakeaway}
-                  </p>
-                </div>
-              )}
+            {/* Actionable Key Lesson */}
+            <div className="p-3 rounded-xl bg-black text-white dark:bg-white dark:text-black space-y-1 shadow-2xs">
+              <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider opacity-90">
+                <Heart className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Life Lesson & Contemplation</span>
+              </div>
+              <p className="text-xs font-semibold leading-relaxed">
+                {tafsir.keyLesson}
+              </p>
             </div>
-          )}
+          </div>
 
-          {/* TAB 3: RELATED PROPHETIC HADITH - ZERO VERTICAL SCROLL */}
-          {activeTab === 'hadith' && (
-            <div className="flex-1 flex flex-col justify-between gap-2.5 animate-in fade-in duration-150 overflow-hidden">
-              {relatedHadith ? (
-                <div className="p-3.5 rounded-2xl bg-amber-500/10 dark:bg-amber-950/20 border-2 border-amber-500/30 flex-1 flex flex-col justify-between gap-2 overflow-hidden">
-                  <div className="flex items-center justify-between text-xs font-bold text-amber-800 dark:text-amber-300">
-                    <div className="flex items-center gap-1.5 font-cinzel">
-                      <Quote className="w-3.5 h-3.5" />
-                      <span>Authentic Prophetic Hadith</span>
-                    </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-900 dark:text-amber-200 font-semibold">
-                      {relatedHadith.source}
-                    </span>
-                  </div>
-
-                  <div className="text-[11px] text-stone-500 italic">
-                    Narrated by: {relatedHadith.narrator}
-                  </div>
-
-                  {/* English Hadith Text */}
-                  <div className="p-3 rounded-xl bg-white/80 dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800">
-                    <p className="text-xs text-stone-900 dark:text-stone-100 font-medium leading-relaxed italic">
-                      "{relatedHadith.textEnglish}"
-                    </p>
-                  </div>
-
-                  {/* Scholarly Relevance Explanation */}
-                  <div className="p-2.5 rounded-xl bg-amber-500/15 text-xs text-amber-900 dark:text-amber-200 space-y-0.5">
-                    <span className="font-bold block uppercase tracking-wider text-[10px]">
-                      Why this Hadith illuminates Ayah {ayah.numberInSurah}:
-                    </span>
-                    <p className="leading-relaxed text-[11px]">{relatedHadith.relevance}</p>
-                  </div>
+          {/* 3. Related Prophetic Hadith (if directly relevant to this verse) */}
+          {hadith && (
+            <div className="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-xs space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-black dark:text-white">
+                  <Quote className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Related Prophetic Hadith</span>
                 </div>
-              ) : (
-                <div className="p-6 text-center text-stone-500 space-y-2 my-auto">
-                  <Quote className="w-8 h-8 mx-auto opacity-40" />
-                  <p className="text-xs font-medium">
-                    No verse-specific Hadith recorded for this exact Ayah.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* TAB 4: TAJWEED & METADATA - ZERO VERTICAL SCROLL */}
-          {activeTab === 'tajweed' && (
-            <div className="flex-1 flex flex-col justify-between gap-2.5 animate-in fade-in duration-150 overflow-hidden">
-              {/* Verse Metadata Summary */}
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800">
-                  <span className="text-[10px] text-stone-400 block font-semibold uppercase">
-                    Surah Position
-                  </span>
-                  <span className="font-bold text-stone-900 dark:text-stone-100 font-cinzel">
-                    Verse {ayah.numberInSurah} of {surah.numberOfAyahs}
-                  </span>
-                </div>
-                <div className="p-2.5 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800">
-                  <span className="text-[10px] text-stone-400 block font-semibold uppercase">
-                    Revelation Place
-                  </span>
-                  <span className="font-bold text-stone-900 dark:text-stone-100 font-cinzel">
-                    {surah.revelationType} Period
-                  </span>
-                </div>
+                <span className="text-[10px] font-mono font-bold text-stone-600 dark:text-stone-400">
+                  {hadith.source}
+                </span>
               </div>
 
-              {/* Tajweed Stopping Signs Found in This Ayah */}
-              <div className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-2 flex-1 overflow-hidden flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-stone-800 dark:text-stone-200 uppercase tracking-wider font-cinzel">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Stopping Rules in this Verse</span>
-                </div>
+              <p className="text-xs text-black dark:text-stone-200 italic font-medium leading-relaxed">
+                "{hadith.textEnglish}"
+              </p>
 
-                {waqfSigns.length > 0 ? (
-                  <div className="space-y-1.5">
-                    {waqfSigns.map((sign, idx) => (
-                      <div
-                        key={idx}
-                        className="p-2 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center gap-2.5"
-                      >
-                        <span
-                          className={`w-7 h-7 rounded-lg flex items-center justify-center font-quran text-sm font-bold shrink-0 border ${sign.badgeColor}`}
-                        >
-                          {sign.symbol}
-                        </span>
-                        <div className="min-w-0">
-                          <div className="text-xs font-bold text-stone-900 dark:text-stone-100 truncate">
-                            {sign.name} ({sign.arabicName})
-                          </div>
-                          <div className="text-[11px] text-amber-600 dark:text-amber-400 font-medium truncate">
-                            {sign.ruleSimple}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs text-stone-500">
-                    Standard continuous recitation rules apply. Stop comfortably at the end of the
-                    verse marker ۝ {ayah.numberInSurah}.
-                  </p>
-                )}
+              {hadith.textUrdu && (
+                <p className="font-urdu text-xs sm:text-sm text-black dark:text-stone-200 text-right leading-loose font-bold" dir="rtl">
+                  {hadith.textUrdu}
+                </p>
+              )}
 
-                {deepTafsir.linguisticInsights && (
-                  <div className="pt-1 text-[11px] text-stone-600 dark:text-stone-400 line-clamp-2">
-                    <strong className="text-stone-800 dark:text-stone-200">Linguistic Insight:</strong> {deepTafsir.linguisticInsights}
-                  </div>
-                )}
+              <div className="p-2 rounded-lg bg-stone-100 dark:bg-stone-800/80 text-[11px] text-stone-900 dark:text-stone-200 font-medium">
+                <strong>Connection:</strong> {hadith.relevance}
               </div>
             </div>
           )}
         </div>
 
-        {/* Footer Quick Action Bar (Play Audio, Bookmark, Close) */}
-        <div className="p-4 border-t border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/50 flex items-center justify-between gap-2">
-          {onPlayAyah && (
-            <button
-              onClick={() => {
-                onPlayAyah(ayah.numberInSurah);
-              }}
-              className="flex-1 py-3 px-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              <span>Listen Ayah</span>
-            </button>
-          )}
-
-          {onBookmarkAyah && (
-            <button
-              onClick={() => {
-                onBookmarkAyah(ayah.numberInSurah);
-              }}
-              className="py-3 px-4 rounded-2xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-amber-500 font-semibold text-xs transition-colors active:scale-95 flex items-center justify-center gap-1.5"
-              title="Bookmark this verse"
-            >
-              <Bookmark className="w-4 h-4" />
-              <span>Bookmark</span>
-            </button>
-          )}
-
+        {/* Modal Bottom Close Button */}
+        <div className="p-3.5 border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 py-3 px-4 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-semibold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center"
+            className="w-full h-12 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md active:scale-[0.98] transition-all flex items-center justify-center gap-2"
           >
-            Done
+            <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
+            <span>Close Tafsir</span>
           </button>
         </div>
       </div>

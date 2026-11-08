@@ -89,6 +89,36 @@
   .animate-mushaf-flip-prev {
     animation: flipInPrev 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  @keyframes slideInRight {
+    0% {
+      opacity: 0.35;
+      transform: translateX(24px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    0% {
+      opacity: 0.35;
+      transform: translateX(-24px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-slide-next {
+    animation: slideInRight 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-slide-prev {
+    animation: slideInLeft 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
 }
 
 /* Custom scrollbars for clean dashboard */

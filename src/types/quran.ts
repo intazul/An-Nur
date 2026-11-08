@@ -100,8 +100,8 @@ export interface UserProfileData {
   showEnglish: boolean;
   showUrdu: boolean;
   showTafsir: boolean;
-  readingLayout: 'cards' | 'paragraph'; // 'paragraph' = pure Mushaf continuous text without translations
-  mushafPageMode: 'flip' | 'scroll'; // 'flip' = horizontal page turn mode like a physical book
+  readingLayout: 'cards' | 'paragraph' | 'thematic'; // 'paragraph' = pure Mushaf page sliding | 'thematic' = Thematic paragraph study with topic & question | 'cards' = verse cards
+  mushafPageMode?: 'flip' | 'scroll';
   mushafFontSize: number; // Small, refined and readable font size for Mushaf mode (e.g. 21px)
   showTajweedSigns: boolean; // Highlights stopping rules & guidance
   favoriteSurahs: number[];

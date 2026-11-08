@@ -5,7 +5,7 @@ const BOOKMARKS_KEY = 'annur_audio_bookmarks_v1';
 const IMAN_KEY_PREFIX = 'annur_iman_record_';
 const DOWNLOADS_KEY = 'annur_downloaded_surahs_meta_v1';
 const OFFLINE_SURAH_PREFIX = 'annur_offline_surah_';
-const AUDIO_CACHE_NAME = 'annur-quran-audio-v1';
+export const AUDIO_CACHE_NAME = 'annur-quran-audio-v1';
 
 export const DEFAULT_PROFILE: UserProfileData = {
   name: 'Believer',
@@ -19,8 +19,8 @@ export const DEFAULT_PROFILE: UserProfileData = {
   showEnglish: true,
   showUrdu: true,
   showTafsir: false,
-  readingLayout: 'cards', // 'cards' | 'paragraph'
-  mushafPageMode: 'flip', // 'flip' = horizontal page flip mode like real book
+  readingLayout: 'thematic', // 'thematic' = Thematic paragraph study slides with topic headings & questions | 'paragraph' = Mushaf page sliding | 'cards' = verse cards
+  mushafPageMode: 'flip', // 'flip' = horizontal page sliding like physical book
   mushafFontSize: 21, // Compact, refined small font size for Mushaf mode (readable, high contrast)
   showTajweedSigns: true, // Highlights where to stop/pause with simple help
   favoriteSurahs: [1, 36, 55, 67, 112], // Beloved chapters pre-favorited
@@ -199,11 +199,39 @@ export function getOfflineSurahDetail(surahNumber: number): SurahDetail | null {
   }
 }
 
-export async function saveSurahOffline(detail: SurahDetail, downloadAudio: boolean = false): Promise<void> {
+/**
+ * Resolves an audio URL to a local cached Blob Object URL if stored in Cache API,
+ * ensuring 100% offline playback even when disconnected.
+ */
+export async function getCachedAudioUrl(url: string): Promise<string> {
+  if (!('caches' in window)) return url;
+  try {
+    const cache = await caches.open(AUDIO_CACHE_NAME);
+    const match = await cache.match(url);
+    if (match) {
+      const blob = await match.blob();
+      return URL.createObjectURL(blob);
+    }
+  } catch (err) {
+    console.warn('Error fetching audio from cache:', err);
+  }
+  return url;
+}
+
+/**
+ * Saves a Surah's text, translations, and precise Tafsir offline,
+ * and caches its Arabic and Urdu recitation audio into Cache Storage.
+ */
+export async function saveSurahOffline(
+  detail: SurahDetail,
+  downloadAudio: boolean = false,
+  reciterId: string = 'alafasy',
+  urduReciterId: string = 'shamshad',
+  onProgress?: (current: number, total: number) => void
+): Promise<void> {
   try {
     localStorage.setItem(`${OFFLINE_SURAH_PREFIX}${detail.number}`, JSON.stringify(detail));
 
-    // Calculate approximate size
     const jsonSize = new Blob([JSON.stringify(detail)]).size;
     let totalSizeKb = Math.round(jsonSize / 1024);
 
@@ -211,14 +239,31 @@ export async function saveSurahOffline(detail: SurahDetail, downloadAudio: boole
       try {
         const cache = await caches.open(AUDIO_CACHE_NAME);
         const { getAyahAudioUrl } = await import('../data/reciters');
+        const total = detail.ayahs.length * 2; // Arabic + Urdu
+        let done = 0;
+
         for (const ayah of detail.ayahs) {
-          const url = getAyahAudioUrl(detail.number, ayah.numberInSurah, 'alafasy');
+          // 1. Arabic Audio
+          const arUrl = getAyahAudioUrl(detail.number, ayah.numberInSurah, reciterId, false);
           try {
-            await cache.add(url);
-            totalSizeKb += 45; // ~45kb per ayah audio
-          } catch (audioErr) {
-            console.warn(`Could not cache audio for ${url}`, audioErr);
+            await cache.add(arUrl);
+            totalSizeKb += 40;
+          } catch (e) {
+            console.warn(`Could not cache Arabic audio: ${arUrl}`, e);
           }
+          done++;
+          onProgress?.(done, total);
+
+          // 2. Urdu Translation Audio
+          const urUrl = getAyahAudioUrl(detail.number, ayah.numberInSurah, reciterId, true, urduReciterId);
+          try {
+            await cache.add(urUrl);
+            totalSizeKb += 40;
+          } catch (e) {
+            console.warn(`Could not cache Urdu audio: ${urUrl}`, e);
+          }
+          done++;
+          onProgress?.(done, total);
         }
       } catch (cacheErr) {
         console.warn('Cache API unavailable for audio:', cacheErr);
@@ -244,6 +289,9 @@ export async function saveSurahOffline(detail: SurahDetail, downloadAudio: boole
   }
 }
 
+/**
+ * Removes a Surah and its cached audio files.
+ */
 export async function deleteOfflineSurah(surahNumber: number): Promise<DownloadedSurahInfo[]> {
   try {
     localStorage.removeItem(`${OFFLINE_SURAH_PREFIX}${surahNumber}`);
@@ -251,9 +299,7 @@ export async function deleteOfflineSurah(surahNumber: number): Promise<Downloade
     if ('caches' in window) {
       try {
         const cache = await caches.open(AUDIO_CACHE_NAME);
-        const { getAyahAudioUrl } = await import('../data/reciters');
         const sStr = String(surahNumber).padStart(3, '0');
-        // purge cached audio for this surah
         const keys = await cache.keys();
         for (const req of keys) {
           if (req.url.includes(`/${sStr}`)) {
@@ -270,5 +316,98 @@ export async function deleteOfflineSurah(surahNumber: number): Promise<Downloade
     return list;
   } catch {
     return getDownloadedSurahsList();
+  }
+}
+
+/**
+ * Returns summary stats of offline storage (text + audio files cached).
+ */
+export async function getOfflineCacheStats(): Promise<{
+  surahsCount: number;
+  audioFilesCount: number;
+  totalKb: number;
+}> {
+  const downloaded = getDownloadedSurahsList();
+  const surahsCount = downloaded.length;
+  let totalKb = downloaded.reduce((acc, s) => acc + s.sizeKb, 0);
+  let audioFilesCount = 0;
+
+  if (typeof window !== 'undefined' && 'caches' in window) {
+    try {
+      const cache = await caches.open(AUDIO_CACHE_NAME);
+      const keys = await cache.keys();
+      audioFilesCount = keys.length;
+      totalKb += audioFilesCount * 45; // ~45KB per ayah audio clip estimate
+    } catch (e) {
+      console.warn('Error reading audio cache stats:', e);
+    }
+  }
+
+  return { surahsCount, audioFilesCount, totalKb };
+}
+
+/**
+ * Downloads all 114 Surahs (Arabic text, English translation, Urdu translation, and precise verse Tafsir)
+ * into offline storage so the entire Quran is readable and studyable 100% offline.
+ */
+export async function downloadAllSurahsTextAndTafsir(
+  onProgress?: (info: { current: number; total: number; currentSurahName: string }) => void
+): Promise<void> {
+  const { fetchSurahDetail } = await import('./quranApi');
+  const { ALL_SURAHS } = await import('../data/surahList');
+  const total = ALL_SURAHS.length;
+
+  for (let i = 0; i < total; i++) {
+    const meta = ALL_SURAHS[i];
+    onProgress?.({ current: i + 1, total, currentSurahName: meta.nameEnglish });
+    try {
+      const detail = await fetchSurahDetail(meta.number);
+      // Ensure it is marked in download list
+      const list = getDownloadedSurahsList().filter((s) => s.surahNumber !== meta.number);
+      list.push({
+        surahNumber: meta.number,
+        nameEnglish: detail.nameEnglish,
+        nameArabic: detail.nameArabic,
+        ayahCount: detail.ayahs.length,
+        downloadedAt: new Date().toISOString(),
+        sizeKb: Math.round(new Blob([JSON.stringify(detail)]).size / 1024),
+        hasAudio: false,
+      });
+      localStorage.setItem(DOWNLOADS_KEY, JSON.stringify(list));
+    } catch (err) {
+      console.warn(`Failed downloading Surah ${meta.number} for offline:`, err);
+    }
+  }
+}
+
+/**
+ * Downloads recitation audio (both Arabic and Urdu) for core & beloved Surahs:
+ * Al-Fatihah (1), Yasin (36), Ar-Rahman (55), Al-Waqi'ah (56), Al-Mulk (67),
+ * Al-Ikhlas (112), Al-Falaq (113), An-Nas (114), and any additional favorited Surahs.
+ */
+export async function downloadCoreAudioOffline(
+  favoriteSurahs: number[] = [],
+  reciterId: string = 'alafasy',
+  urduReciterId: string = 'shamshad',
+  onProgress?: (info: { current: number; total: number; surahName: string; step: string }) => void
+): Promise<void> {
+  const { fetchSurahDetail } = await import('./quranApi');
+  const coreNumbers = Array.from(new Set([1, 36, 55, 56, 67, 108, 112, 113, 114, ...favoriteSurahs]));
+  const totalSurahs = coreNumbers.length;
+
+  for (let idx = 0; idx < totalSurahs; idx++) {
+    const surahNum = coreNumbers[idx];
+    try {
+      const detail = await fetchSurahDetail(surahNum);
+      onProgress?.({
+        current: idx + 1,
+        total: totalSurahs,
+        surahName: detail.nameEnglish,
+        step: `Caching recitations for ${detail.nameEnglish}`,
+      });
+      await saveSurahOffline(detail, true, reciterId, urduReciterId);
+    } catch (err) {
+      console.warn(`Failed caching audio for Surah ${surahNum}:`, err);
+    }
   }
 }

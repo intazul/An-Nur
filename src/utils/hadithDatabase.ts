@@ -195,32 +195,58 @@ export const HADITH_MAPPINGS: Record<string, RelatedHadith> = {
     narrator: 'Ibn Abbas (RA)',
     textEnglish: 'The Prophet (ﷺ) said: "Allah will grant me of Paradise until I am well pleased, and among that satisfaction is that not a single member of my Ummah who believed shall remain in the Fire."',
     textUrdu: 'رسول اللہ ﷺ نے فرمایا: اللہ تعالیٰ مجھے اتنا عطا فرمائے گا کہ میں راضی ہو جاؤں گا، اور میری رضا یہ ہے کہ میری امت کا کوئی بھی ایمان والا جہنم میں نہ رہے۔',
-    relevance: 'The pinnacle of divine reassurance: "And your Lord will give you, and you will be well satisfied."',
+    relevance: 'The supreme promise of intercession and boundless divine generosity to the Prophet Muhammad (ﷺ) and his followers.',
+  },
+
+  // Surah 56: Al-Waqi\'ah
+  '56:1': {
+    source: 'Ibn Asakir & Shu\'ab al-Iman',
+    narrator: 'Abdullah ibn Mas\'ud (RA)',
+    textEnglish: 'The Prophet (ﷺ) said: "Whoever recites Surah Al-Waqi\'ah every night will never be afflicted by poverty or destitution."',
+    textUrdu: 'رسول اللہ ﷺ نے فرمایا: جو شخص ہر رات سورۃ الواقعہ پڑھے گا وہ کبھی فاقہ کشی اور غربت میں مبتلا نہیں ہوگا۔',
+    relevance: 'The supreme Surah of spiritual and material sustenance, establishing absolute divine provenance over human provision and the reality of the Inevitable Day.',
+  },
+
+  // Surah 59: Al-Hashr
+  '59:22': {
+    source: 'Jami` at-Tirmidhi 2922',
+    narrator: 'Ma\'qil ibn Yasar (RA)',
+    textEnglish: 'The Messenger of Allah (ﷺ) said: "Whoever says three times in the morning: \'I seek refuge in Allah from the accursed devil\' and recites the last three verses of Surah Al-Hashr, Allah appoints seventy thousand angels to pray for him until evening."',
+    textUrdu: 'رسول اللہ ﷺ نے فرمایا: جو صبح کے وقت سورۃ الحشر کی آخری تین آیات پڑھے گا، اللہ ستر ہزار فرشتے اس کے لیے مغفرت کی دعا کرنے پر مقرر فرما دے گا۔',
+    relevance: 'A sacred compilation of Allah\'s sublime Most Beautiful Names (Asma\'ul Husna), invoking divine protection and angelic prayers.',
+  },
+
+  // Surah 99: Az-Zalzalah
+  '99:1': {
+    source: 'Jami` at-Tirmidhi 2894',
+    narrator: 'Anas ibn Malik (RA)',
+    textEnglish: 'The Prophet (ﷺ) said: "Surah Iza Zulzilat is equal to half of the Quran in its profound depiction of resurrection."',
+    textUrdu: 'رسول اللہ ﷺ نے فرمایا: سورۃ اذا زلزلت تہائی کے بجائے آدھے قرآن کے برابر ہے کیونکہ یہ قیامت کا پورا نقشہ کھینچتی ہے۔',
+    relevance: 'An earth-shattering reminder that every atom\'s weight of good or evil done in this life will be laid bare.',
+  },
+
+  // Surah 109: Al-Kafirun
+  '109:1': {
+    source: 'Jami` at-Tirmidhi 2893',
+    narrator: 'Farwah ibn Nawfal (RA)',
+    textEnglish: 'The Prophet (ﷺ) said: "Recite Qul ya ayyuhal-kafirun and then go to sleep, for it is a total disavowal and exoneration from polytheism (shirk)."',
+    textUrdu: 'رسول اللہ ﷺ نے فرمایا: قل یا ایھا الکافرون پڑھ کر سویا کرو، کیونکہ یہ شرک سے مکمل براءت اور بیزاری ہے۔',
+    relevance: 'The decisive declaration of pure monotheism, cutting all spiritual compromise with falsehood.',
   },
 };
 
 /**
- * Returns a related Hadith for a given Surah and Ayah.
- * If a verse-specific Hadith exists, returns it; otherwise provides a reliable thematic Hadith.
+ * Returns a related Hadith ONLY where it is appropriate and a genuine authentic Hadith is present for that verse.
+ * If no specific Hadith is related, returns null so no unrelated or placeholder Hadith is displayed.
  */
-export function getRelatedHadith(surahNumber: number, ayahNumber: number): RelatedHadith {
+export function getRelatedHadith(surahNumber: number, ayahNumber: number): RelatedHadith | null {
   const key = `${surahNumber}:${ayahNumber}`;
   if (HADITH_MAPPINGS[key]) {
     return HADITH_MAPPINGS[key];
   }
 
-  // Fallback to chapter level or general authentic Quranic Hadith
-  if (HADITH_MAPPINGS[`${surahNumber}:1`]) {
-    return HADITH_MAPPINGS[`${surahNumber}:1`];
-  }
-
-  return {
-    source: 'Sahih al-Bukhari 5027',
-    narrator: 'Uthman ibn Affan (RA)',
-    textEnglish: 'The Messenger of Allah (ﷺ) said: "The best among you are those who learn the Quran and teach it."',
-    textUrdu: 'رسول اللہ ﷺ نے فرمایا: تم میں سب سے بہترین وہ ہے جو قرآن سیکھے اور سکھائے۔',
-    relevance: `Reflect upon this sacred passage of Surah ${surahNumber}, Ayah ${ayahNumber} as part of your devotional study and transmission of divine guidance.`,
-  };
+  // Return null when there is no specific related Hadith
+  return null;
 }
 
 /**

@@ -1,6 +1,7 @@
 import { SurahDetail } from '../types/quran';
+import fullCoreSurahs from './fullCoreSurahs.json';
 
-export const BUNDLED_SURAHS: Record<number, SurahDetail> = {
+const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
   // 1: Al-Fatihah (Complete)
   1: {
     number: 1,
@@ -596,128 +597,9 @@ export const BUNDLED_SURAHS: Record<number, SurahDetail> = {
       },
     ],
   },
+};
 
-  // 36: Ya-Sin (Heart of the Quran - Key Opening Verses)
-  36: {
-    number: 36,
-    nameArabic: 'يس',
-    nameEnglish: 'Ya-Sin',
-    nameUrdu: 'یٰسٓ',
-    englishTranslation: 'Ya-Sin',
-    revelationType: 'Meccan',
-    numberOfAyahs: 83,
-    bismillahPre: true,
-    ayahs: [
-      {
-        numberInSurah: 1,
-        globalNumber: 3706,
-        textArabic: 'يس',
-        textEnglish: 'Ya, Seen.',
-        textUrdu: 'یٰسٓ',
-        tafsirSummary: 'Disjointed miraculous letters (Huruf Muqatta\'at). Allah alone knows their definitive essence, drawing attention to the miraculous linguistic nature of the Quran.',
-      },
-      {
-        numberInSurah: 2,
-        globalNumber: 3707,
-        textArabic: 'وَالْقُرْآنِ الْحَكِيمِ',
-        textEnglish: 'By the wise Qur\'an.',
-        textUrdu: 'حکمت سے بھرے قرآن کی قسم',
-        tafsirSummary: 'An oath by the Quran Al-Hakeem: packed with divine wisdom, justice, moral philosophy, and unalterable truths.',
-      },
-      {
-        numberInSurah: 3,
-        globalNumber: 3708,
-        textArabic: 'إِنَّكَ لَمِنَ الْمُرْسَلِينَ',
-        textEnglish: 'Indeed you, [O Muhammad], are from among the messengers,',
-        textUrdu: 'بے شک آپ ضرور رسولوں میں سے ہیں',
-        tafsirSummary: 'Direct affirmation to the Prophet Muhammad (ﷺ) that he is a commissioned messenger sent to guide humanity to monotheism.',
-      },
-      {
-        numberInSurah: 4,
-        globalNumber: 3709,
-        textArabic: 'عَلَىٰ صِرَاطٍ مُسْتَقِيمٍ',
-        textEnglish: 'On a straight path.',
-        textUrdu: 'سیدھے راستے پر',
-        tafsirSummary: 'Walking and teaching the pure Sirat al-Mustaqeem: devoid of theological corruption or moral ambiguity.',
-      },
-      {
-        numberInSurah: 5,
-        globalNumber: 3710,
-        textArabic: 'تَنْزِيلَ الْعَزِيزِ الرَّحِيمِ',
-        textEnglish: '[This is] a revelation of the Exalted in Might, the Merciful,',
-        textUrdu: 'یہ غالب اور مہربان خدا کا اتارا ہوا ہے',
-        tafsirSummary: 'Sent from the Almighty (capable of holding transgressors accountable) who is simultaneously the Most Merciful.',
-      },
-      {
-        numberInSurah: 6,
-        globalNumber: 3711,
-        textArabic: 'لِتُنْذِرَ قَوْمًا مَا أُنْذِرَ آبَاؤُهُمْ فَهُمْ غَافِلُونَ',
-        textEnglish: 'That you may warn a people whose forefathers were not warned, so they are unaware.',
-        textUrdu: 'تاکہ آپ ان لوگوں کو خبردار کریں جن کے باپ دادا کو نہیں ڈرایا گیا تھا سو وہ غفلت میں پڑے ہیں',
-        tafsirSummary: 'The prophetic mission awakens people from existential heedlessness (Ghaflah) into moral consciousness.',
-      },
-    ],
-  },
-
-  // 55: Ar-Rahman (The Beneficent - Majestic Verses)
-  55: {
-    number: 55,
-    nameArabic: 'الرَّحْمَن',
-    nameEnglish: 'Ar-Rahman',
-    nameUrdu: 'الرحمٰن',
-    englishTranslation: 'The Beneficent',
-    revelationType: 'Medinan',
-    numberOfAyahs: 78,
-    bismillahPre: true,
-    ayahs: [
-      {
-        numberInSurah: 1,
-        globalNumber: 4902,
-        textArabic: 'الرَّحْمَٰنُ',
-        textEnglish: 'The Most Merciful',
-        textUrdu: 'رحمٰن (نہایت مہربان خدا)',
-        tafsirSummary: 'Named after the supreme divine attribute of mercy. The beauty of creation and divine law stems entirely from His all-encompassing compassioned grace.',
-      },
-      {
-        numberInSurah: 2,
-        globalNumber: 4903,
-        textArabic: 'عَلَّمَ الْقُرْآنَ',
-        textEnglish: 'Taught the Qur\'an,',
-        textUrdu: 'جس نے قرآن سکھایا',
-        tafsirSummary: 'The greatest manifestation of divine mercy to humanity is revelation: teaching the path to eternal felicity.',
-      },
-      {
-        numberInSurah: 3,
-        globalNumber: 4904,
-        textArabic: 'خَلَقَ الْإِنْسَانَ',
-        textEnglish: 'Created man,',
-        textUrdu: 'انسان کو پیدا کیا',
-        tafsirSummary: 'Fashioning humanity with consciousness, moral agency, and intellect.',
-      },
-      {
-        numberInSurah: 4,
-        globalNumber: 4905,
-        textArabic: 'عَلَّمَهُ الْبَيَانَ',
-        textEnglish: '[And] taught him speech.',
-        textUrdu: 'اسے بولنا سکھایا',
-        tafsirSummary: 'Al-Bayan: The power of articulate speech, linguistic expression, conceptual thinking, and profound communication.',
-      },
-      {
-        numberInSurah: 5,
-        globalNumber: 4906,
-        textArabic: 'الشَّمْسُ وَالْقَمَرُ بِحُسْبَانٍ',
-        textEnglish: 'The sun and the moon [move] by precise calculation,',
-        textUrdu: 'سورج اور چاند ایک حساب کے ساتھ گردش میں ہیں',
-        tafsirSummary: 'Astrological precision sustaining earthly calendars, agriculture, and ocean tides in clockwork mathematical perfection.',
-      },
-      {
-        numberInSurah: 13,
-        globalNumber: 4914,
-        textArabic: 'فَبِأَيِّ آلَاءِ رَبِّكُمَا تُكَذِّبَانِ',
-        textEnglish: 'So which of the favors of your Lord would you deny?',
-        textUrdu: 'پس تم اپنے رب کی کون کون سی نعمتوں کو جھٹلاؤ گے؟',
-        tafsirSummary: 'The famous recurring refrain directed to both mankind and jinn: challenging them to contemplate and be grateful for uncounted blessings.',
-      },
-    ],
-  },
+export const BUNDLED_SURAHS: Record<number, SurahDetail> = {
+  ...BASE_BUNDLED_SURAHS,
+  ...(fullCoreSurahs as unknown as Record<number, SurahDetail>),
 };

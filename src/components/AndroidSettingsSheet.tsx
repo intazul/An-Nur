@@ -11,9 +11,14 @@ import {
   Check,
   BookOpen,
   Volume2,
+  Smartphone,
+  Wifi,
+  WifiOff,
+  HardDrive,
 } from 'lucide-react';
 import { UserProfileData } from '../types/quran';
 import { ARABIC_RECITERS, URDU_RECITERS, RECITERS } from '../data/reciters';
+import { useOnlineStatus, usePWAInstall } from '../hooks/usePWA';
 
 interface AndroidSettingsSheetProps {
   isOpen: boolean;
@@ -36,6 +41,9 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
   onOpenBookmarks,
   onOpenOfflineManager,
 }) => {
+  const isOnline = useOnlineStatus();
+  const { isInstallable, isInstalled, install } = usePWAInstall();
+
   if (!isOpen) return null;
 
   return (
@@ -135,67 +143,64 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             <span>Reading Format Layout</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            {/* 1. Mushaf Mode */}
             <button
               onClick={() => onUpdateProfile({ readingLayout: 'paragraph' })}
-              className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
+              className={`p-3 rounded-2xl border-2 text-left transition-all ${
                 profile.readingLayout === 'paragraph'
                   ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-md font-bold'
                   : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium hover:border-black'
               }`}
             >
-              <div className="font-bold text-sm mb-1">📖 Mushaf Flow</div>
+              <div className="font-bold text-sm mb-1">📖 Mushaf Pages</div>
               <div className="text-[11px] opacity-90 leading-tight">
-                Paragraph format in pure Arabic without translation
+                Pure Arabic calligraphy page-by-page sliding with Tajweed signs
               </div>
             </button>
 
+            {/* 2. Thematic Paragraph Study Mode (Reference Image Style) */}
+            <button
+              onClick={() => onUpdateProfile({ readingLayout: 'thematic' })}
+              className={`p-3 rounded-2xl border-2 text-left transition-all ${
+                profile.readingLayout === 'thematic'
+                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-md font-bold'
+                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium hover:border-black'
+              }`}
+            >
+              <div className="font-bold text-sm mb-1">📚 Thematic Study</div>
+              <div className="text-[11px] opacity-90 leading-tight">
+                One paragraph per slide with specific topic name, questions & small noticeable text
+              </div>
+            </button>
+
+            {/* 3. Verse Cards Mode */}
             <button
               onClick={() => onUpdateProfile({ readingLayout: 'cards' })}
-              className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
+              className={`p-3 rounded-2xl border-2 text-left transition-all ${
                 profile.readingLayout === 'cards'
                   ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-md font-bold'
                   : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium hover:border-black'
               }`}
             >
-              <div className="font-bold text-sm mb-1">📑 Verse Cards</div>
+              <div className="font-bold text-sm mb-1">📑 Verse Slides</div>
               <div className="text-[11px] opacity-90 leading-tight">
-                Card-by-card with translations & Hadith
+                Verse-by-verse sliding with large translations & related Hadith
               </div>
             </button>
           </div>
 
-          {/* Mushaf Page Turn Options (When in Mushaf format) */}
+          {/* Mushaf Page Turn Style Indicator */}
           {profile.readingLayout === 'paragraph' && (
             <div className="space-y-3 p-4 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
-                <span>Mushaf Page Turn Style</span>
-                <span className="text-[11px] font-semibold text-stone-800 dark:text-stone-300">
-                  {profile.mushafPageMode === 'flip' ? '📖 Horizontal Page Flip' : '📜 Vertical Scroll'}
+                <span>Page Turn Style</span>
+                <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                  Horizontal Page Sliding Active
                 </span>
               </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => onUpdateProfile({ mushafPageMode: 'flip' })}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
-                    profile.mushafPageMode === 'flip'
-                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
-                      : 'bg-white dark:bg-stone-800 text-black dark:text-stone-300 border-stone-300 dark:border-stone-700'
-                  }`}
-                >
-                  Horizontal Page Flip
-                </button>
-                <button
-                  onClick={() => onUpdateProfile({ mushafPageMode: 'scroll' })}
-                  className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
-                    profile.mushafPageMode === 'scroll'
-                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
-                      : 'bg-white dark:bg-stone-800 text-black dark:text-stone-300 border-stone-300 dark:border-stone-700'
-                  }`}
-                >
-                  Vertical Scroll
-                </button>
+              <div className="text-[11px] text-stone-700 dark:text-stone-300 font-medium">
+                Vertical scrolling is replaced with smooth horizontal page slides and swipe gestures like a real physical book.
               </div>
 
               {/* Small & Readable Mushaf Font Size */}
@@ -590,28 +595,85 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           )}
         </div>
 
-        {/* SECTION 7: Bookmarks & Offline Downloads Quick Links */}
-        <div className="grid grid-cols-2 gap-2 pt-1 pb-4">
-          <button
-            onClick={() => {
-              onClose();
-              onOpenBookmarks();
-            }}
-            className="p-3.5 rounded-2xl border-2 border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 text-black dark:text-white text-xs font-bold flex items-center gap-2 justify-center transition-colors active:scale-95"
-          >
-            <Bookmark className="w-4 h-4 text-black dark:text-white" />
-            <span>Audio Bookmarks</span>
-          </button>
-          <button
-            onClick={() => {
-              onClose();
-              onOpenOfflineManager();
-            }}
-            className="p-3.5 rounded-2xl border-2 border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 text-black dark:text-white text-xs font-bold flex items-center gap-2 justify-center transition-colors active:scale-95"
-          >
-            <Download className="w-4 h-4 text-black dark:text-white" />
-            <span>Offline Manager</span>
-          </button>
+        {/* SECTION 7: Offline Capabilities & PWA Installation */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
+            <HardDrive className="w-3.5 h-3.5" />
+            <span>Offline & App Installation</span>
+          </div>
+
+          {/* Network Status Badge */}
+          <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isOnline ? (
+                <Wifi className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              ) : (
+                <WifiOff className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              )}
+              <div>
+                <div className="text-xs font-bold text-black dark:text-white">
+                  {isOnline ? 'Online (Ready to sync & cache)' : 'Offline Mode Active'}
+                </div>
+                <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                  {isOnline
+                    ? 'All downloaded chapters & recitations play without network'
+                    : 'Running 100% from local device cache'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* PWA App Install Button (if browser supports install prompt or standalone) */}
+          {isInstallable && (
+            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5">
+                  <Smartphone className="w-3.5 h-3.5 text-black dark:text-white" />
+                  <span>Install as Native Android App</span>
+                </div>
+                <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                  Add to home screen for fullscreen offline experience.
+                </div>
+              </div>
+              <button
+                onClick={install}
+                className="py-2 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 active:scale-95 transition-all shrink-0"
+              >
+                Install App
+              </button>
+            </div>
+          )}
+
+          {isInstalled && (
+            <div className="p-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+              <Check className="w-4 h-4 stroke-[3]" />
+              <span>Installed as Standalone Native PWA</span>
+            </div>
+          )}
+
+          {/* Quick Shortcuts */}
+          <div className="grid grid-cols-2 gap-2 pt-1 pb-2">
+            <button
+              onClick={() => {
+                onClose();
+                onOpenBookmarks();
+              }}
+              className="p-3 rounded-2xl border-2 border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 hover:border-black dark:hover:border-white text-black dark:text-white text-xs font-bold flex items-center gap-2 justify-center transition-colors active:scale-95"
+            >
+              <Bookmark className="w-4 h-4 text-black dark:text-white" />
+              <span>Audio Bookmarks</span>
+            </button>
+            <button
+              onClick={() => {
+                onClose();
+                onOpenOfflineManager();
+              }}
+              className="p-3 rounded-2xl border-2 border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 hover:border-black dark:hover:border-white text-black dark:text-white text-xs font-bold flex items-center gap-2 justify-center transition-colors active:scale-95"
+            >
+              <Download className="w-4 h-4 text-black dark:text-white" />
+              <span>Offline Manager</span>
+            </button>
+          </div>
         </div>
       </div>
 

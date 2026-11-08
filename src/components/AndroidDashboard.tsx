@@ -59,7 +59,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   const favorites = (profile.favoriteSurahs || [1, 36, 55, 67, 112]).slice(0, 4);
 
   return (
-    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto px-5 py-4 select-none bg-white dark:bg-stone-950">
+    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto px-5 py-4 select-none bg-white dark:bg-stone-950 overflow-y-auto">
       {/* 1. Sleek Android Header (Notification bar removed as requested) */}
       <div className="flex items-center justify-between pt-1 pb-2">
         <div className="flex items-center gap-2.5">
