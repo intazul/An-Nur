@@ -26,33 +26,29 @@
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
-  /* Arabic Glow Styles for Night Mode & Low Light Reading */
-  .arabic-glow-gold {
-    text-shadow: 0 0 10px rgba(245, 158, 11, 0.45),
-                 0 0 22px rgba(217, 119, 6, 0.3),
-                 0 0 35px rgba(180, 83, 9, 0.15);
+  .font-book-serif {
+    font-family: 'Lora', 'Crimson Pro', 'Georgia', serif;
+    letter-spacing: 0.01em;
   }
 
-  .arabic-glow-gold-intense {
-    text-shadow: 0 0 14px rgba(251, 191, 36, 0.75),
-                 0 0 28px rgba(245, 158, 11, 0.55),
-                 0 0 45px rgba(217, 119, 6, 0.35);
-  }
-
-  .arabic-glow-emerald {
-    text-shadow: 0 0 10px rgba(16, 185, 129, 0.5),
-                 0 0 22px rgba(5, 150, 105, 0.35),
-                 0 0 35px rgba(4, 120, 87, 0.2);
-  }
-
-  .arabic-glow-lunar {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.65),
-                 0 0 24px rgba(226, 232, 240, 0.45),
-                 0 0 40px rgba(148, 163, 184, 0.25);
-  }
-
+  /* Clean, crisp dark Arabic font typography (Glowing effect removed for clean clear visibility) */
+  .arabic-glow-gold,
+  .arabic-glow-gold-intense,
+  .arabic-glow-emerald,
+  .arabic-glow-lunar,
   .arabic-glow-none {
-    text-shadow: none;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  .font-arabic-clean {
+    text-shadow: none !important;
+    filter: none !important;
+    color: #09090b; /* Pure dark ink in light mode */
+  }
+
+  :is(.dark) .font-arabic-clean {
+    color: #fafafa; /* Crisp, pure clear text in dark mode */
   }
 
   /* Physical Mushaf Page Flip 3D Turn Animations */
@@ -118,6 +114,19 @@
 
   .animate-slide-prev {
     animation: slideInLeft 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .no-vertical-scroll {
+    touch-action: pan-x !important;
+    overscroll-behavior: none !important;
+    overflow-y: hidden !important;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 

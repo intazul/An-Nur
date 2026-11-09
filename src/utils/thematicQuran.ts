@@ -695,16 +695,21 @@ export function getThematicParagraphs(surah: SurahDetail): ThematicParagraph[] {
       );
 
       if (matchingAyahs.length > 0) {
-        paragraphs.push({
-          id: `${surah.number}:${rule.from}-${rule.to}`,
-          surahNumber: surah.number,
-          fromAyah: rule.from,
-          toAyah: rule.to,
-          topicTitle: rule.title,
-          topicQuestion: rule.question,
-          ayahs: matchingAyahs,
-          keyTheme: rule.keyTheme,
-        });
+        // Subdivide large sections if they exceed 3 verses so every slide fits viewport with zero vertical scroll
+        if (matchingAyahs.length > 3) {
+          chunkAndPushParagraphs(surah, matchingAyahs, paragraphs);
+        } else {
+          paragraphs.push({
+            id: `${surah.number}:${rule.from}-${rule.to}`,
+            surahNumber: surah.number,
+            fromAyah: rule.from,
+            toAyah: rule.to,
+            topicTitle: rule.title,
+            topicQuestion: rule.question,
+            ayahs: matchingAyahs,
+            keyTheme: rule.keyTheme,
+          });
+        }
         coveredUpTo = Math.max(coveredUpTo, rule.to);
       }
     }
@@ -753,14 +758,14 @@ function chunkAndPushParagraphs(
 
   let currentChunk: Ayah[] = [];
   let charCount = 0;
-  const MAX_PARAGRAPH_CHARS = 380; // Keeps text compact, readable, zero scroll
+  const MAX_PARAGRAPH_CHARS = 280; // Keeps text compact, readable, zero scroll
 
   for (let i = 0; i < ayahs.length; i++) {
     const ayah = ayahs[i];
     const textLen = (ayah.textEnglish?.length || 0) + (ayah.textArabic?.length || 0);
 
     const shouldBreak =
-      currentChunk.length >= 4 ||
+      currentChunk.length >= 3 ||
       (currentChunk.length >= 2 && charCount + textLen > MAX_PARAGRAPH_CHARS);
 
     if (shouldBreak && currentChunk.length > 0) {

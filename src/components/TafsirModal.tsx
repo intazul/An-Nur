@@ -142,7 +142,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             </div>
 
             <div className="py-2 text-right" dir="rtl">
-              <p className="font-quran text-2xl sm:text-3xl text-black dark:text-stone-100 leading-[2.5] font-bold">
+              <p className="font-quran text-2xl sm:text-3xl text-stone-950 dark:text-stone-50 leading-[2.5] font-bold font-arabic-clean select-text">
                 {ayah.textArabic}
                 <span className="inline-block mr-2 text-amber-600 dark:text-amber-400 font-cinzel text-base select-none">
                   ۝ {ayah.numberInSurah}
@@ -152,8 +152,8 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
 
             {/* Translations */}
             <div className="pt-2 border-t border-stone-100 dark:border-stone-800/80 space-y-2">
-              <div className="text-xs sm:text-sm text-black dark:text-stone-200 font-medium leading-relaxed font-sans-ui">
-                <span className="font-bold text-stone-800 dark:text-stone-400 block text-[10px] uppercase tracking-wider mb-0.5">
+              <div className="text-sm sm:text-base text-stone-900 dark:text-stone-100 font-book-serif leading-relaxed">
+                <span className="font-bold text-stone-700 dark:text-stone-400 block text-[10px] font-sans-ui uppercase tracking-wider mb-1">
                   English Translation:
                 </span>
                 {ayah.textEnglish}
@@ -197,11 +197,11 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             </div>
 
             {/* Plain Detailed Explanation */}
-            <div className="space-y-1.5 text-xs sm:text-sm text-black dark:text-stone-200 leading-relaxed font-normal">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 block">
+            <div className="space-y-1.5 text-sm sm:text-base text-stone-900 dark:text-stone-200 leading-relaxed font-book-serif">
+              <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 block">
                 Explanation:
               </span>
-              <p className="text-stone-900 dark:text-stone-200 font-medium">
+              <p className="font-normal">
                 {tafsir.explanation}
               </p>
             </div>
@@ -243,7 +243,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
                 </span>
               </div>
 
-              <p className="text-xs text-black dark:text-stone-200 italic font-medium leading-relaxed">
+              <p className="text-sm text-stone-900 dark:text-stone-200 italic font-book-serif leading-relaxed">
                 "{hadith.textEnglish}"
               </p>
 

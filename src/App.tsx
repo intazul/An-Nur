@@ -10,6 +10,10 @@ import { UserProfileModal } from './components/UserProfileModal';
 import { AudioBookmarkDialog } from './components/AudioBookmarkDialog';
 import { TafsirModal } from './components/TafsirModal';
 import { QiblaFinderView } from './components/QiblaFinderView';
+import { SurahListView } from './components/SurahListView';
+import { HadithLibraryView } from './components/HadithLibraryView';
+import { HadithJourneyView } from './components/HadithJourneyView';
+import { ALL_SURAHS } from './data/surahList';
 import {
   AudioBookmark,
   Ayah,
@@ -41,11 +45,12 @@ import { getAyahAudioUrl } from './data/reciters';
 import { playGentleChime } from './utils/notifications';
 import { useOnlineStatus } from './hooks/usePWA';
 
-type ActiveView = 'dashboard' | 'reading' | 'recitation' | 'qibla' | 'settings';
+type ActiveView = 'dashboard' | 'surah_list' | 'reading' | 'recitation' | 'qibla' | 'settings' | 'hadith_library' | 'hadith_journey';
 
 export default function App() {
   // Active Screen
   const [activeView, setActiveView] = useState<ActiveView>('dashboard');
+  const [startInFullScreen, setStartInFullScreen] = useState<boolean>(true);
   const previousViewRef = useRef<ActiveView>('dashboard');
 
   const handleOpenSettings = () => {
@@ -509,10 +514,8 @@ export default function App() {
             streak={streakInfo.currentStreak}
             lastRead={profile.lastRead}
             onStartReading={() => {
-              // Always start from last read
-              setCurrentSurahNumber(profile.lastRead?.surahNumber || 1);
-              setActiveAyahNumber(profile.lastRead?.ayahNumber || 1);
-              setActiveView('reading');
+              // Open the complete list of 114 Surahs as requested
+              setActiveView('surah_list');
             }}
             onStartRecitation={() => {
               // Always start recitation from last read
@@ -520,12 +523,15 @@ export default function App() {
               setActiveAyahNumber(profile.lastRead?.ayahNumber || 1);
               setActiveView('recitation');
             }}
+            onStartHadithReading={() => setActiveView('hadith_library')}
+            onStartHadithJourney={() => setActiveView('hadith_journey')}
             onOpenSettings={handleOpenSettings}
             onTogglePrayer={handleTogglePrayer}
             onOpenImanTracker={() => setIsImanTrackerOpen(true)}
             onSelectFavoriteSurah={(sNum) => {
               setCurrentSurahNumber(sNum);
               setActiveAyahNumber(1);
+              setStartInFullScreen(true);
               setActiveView('reading');
             }}
             onOpenFavoritesModal={() => setIsFavoritesModalOpen(true)}
@@ -533,12 +539,35 @@ export default function App() {
           />
         )}
 
-        {/* 2. Android Quran Reading View */}
+        {/* 2. Complete List of 114 Surahs (Opens before reading, tapping a Surah launches full screen) */}
+        {activeView === 'surah_list' && (
+          <SurahListView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onSelectSurah={(num, fullScreen = true) => {
+              setCurrentSurahNumber(num);
+              setActiveAyahNumber(1);
+              setStartInFullScreen(fullScreen);
+              setActiveView('reading');
+              handleUpdateLastRead({
+                surahNumber: num,
+                ayahNumber: 1,
+                surahName: ALL_SURAHS.find((s) => s.number === num)?.nameEnglish || `Surah ${num}`,
+                updatedAt: new Date().toISOString(),
+              });
+            }}
+            onOpenSettings={handleOpenSettings}
+            profile={profile}
+            onToggleFavoriteSurah={handleToggleFavoriteSurah}
+            lastRead={profile.lastRead}
+          />
+        )}
+
+        {/* 3. Android Quran Reading View (Zero vertical scrolling, horizontal page/slide reading) */}
         {activeView === 'reading' && (
           <AndroidReadingView
             currentSurah={currentSurah}
             isLoading={isLoadingSurah}
-            onBackToDashboard={() => setActiveView('dashboard')}
+            onBackToDashboard={() => setActiveView('surah_list')}
             onSelectSurah={(num) => {
               setCurrentSurahNumber(num);
               setActiveAyahNumber(1);
@@ -566,6 +595,7 @@ export default function App() {
             isFavoriteSurah={isFavorite}
             onUpdateLastRead={handleUpdateLastRead}
             initialTargetAyah={profile.lastRead?.ayahNumber}
+            initialFullScreen={startInFullScreen}
           />
         )}
 
@@ -626,6 +656,22 @@ export default function App() {
               setProfileInitialTab('offline');
               setIsProfileOpen(true);
             }}
+          />
+        )}
+
+        {/* 6. Sahih Hadith Library View (Start Hadith Reading) */}
+        {activeView === 'hadith_library' && (
+          <HadithLibraryView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onStartJourney={() => setActiveView('hadith_journey')}
+          />
+        )}
+
+        {/* 7. Sahih Hadith Journey View (Start Hadith Journey - Full screen questions slides) */}
+        {activeView === 'hadith_journey' && (
+          <HadithJourneyView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onOpenLibrary={() => setActiveView('hadith_library')}
           />
         )}
       </div>

@@ -190,6 +190,36 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             </button>
           </div>
 
+          {/* Thematic Study Layout Indicator */}
+          {profile.readingLayout === 'thematic' && (
+            <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+              <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
+                <span>Thematic Study Style</span>
+                <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                  Zero Vertical Scroll Active
+                </span>
+              </div>
+              <div className="text-[11px] text-stone-700 dark:text-stone-300 font-medium">
+                One paragraph per slide with specific topic headings, reflective questions, and small noticeable letters.
+              </div>
+            </div>
+          )}
+
+          {/* Cards Layout Indicator */}
+          {profile.readingLayout === 'cards' && (
+            <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+              <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
+                <span>Verse Slides Style</span>
+                <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                  Zero Vertical Scroll Active
+                </span>
+              </div>
+              <div className="text-[11px] text-stone-700 dark:text-stone-300 font-medium">
+                Horizontal sliding verse cards with translations, Tafsir and authenticated Hadith.
+              </div>
+            </div>
+          )}
+
           {/* Mushaf Page Turn Style Indicator */}
           {profile.readingLayout === 'paragraph' && (
             <div className="space-y-3 p-4 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">

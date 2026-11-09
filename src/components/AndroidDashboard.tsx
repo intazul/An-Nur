@@ -24,6 +24,8 @@ interface AndroidDashboardProps {
   lastRead: LastReadPosition;
   onStartReading: () => void;
   onStartRecitation: () => void;
+  onStartHadithReading: () => void;
+  onStartHadithJourney: () => void;
   onOpenSettings: () => void;
   onTogglePrayer: (prayerKey: keyof DailyPrayers) => void;
   onOpenImanTracker: () => void;
@@ -40,6 +42,8 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   lastRead,
   onStartReading,
   onStartRecitation,
+  onStartHadithReading,
+  onStartHadithJourney,
   onOpenSettings,
   onTogglePrayer,
   onOpenImanTracker,
@@ -237,6 +241,18 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
         >
           <Headphones className="w-5 h-5 stroke-[2.5]" />
           <span>Quran Recitation</span>
+        </button>
+
+        {/* Button 3: Start Hadith’s Journey (116+ Topic Chapters • Questions Sliding Mode • All Hadiths) */}
+        <button
+          onClick={onStartHadithJourney}
+          className="w-full h-14 rounded-2xl bg-gradient-to-r from-stone-900 via-black to-stone-900 text-white hover:opacity-95 dark:from-stone-100 dark:via-white dark:to-stone-100 dark:text-black font-bold text-base flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all border border-stone-700/60 dark:border-stone-300"
+        >
+          <Compass className="w-5 h-5 text-amber-400 dark:text-amber-600 stroke-[2.5]" />
+          <div className="flex flex-col items-start leading-tight">
+            <span>Start Hadith’s Journey</span>
+            <span className="text-[10px] opacity-80 font-normal">116+ Chapters · Questions Sliding · Bukhari, Muslim & Tirmidhi</span>
+          </div>
         </button>
       </div>
     </div>

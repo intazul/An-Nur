@@ -15,8 +15,6 @@ import {
   Volume2,
   Star,
   Quote,
-  AlignJustify,
-  Layers,
   Maximize2,
   Minimize2,
 } from 'lucide-react';
@@ -49,6 +47,7 @@ interface AndroidReadingViewProps {
   isFavoriteSurah: boolean;
   onUpdateLastRead: (position: LastReadPosition) => void;
   initialTargetAyah?: number;
+  initialFullScreen?: boolean;
 }
 
 export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
@@ -73,13 +72,14 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   isFavoriteSurah,
   onUpdateLastRead,
   initialTargetAyah,
+  initialFullScreen = true,
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [expandedHadithAyah, setExpandedHadithAyah] = useState<number | null>(null);
   const [selectedWaqfSign, setSelectedWaqfSign] = useState<WaqfSignInfo | null>(null);
   const [selectedParagraphAyah, setSelectedParagraphAyah] = useState<number | null>(null);
 
-  // 1. Thematic Paragraph Study Mode (Reference Image Style with Topic Names & Questions)
+  // 1. Thematic Paragraph Study Mode (Topic Names, Reflective Questions & Small Noticeable Letters)
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState<number>(0);
   const [paragraphAnimation, setParagraphAnimation] = useState<'next' | 'prev' | 'none'>('none');
 
@@ -91,7 +91,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   const [currentCardIndex, setCurrentCardIndex] = useState<number>(0);
   const [cardAnimation, setCardAnimation] = useState<'next' | 'prev' | 'none'>('none');
 
-  const [isFullScreenMode, setIsFullScreenMode] = useState<boolean>(false);
+  // Full Screen Mode is active by default when opening from Surah list
+  const [isFullScreenMode, setIsFullScreenMode] = useState<boolean>(initialFullScreen);
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
 
@@ -103,7 +104,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   const isThematicMode = currentLayout === 'thematic';
   const isParagraphMode = currentLayout === 'paragraph';
   const isCardsMode = currentLayout === 'cards';
-  const mushafFontSize = profile.mushafFontSize || 21;
+  const mushafFontSize = Math.max(22, profile.mushafFontSize || 22);
 
   // Compute Thematic Paragraphs for the current Surah
   const thematicParagraphs: ThematicParagraph[] = useMemo(() => {
@@ -112,6 +113,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   }, [currentSurah]);
 
   // Chunk Surah Ayahs into discrete pages for Horizontal Page Mushaf mode
+  // Target ~320 chars per page ensures no page overflows the screen vertically
   const mushafPages = useMemo(() => {
     if (!currentSurah || currentSurah.ayahs.length === 0) return [];
 
@@ -122,7 +124,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
     const pages: Ayah[][] = [];
     let currentPage: Ayah[] = [];
     let charCount = 0;
-    const TARGET_CHARS = 480;
+    const TARGET_CHARS = 320;
 
     for (const ayah of currentSurah.ayahs) {
       const len = ayah.textArabic.length;
@@ -302,7 +304,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
     const deltaX = touchEndX - touchStartXRef.current;
     const deltaY = touchEndY - touchStartYRef.current;
 
-    if (Math.abs(deltaX) > 35 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+    // Only register horizontal swipes, lock out vertical gestures completely
+    if (Math.abs(deltaX) > 30 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15) {
       if (isThematicMode) {
         if (deltaX < 0) goToNextParagraph();
         else goToPrevParagraph();
@@ -347,16 +350,19 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
     : null;
 
   return (
-    <div className="flex-1 flex flex-col max-w-md w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full overflow-hidden select-none pb-2">
-      {/* 1. Android App Bar */}
+    <div
+      className="flex-1 flex flex-col max-w-md w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full max-h-screen overflow-hidden select-none pb-1"
+      style={{ touchAction: 'pan-x', overscrollBehavior: 'none' }}
+    >
+      {/* 1. Android App Bar (Clean & Uncluttered: Segmented Control moved to Settings as requested) */}
       {!isFullScreenMode ? (
         <header className="shrink-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-3.5 py-2.5 flex items-center justify-between gap-2 shadow-2xs">
           <div className="flex items-center gap-2 min-w-0">
             <button
               onClick={onBackToDashboard}
               className="p-1.5 -ml-1 text-black dark:text-white rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              title="Back to Dashboard"
-              aria-label="Back to Dashboard"
+              title="Back"
+              aria-label="Back"
             >
               <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
             </button>
@@ -383,49 +389,6 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* 3-Mode Quick Segmented Control: Thematic Study / Mushaf / Cards */}
-            <div className="flex items-center rounded-xl bg-stone-100 dark:bg-stone-800 p-0.5 border border-stone-300 dark:border-stone-700">
-              <button
-                onClick={() => onUpdateProfile({ readingLayout: 'thematic' })}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
-                  isThematicMode
-                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                    : 'text-stone-700 dark:text-stone-300 hover:text-black'
-                }`}
-                title="Thematic Study Paragraphs (Topic & Specific Questions)"
-              >
-                <BookOpen className="w-3 h-3" />
-                <span className="hidden sm:inline">Thematic</span>
-                <span className="sm:hidden">Study</span>
-              </button>
-
-              <button
-                onClick={() => onUpdateProfile({ readingLayout: 'paragraph' })}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
-                  isParagraphMode
-                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                    : 'text-stone-700 dark:text-stone-300 hover:text-black'
-                }`}
-                title="Mushaf Page Sliding"
-              >
-                <AlignJustify className="w-3 h-3" />
-                <span>Mushaf</span>
-              </button>
-
-              <button
-                onClick={() => onUpdateProfile({ readingLayout: 'cards' })}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
-                  isCardsMode
-                    ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                    : 'text-stone-700 dark:text-stone-300 hover:text-black'
-                }`}
-                title="Verse by Verse Slide Cards"
-              >
-                <Layers className="w-3 h-3" />
-                <span>Cards</span>
-              </button>
-            </div>
-
             {/* Fullscreen Distraction-Free Toggle */}
             <button
               onClick={() => setIsFullScreenMode(true)}
@@ -446,11 +409,11 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Settings */}
+            {/* Settings (Where Reading Format Layout & options are placed) */}
             <button
               onClick={onOpenSettings}
               className="p-1.5 text-black dark:text-white rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
-              title="Settings"
+              title="Settings & Reading Layouts"
               aria-label="Settings"
             >
               <Settings className="w-4 h-4" />
@@ -459,12 +422,12 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         </header>
       ) : (
         /* Minimal Floating Header when in Fullscreen Distraction-Free Mode */
-        <div className="shrink-0 px-3.5 py-2 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
+        <div className="shrink-0 px-3.5 py-1.5 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
           <div className="flex items-center gap-2">
             <button
               onClick={onBackToDashboard}
               className="p-1 rounded-lg text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800"
-              title="Back to Dashboard"
+              title="Back"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
@@ -492,9 +455,9 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         </div>
       )}
 
-      {/* 2. Compact Surah Switcher & Jump Strip */}
+      {/* 2. Compact Surah Switcher Strip (Hidden in Full Screen Mode to maximize space and prevent vertical scrolling) */}
       {!isFullScreenMode && (
-        <div className="shrink-0 px-3.5 py-2 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2 text-xs">
+        <div className="shrink-0 px-3.5 py-1.5 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-1">
             <button
               onClick={() => onSelectSurah(prevSurahNum)}
@@ -529,7 +492,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           <button
             onClick={handleDownload}
             disabled={isDownloading}
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[11px] font-bold transition-colors ${
+            className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10.5px] font-bold transition-colors ${
               isDownloaded
                 ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
                 : 'bg-stone-50 dark:bg-stone-800 text-black dark:text-white border-stone-200 dark:border-stone-700'
@@ -556,17 +519,17 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         </div>
       )}
 
-      {/* 4A. THEMATIC PARAGRAPH STUDY MODE (REFERENCE IMAGE STYLE: TOPIC NAMES, QUESTIONS & SMALL NOTICEABLE LETTERS) */}
+      {/* 4A. THEMATIC PARAGRAPH STUDY MODE (ZERO VERTICAL SCROLLING • ONE PARAGRAPH PER SLIDE • SMALL NOTICEABLE LETTERS) */}
       {!isLoading && currentSurah && isThematicMode && currentParagraph && (
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="flex-1 flex flex-col justify-between p-3 overflow-hidden select-none"
+          className="flex-1 min-h-0 flex flex-col justify-between p-2.5 sm:p-3 overflow-hidden select-none"
         >
-          {/* Physical Study Page Slide Card */}
+          {/* Physical Study Page Slide Card (Fits screen height perfectly with zero vertical scrolling) */}
           <div
             onAnimationEnd={() => setParagraphAnimation('none')}
-            className={`flex-1 flex flex-col justify-between p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-800 shadow-md text-left overflow-hidden ${
+            className={`flex-1 min-h-0 flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-800 shadow-md text-left overflow-hidden ${
               paragraphAnimation === 'next'
                 ? 'animate-slide-next'
                 : paragraphAnimation === 'prev'
@@ -574,8 +537,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 : ''
             }`}
           >
-            {/* Physical Study Header */}
-            <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-stone-200 dark:border-stone-800 text-xs shrink-0">
+            {/* Top Bar of Slide */}
+            <div className="flex items-center justify-between pb-1.5 mb-1 border-b border-stone-200 dark:border-stone-800 text-xs shrink-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-cinzel text-xs font-bold text-stone-900 dark:text-stone-100">
                   {currentSurah.number}. {currentSurah.nameEnglish}
@@ -605,10 +568,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   )}
                 </button>
 
-                {/* Tafsir button for first verse of paragraph */}
+                {/* Tafsir button */}
                 <button
                   onClick={() => onOpenTafsir(currentParagraph.ayahs[0])}
-                  className="px-2.5 py-1 rounded-lg bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] shadow-2xs hover:opacity-90 transition-opacity"
+                  className="px-2 py-0.5 rounded-lg bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] shadow-2xs hover:opacity-90 transition-opacity"
                   title="Open In-Depth Tafsir for this section"
                 >
                   Tafsir
@@ -616,37 +579,97 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               </div>
             </div>
 
-            {/* Slide Body: Centered Topic Name, Reflective Question, and Small Noticeable Text Paragraph */}
-            <div className="flex-1 flex flex-col justify-start space-y-2.5 overflow-y-auto px-1 py-1">
+            {/* Slide Body: Centered Topic Name, Reflective Question, and Properly Arranged Text (Scrollable if needed) */}
+            <div className="flex-1 min-h-0 flex flex-col justify-start py-1 overflow-y-auto overscroll-contain space-y-3 pr-1">
               {/* Bismillah on First Paragraph */}
               {currentParagraphIndex === 0 && currentSurah.bismillahPre && (
-                <div className="text-center py-0.5 shrink-0">
-                  <p className={`font-quran text-base sm:text-lg text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
+                <div className="text-center shrink-0">
+                  <p className={`font-quran text-sm sm:text-base text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                   </p>
                 </div>
               )}
 
               {/* Centered Topic Title (e.g. *Order to Worship God Alone*) */}
-              <div className="text-center pt-0.5">
-                <h3 className="font-serif italic text-base sm:text-lg font-bold text-stone-900 dark:text-stone-100 tracking-wide">
+              <div className="text-center shrink-0">
+                <h3 className="font-serif italic text-sm sm:text-base font-bold text-stone-900 dark:text-stone-100 tracking-wide">
                   {currentParagraph.topicTitle}
                 </h3>
               </div>
 
               {/* Specific Question for this Paragraph */}
-              <div className="px-3 py-1.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20 text-center shrink-0">
-                <span className="text-[10px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider block mb-0.5">
+              <div className="px-2.5 py-1.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20 text-center shrink-0">
+                <span className="text-[9px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider block mb-0.5">
                   Reflective Question
                 </span>
-                <p className="font-serif italic text-xs sm:text-[13px] text-stone-800 dark:text-stone-200 leading-snug">
+                <p className="font-serif italic text-[11.5px] sm:text-xs text-stone-800 dark:text-stone-200 leading-snug">
                   "{currentParagraph.topicQuestion}"
                 </p>
               </div>
 
-              {/* English Translation Paragraph with bold inline verse numbers (Small Letters Noticeable Properly) */}
+              {/* 1. SACRED ARABIC VERSES - PROPERLY ARRANGED & HIGHLY VISIBLE WITH MILD GLOW */}
+              <div
+                className="pt-1 text-right leading-[2.3] select-text"
+                dir="rtl"
+              >
+                {currentParagraph.ayahs.map((ayah) => {
+                  const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
+                  const waqfSigns = getVerseWaqfSigns(currentSurah.number, ayah.numberInSurah, ayah.textArabic);
+
+                  return (
+                    <span
+                      key={ayah.numberInSurah}
+                      onClick={() => {
+                        handleAyahVisible(ayah.numberInSurah);
+                        onOpenTafsir(ayah);
+                      }}
+                      className={`inline cursor-pointer transition-all rounded px-1 ${
+                        isPlayingThis ? 'bg-amber-400/25 ring-2 ring-amber-500 rounded-md' : 'hover:bg-amber-500/10'
+                      }`}
+                      title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
+                    >
+                      <span
+                        className={`${
+                          profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
+                        } text-stone-950 dark:text-stone-50 font-bold font-arabic-clean ${getGlowClass()}`}
+                        style={{
+                          fontSize: `${Math.max(24, profile.arabicFontSize)}px`,
+                          lineHeight: '2.3',
+                        }}
+                      >
+                        {ayah.textArabic}{' '}
+                      </span>
+
+                      {profile.showTajweedSigns && waqfSigns.length > 0 && (
+                        <span className="inline-flex items-center gap-0.5 mx-0.5 align-middle select-none">
+                          {waqfSigns.map((sign, sIdx) => (
+                            <button
+                              key={sIdx}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedWaqfSign(sign);
+                              }}
+                              className={`inline-flex items-center justify-center px-1 py-0.2 rounded border text-[9px] font-bold ${sign.badgeColor}`}
+                              title={sign.ruleSimple}
+                            >
+                              <span className="font-quran text-[10px]">{sign.symbol}</span>
+                            </button>
+                          ))}
+                        </span>
+                      )}
+
+                      <span className="inline-block text-amber-700 dark:text-amber-400 font-cinzel text-xs font-bold mx-0.5 select-none">
+                        ۝ {ayah.numberInSurah}
+                      </span>
+                      {' '}
+                    </span>
+                  );
+                })}
+              </div>
+
+              {/* 2. ENGLISH TRANSLATION - PLACED RESPECTFULLY BELOW ARABIC IN REFINED BOOK SERIF (LORA / CRIMSON PRO) */}
               {profile.showEnglish && (
-                <div className="text-justify font-serif text-[13px] sm:text-[14px] leading-[1.8] text-stone-900 dark:text-stone-100 select-text">
+                <div className="pt-2.5 border-t border-stone-200 dark:border-stone-800/80 text-left font-book-serif text-[14px] sm:text-[15px] leading-[1.75] text-stone-900 dark:text-stone-200 select-text">
                   {currentParagraph.ayahs.map((ayah) => {
                     const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
                     return (
@@ -673,67 +696,15 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 </div>
               )}
 
-              {/* Arabic Paragraph Flow with Tajweed Signs and Inline Ayah Emblems */}
-              <div
-                className="pt-2 border-t border-amber-600/15 dark:border-amber-500/15 text-justify leading-[2.3] select-text"
-                dir="rtl"
-              >
-                {currentParagraph.ayahs.map((ayah) => {
-                  const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
-                  const waqfSigns = getVerseWaqfSigns(currentSurah.number, ayah.numberInSurah, ayah.textArabic);
-
-                  return (
-                    <span
-                      key={ayah.numberInSurah}
-                      onClick={() => {
-                        handleAyahVisible(ayah.numberInSurah);
-                        onOpenTafsir(ayah);
-                      }}
-                      className={`inline cursor-pointer transition-all rounded px-1 ${
-                        isPlayingThis ? 'bg-amber-400/25 ring-1 ring-amber-500 rounded' : 'hover:bg-amber-500/10'
-                      }`}
-                      title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
-                    >
-                      <span className="font-quran text-[16px] sm:text-[17px] text-stone-950 dark:text-stone-100 font-bold">
-                        {ayah.textArabic}{' '}
-                      </span>
-
-                      {profile.showTajweedSigns && waqfSigns.length > 0 && (
-                        <span className="inline-flex items-center gap-0.5 mx-0.5 align-middle select-none">
-                          {waqfSigns.map((sign, sIdx) => (
-                            <button
-                              key={sIdx}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedWaqfSign(sign);
-                              }}
-                              className={`inline-flex items-center justify-center px-1 py-0.2 rounded border text-[10px] font-bold ${sign.badgeColor}`}
-                              title={sign.ruleSimple}
-                            >
-                              <span className="font-quran text-[11px]">{sign.symbol}</span>
-                            </button>
-                          ))}
-                        </span>
-                      )}
-
-                      <span className="inline-block text-amber-700 dark:text-amber-400 font-cinzel text-xs font-bold mx-1 select-none">
-                        ۝ {ayah.numberInSurah}
-                      </span>
-                      {' '}
-                    </span>
-                  );
-                })}
-              </div>
-
-              {/* Urdu Translation Paragraph (if enabled) */}
+              {/* 3. URDU TRANSLATION - ELEGANT NASTALIQ (IF ENABLED) */}
               {profile.showUrdu && (
                 <div
-                  className="pt-2 border-t border-stone-200 dark:border-stone-800 text-right leading-[2.1] font-urdu text-xs sm:text-[13px] text-stone-900 dark:text-stone-100 font-bold"
+                  className="pt-2 border-t border-stone-200 dark:border-stone-800 text-right leading-[2.1] font-urdu text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-bold"
                   dir="rtl"
                 >
                   {currentParagraph.ayahs.map((ayah) => (
                     <span key={ayah.numberInSurah} className="inline ml-1">
-                      <span className="font-sans text-[11px] font-bold text-amber-700 dark:text-amber-400 ml-1">
+                      <span className="font-sans text-[11px] font-bold text-amber-700 dark:text-amber-400 ml-0.5">
                         ({ayah.numberInSurah})
                       </span>
                       <span>{ayah.textUrdu} </span>
@@ -744,7 +715,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             </div>
 
             {/* Quick Paragraph Scrubber Slider */}
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
+            <div className="pt-1.5 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
               <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 shrink-0">
                 Topic {currentParagraphIndex + 1} / {thematicParagraphs.length}
               </span>
@@ -765,10 +736,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           {/* Tactile Next & Prev Paragraph Buttons (High Contrast Black / White) */}
-          <div className="mt-2 flex items-center justify-between gap-2 shrink-0">
+          <div className="mt-1.5 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={goToPrevParagraph}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Previous Topic (or swipe right)"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
@@ -777,7 +748,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
             <button
               onClick={goToNextParagraph}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Next Topic (or swipe left)"
             >
               <span>{currentParagraphIndex === thematicParagraphs.length - 1 ? 'Next Surah' : 'Next Topic'}</span>
@@ -787,17 +758,17 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         </div>
       )}
 
-      {/* 4B. MUSHAF MODE (PURE ARABIC CALLIGRAPHY PAGE-BY-PAGE SLIDING) */}
+      {/* 4B. MUSHAF MODE (PURE ARABIC CALLIGRAPHY PAGE-BY-PAGE SLIDING • ZERO VERTICAL SCROLL) */}
       {!isLoading && currentSurah && isParagraphMode && (
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="flex-1 flex flex-col justify-between p-3 overflow-hidden select-none"
+          className="flex-1 min-h-0 flex flex-col justify-between p-2.5 sm:p-3 overflow-hidden select-none"
         >
           {/* Authentically framed physical Mushaf Page */}
           <div
             onAnimationEnd={() => setFlipAnimation('none')}
-            className={`flex-1 flex flex-col justify-between p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-amber-600/30 dark:border-amber-500/30 shadow-md text-right overflow-hidden ${
+            className={`flex-1 min-h-0 flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-amber-600/30 dark:border-amber-500/30 shadow-md text-right overflow-hidden ${
               flipAnimation === 'next'
                 ? 'animate-mushaf-flip-next'
                 : flipAnimation === 'prev'
@@ -806,7 +777,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             }`}
           >
             {/* Page Header */}
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-amber-600/20 dark:border-amber-500/20 text-xs shrink-0">
+            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-amber-600/20 dark:border-amber-500/20 text-xs shrink-0">
               <div className="flex items-center gap-1.5">
                 <span className="font-cinzel text-[11px] font-bold text-amber-800 dark:text-amber-300">
                   Juz {currentJuz}
@@ -824,16 +795,16 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
             {/* Bismillah on Page 1 if applicable */}
             {currentPageIndex === 0 && currentSurah.bismillahPre && (
-              <div className="text-center py-1 mb-1 shrink-0">
-                <p className={`font-quran text-lg text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
+              <div className="text-center py-0.5 shrink-0">
+                <p className={`font-quran text-base sm:text-lg text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
                   بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
               </div>
             )}
 
-            {/* Mushaf Page Verses - Paragraph Flow */}
+            {/* Mushaf Page Verses - Paragraph Flow (Scrollable if needed, zero clipping) */}
             <div
-              className="flex-1 flex flex-col justify-start leading-[2.5] select-text text-justify overflow-y-auto px-0.5"
+              className="flex-1 min-h-0 flex flex-col justify-start leading-[2.3] select-text text-justify px-1 overflow-y-auto overscroll-contain scrollbar-thin"
               dir="rtl"
             >
               <div>
@@ -861,10 +832,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                       <span
                         className={`${
                           profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                        } text-stone-950 dark:text-stone-100 ${getGlowClass()}`}
+                        } text-stone-950 dark:text-stone-100 font-arabic-clean ${getGlowClass()}`}
                         style={{
                           fontSize: `${mushafFontSize}px`,
-                          lineHeight: '2.5',
+                          lineHeight: '2.3',
                         }}
                       >
                         {ayah.textArabic}{' '}
@@ -872,7 +843,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
                       {/* Tajweed Stopping Signs */}
                       {profile.showTajweedSigns && (
-                        <span className="inline-flex items-center gap-1 mx-1 align-middle select-none">
+                        <span className="inline-flex items-center gap-1 mx-0.5 align-middle select-none">
                           {waqfSigns.map((sign, sIdx) => (
                             <button
                               key={sIdx}
@@ -880,7 +851,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                                 e.stopPropagation();
                                 setSelectedWaqfSign(sign);
                               }}
-                              className={`inline-flex items-center justify-center px-1 py-0.2 rounded border text-[10px] font-bold transition-transform hover:scale-115 active:scale-95 shadow-2xs ${sign.badgeColor}`}
+                              className={`inline-flex items-center justify-center px-1 py-0.2 rounded border text-[10px] font-bold ${sign.badgeColor}`}
                               title={`Click for guide: ${sign.ruleSimple}`}
                             >
                               <span className="font-quran text-[11px]">{sign.symbol}</span>
@@ -904,7 +875,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             </div>
 
             {/* Page Bottom Details */}
-            <div className="pt-2 mt-2 border-t border-amber-600/20 dark:border-amber-500/20 flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 shrink-0">
+            <div className="pt-1.5 mt-1 border-t border-amber-600/20 dark:border-amber-500/20 flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 shrink-0">
               <span className="text-[11px] font-medium">
                 Ayahs {currentPageAyahs[0]?.numberInSurah}–
                 {currentPageAyahs[currentPageAyahs.length - 1]?.numberInSurah}
@@ -916,7 +887,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           {/* Quick Page Scrubber Slider */}
-          <div className="mt-2.5 px-3 py-1.5 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
+          <div className="mt-2 px-3 py-1 bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
             <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 shrink-0">
               Page {currentPageIndex + 1} / {mushafPages.length}
             </span>
@@ -936,10 +907,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           {/* Tactile Next & Prev Page Buttons */}
-          <div className="mt-2 flex items-center justify-between gap-2 shrink-0">
+          <div className="mt-1.5 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={goToPrevPage}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Previous Page (or swipe right)"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
@@ -948,7 +919,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
             <button
               onClick={goToNextPage}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Next Page (or swipe left)"
             >
               <span>{currentPageIndex === mushafPages.length - 1 ? 'Next Surah' : 'Next Page'}</span>
@@ -958,17 +929,17 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         </div>
       )}
 
-      {/* 4C. VERSE-BY-VERSE SLIDE PAGES (CARDS MODE) */}
+      {/* 4C. VERSE-BY-VERSE SLIDE PAGES (CARDS MODE • ZERO VERTICAL SCROLL) */}
       {!isLoading && currentSurah && isCardsMode && activeVerseAyah && (
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="flex-1 flex flex-col justify-between p-3 overflow-hidden select-none"
+          className="flex-1 min-h-0 flex flex-col justify-between p-2.5 sm:p-3 overflow-hidden select-none"
         >
           {/* Active Verse Card Slide */}
           <div
             onAnimationEnd={() => setCardAnimation('none')}
-            className={`flex-1 flex flex-col justify-between p-4 rounded-2xl sm:rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-md overflow-hidden ${
+            className={`flex-1 min-h-0 flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-md overflow-hidden ${
               cardAnimation === 'next'
                 ? 'animate-slide-next'
                 : cardAnimation === 'prev'
@@ -977,7 +948,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             }`}
           >
             {/* Slide Top Bar */}
-            <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-stone-200 dark:border-stone-800 shrink-0">
+            <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-stone-200 dark:border-stone-800 shrink-0">
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-800 font-cinzel text-xs font-bold text-black dark:text-white">
                   Ayah {activeVerseAyah.numberInSurah} of {currentSurah.numberOfAyahs}
@@ -1042,23 +1013,23 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               </div>
             </div>
 
-            {/* Slide Body */}
-            <div className="flex-1 flex flex-col justify-center space-y-3 overflow-y-auto px-1 py-1">
+            {/* Slide Body (Scrollable if verse is long, properly arranged) */}
+            <div className="flex-1 min-h-0 flex flex-col justify-start py-1 space-y-3 overflow-y-auto overscroll-contain px-1 scrollbar-thin">
               {currentCardIndex === 0 && currentSurah.bismillahPre && (
-                <div className="text-center py-1 shrink-0">
-                  <p className={`font-quran text-lg text-amber-800 dark:text-amber-300 ${getGlowClass()}`}>
+                <div className="text-center shrink-0">
+                  <p className={`font-quran text-base sm:text-lg text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                   </p>
                 </div>
               )}
 
-              {/* Arabic Calligraphy */}
+              {/* Arabic Calligraphy - Prioritized, Noticeably Bigger with Mild Glowing Letters */}
               <div className="text-right" dir="rtl">
                 <p
                   className={`${
                     profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                  } text-black dark:text-stone-100 leading-[2.3] select-text font-bold ${getGlowClass()}`}
-                  style={{ fontSize: `${profile.arabicFontSize}px` }}
+                  } text-stone-950 dark:text-stone-50 leading-[2.3] select-text font-bold font-arabic-clean ${getGlowClass()}`}
+                  style={{ fontSize: `${Math.max(26, profile.arabicFontSize)}px` }}
                 >
                   {activeVerseAyah.textArabic}
                   <span className="inline-block mr-2 text-amber-600 dark:text-amber-400 font-cinzel text-base select-none">
@@ -1067,10 +1038,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 </p>
               </div>
 
-              {/* English Translation */}
+              {/* English Translation - Refined Book Serif Typography */}
               {profile.showEnglish && activeVerseAyah.textEnglish && (
-                <div className="pt-1 text-stone-900 dark:text-stone-100 font-sans-ui font-medium leading-relaxed">
-                  <p style={{ fontSize: `${profile.translationFontSize}px` }}>
+                <div className="pt-2 text-stone-900 dark:text-stone-100 font-book-serif text-[15px] sm:text-[16.5px] leading-[1.8] select-text">
+                  <p>
                     {activeVerseAyah.textEnglish}
                   </p>
                 </div>
@@ -1081,7 +1052,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 <div className="pt-1 border-t border-stone-200 dark:border-stone-800 text-right" dir="rtl">
                   <p
                     className="font-urdu text-black dark:text-stone-100 font-bold"
-                    style={{ fontSize: `${Math.max(16, profile.translationFontSize + 2)}px` }}
+                    style={{ fontSize: `${Math.max(15, profile.translationFontSize + 1)}px` }}
                   >
                     {activeVerseAyah.textUrdu}
                   </p>
@@ -1090,7 +1061,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
               {/* Expandable Related Hadith */}
               {expandedHadithAyah === activeVerseAyah.numberInSurah && activeHadith && (
-                <div className="p-3 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 space-y-1.5 text-xs shrink-0 animate-in fade-in">
+                <div className="p-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 space-y-1 text-xs shrink-0 animate-in fade-in">
                   <div className="flex items-center justify-between text-amber-800 dark:text-amber-300 font-bold">
                     <div className="flex items-center gap-1.5">
                       <Quote className="w-3.5 h-3.5" />
@@ -1099,17 +1070,11 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     <span className="text-[10px] font-mono">{activeHadith.source}</span>
                   </div>
 
-                  <p className="text-stone-900 dark:text-stone-100 italic leading-relaxed font-medium">
+                  <p className="text-stone-900 dark:text-stone-100 italic leading-snug font-medium">
                     "{activeHadith.textEnglish}"
                   </p>
 
-                  {activeHadith.textUrdu && profile.showUrdu && (
-                    <p className="font-urdu text-stone-800 dark:text-stone-200 text-right leading-relaxed font-bold" dir="rtl">
-                      {activeHadith.textUrdu}
-                    </p>
-                  )}
-
-                  <div className="p-1.5 rounded-lg bg-white/80 dark:bg-stone-900/80 text-[11px] text-amber-900 dark:text-amber-200">
+                  <div className="p-1 rounded-lg bg-white/80 dark:bg-stone-900/80 text-[10.5px] text-amber-900 dark:text-amber-200">
                     <strong>Connection to Verse:</strong> {activeHadith.relevance}
                   </div>
                 </div>
@@ -1117,7 +1082,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             </div>
 
             {/* Quick Ayah Scrubber Slider */}
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
+            <div className="pt-1.5 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
               <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 shrink-0">
                 Ayah {currentCardIndex + 1} / {currentSurah.numberOfAyahs}
               </span>
@@ -1137,10 +1102,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           {/* Tactile Next & Prev Verse Buttons */}
-          <div className="mt-2 flex items-center justify-between gap-2 shrink-0">
+          <div className="mt-1.5 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={goToPrevCard}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Previous Verse (or swipe right)"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
@@ -1149,7 +1114,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
             <button
               onClick={goToNextCard}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Next Verse (or swipe left)"
             >
               <span>{currentCardIndex === currentSurah.numberOfAyahs - 1 ? 'Next Surah' : 'Next Verse'}</span>
@@ -1161,7 +1126,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
       {/* Floating Bottom Mini-Player if audio is active */}
       {activePlayingAyah && (
-        <div className="shrink-0 max-w-md mx-auto w-full p-2.5 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 shadow-xl flex items-center justify-between">
+        <div className="shrink-0 max-w-md mx-auto w-full p-2 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 shadow-xl flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
             <Volume2 className="w-4 h-4 text-amber-500 shrink-0" />
             <div className="min-w-0">
