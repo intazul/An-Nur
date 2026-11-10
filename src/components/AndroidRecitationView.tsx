@@ -72,6 +72,9 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
   currentAudioPhase = 'arabic',
 }) => {
   const [showHadith, setShowHadith] = useState(false);
+  const [hifzRepeatTarget, setHifzRepeatTarget] = useState<number>(1); // 1 (off/once), 3, 5, 10, 999 (infinite)
+  const [hifzCurrentCount, setHifzCurrentCount] = useState<number>(0);
+  const [activeWordIndex, setActiveWordIndex] = useState<number | null>(null);
 
   const currentAyah: Ayah | undefined = currentSurah?.ayahs.find(
     (a) => a.numberInSurah === activeAyahNumber
@@ -348,7 +351,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             ))}
           </div>
 
-          {/* Arabic Calligraphy */}
+          {/* Arabic Calligraphy with Word-by-Word Interactive Highlighting */}
           {currentAyah && (
             <div
               className={`py-2 px-3 rounded-2xl transition-all text-right ${
@@ -358,17 +361,33 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               }`}
               dir="rtl"
             >
-              <p
+              <div
                 className={`${
                   profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                } text-black dark:text-stone-100 leading-[2.4] font-bold ${getGlowClass()}`}
+                } text-black dark:text-stone-100 leading-[2.6] font-bold flex flex-wrap justify-end gap-x-2 gap-y-1 ${getGlowClass()}`}
                 style={{ fontSize: `${Math.max(26, profile.arabicFontSize)}px` }}
               >
-                {currentAyah.textArabic}
+                {currentAyah.textArabic.split(' ').map((word, wIdx, arr) => {
+                  const estCurrentWord = duration > 0 ? Math.floor((currentTime / duration) * arr.length) : -1;
+                  const isWordActive = isPlaying && !isRecitingUrdu && estCurrentWord === wIdx;
+                  return (
+                    <span
+                      key={wIdx}
+                      onClick={() => setActiveWordIndex(activeWordIndex === wIdx ? null : wIdx)}
+                      className={`inline-block px-1 rounded-lg transition-colors cursor-pointer select-none ${
+                        isWordActive || activeWordIndex === wIdx
+                          ? 'bg-amber-400 text-black dark:bg-amber-400 dark:text-black scale-105 shadow-xs'
+                          : 'hover:text-amber-500'
+                      }`}
+                    >
+                      {word}
+                    </span>
+                  );
+                })}
                 <span className="inline-block mr-2 text-black dark:text-amber-400 font-cinzel text-lg select-none">
                   ۝ {currentAyah.numberInSurah}
                 </span>
-              </p>
+              </div>
             </div>
           )}
 
@@ -438,6 +457,44 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               {isRecitingUrdu ? 'Urdu Voice' : 'Arabic Voice'}
             </span>
             <span>{formatTime(duration)}</span>
+          </div>
+        </div>
+
+        {/* Hifz Memorization Loop Selector */}
+        <div className="flex items-center justify-between px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs">
+          <span className="font-bold text-[11px] text-stone-600 dark:text-stone-400">
+            Hifz Loop:
+          </span>
+          <div className="flex items-center gap-1">
+            {[
+              { val: 1, label: '1x (Off)' },
+              { val: 3, label: '3x' },
+              { val: 5, label: '5x' },
+              { val: 10, label: '10x' },
+              { val: 999, label: '∞ Loop' },
+            ].map(({ val, label }) => {
+              const active = (val === 999 && repeatVerse) || (hifzRepeatTarget === val && val !== 999 && !repeatVerse);
+              return (
+                <button
+                  key={val}
+                  onClick={() => {
+                    setHifzRepeatTarget(val);
+                    if (val === 999) {
+                      if (!repeatVerse) onToggleRepeatVerse();
+                    } else {
+                      if (repeatVerse) onToggleRepeatVerse();
+                    }
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all ${
+                    active
+                      ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
 

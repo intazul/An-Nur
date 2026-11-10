@@ -22,7 +22,12 @@ import { ALL_SURAHS } from '../data/surahList';
 import { Ayah, LastReadPosition, SurahDetail, UserProfileData, WaqfSignInfo } from '../types/quran';
 import { getRelatedHadith } from '../utils/hadithDatabase';
 import { getVerseWaqfSigns } from '../data/tajweedSigns';
-import { getThematicParagraphs, ThematicParagraph } from '../utils/thematicQuran';
+import {
+  getThematicSlidePages,
+  ThematicSlidePage,
+  getThematicParagraphs,
+  ThematicParagraph,
+} from '../utils/thematicQuran';
 import { TajweedSignHelpDialog } from './TajweedSignHelpDialog';
 
 interface AndroidReadingViewProps {
@@ -107,6 +112,12 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   const mushafFontSize = Math.max(22, profile.mushafFontSize || 22);
 
   // Compute Thematic Paragraphs for the current Surah
+  // Compute Thematic Slide Pages (continuously filled with ayahs of the same Surah without blank space)
+  const thematicSlidePages: ThematicSlidePage[] = useMemo(() => {
+    if (!currentSurah) return [];
+    return getThematicSlidePages(currentSurah);
+  }, [currentSurah]);
+
   const thematicParagraphs: ThematicParagraph[] = useMemo(() => {
     if (!currentSurah) return [];
     return getThematicParagraphs(currentSurah);
@@ -150,9 +161,9 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
     if (!currentSurah || currentSurah.ayahs.length === 0) return;
     const target = initialTargetAyah || profile.lastRead?.ayahNumber || 1;
 
-    // Set Thematic Paragraph index
-    if (thematicParagraphs.length > 0) {
-      const pIdx = thematicParagraphs.findIndex(
+    // Set Thematic Slide Page index
+    if (thematicSlidePages.length > 0) {
+      const pIdx = thematicSlidePages.findIndex(
         (p) => target >= p.fromAyah && target <= p.toAyah
       );
       setCurrentParagraphIndex(pIdx !== -1 ? pIdx : 0);
@@ -175,8 +186,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   useEffect(() => {
     if (!activePlayingAyah || !currentSurah) return;
 
-    if (isThematicMode && thematicParagraphs.length > 0) {
-      const pIdx = thematicParagraphs.findIndex(
+    if (isThematicMode && thematicSlidePages.length > 0) {
+      const pIdx = thematicSlidePages.findIndex(
         (p) => activePlayingAyah >= p.fromAyah && activePlayingAyah <= p.toAyah
       );
       if (pIdx !== -1 && pIdx !== currentParagraphIndex) {
@@ -210,14 +221,14 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
     });
   };
 
-  // Thematic Study Paragraph Navigation
+  // Thematic Study Slide Page Navigation
   const goToNextParagraph = () => {
     if (!currentSurah) return;
-    if (currentParagraphIndex < thematicParagraphs.length - 1) {
+    if (currentParagraphIndex < thematicSlidePages.length - 1) {
       setParagraphAnimation('next');
       const nextIdx = currentParagraphIndex + 1;
       setCurrentParagraphIndex(nextIdx);
-      const firstAyah = thematicParagraphs[nextIdx]?.ayahs[0];
+      const firstAyah = thematicSlidePages[nextIdx]?.allAyahs[0];
       if (firstAyah) handleAyahVisible(firstAyah.numberInSurah);
     } else {
       onSelectSurah(nextSurahNum);
@@ -230,7 +241,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
       setParagraphAnimation('prev');
       const prevIdx = currentParagraphIndex - 1;
       setCurrentParagraphIndex(prevIdx);
-      const firstAyah = thematicParagraphs[prevIdx]?.ayahs[0];
+      const firstAyah = thematicSlidePages[prevIdx]?.allAyahs[0];
       if (firstAyah) handleAyahVisible(firstAyah.numberInSurah);
     } else {
       onSelectSurah(prevSurahNum);
@@ -343,7 +354,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   const currentJuz = currentPageAyahs[0]?.juz || currentSurah?.ayahs[0]?.juz || 1;
 
   // Active item references
-  const currentParagraph: ThematicParagraph | undefined = thematicParagraphs[currentParagraphIndex];
+  const currentThematicPage: ThematicSlidePage | undefined = thematicSlidePages[currentParagraphIndex] || thematicSlidePages[0];
+  const currentParagraph: ThematicParagraph | undefined = currentThematicPage?.paragraphs[0];
   const activeVerseAyah: Ayah | undefined = currentSurah?.ayahs[currentCardIndex];
   const activeHadith = (currentSurah && activeVerseAyah)
     ? (activeVerseAyah.relatedHadith || getRelatedHadith(currentSurah.number, activeVerseAyah.numberInSurah))
@@ -439,7 +451,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400">
               {isThematicMode
-                ? `Topic ${currentParagraphIndex + 1} of ${thematicParagraphs.length}`
+                ? `Page ${currentParagraphIndex + 1} of ${thematicSlidePages.length}`
                 : isParagraphMode
                 ? `Page ${currentPageIndex + 1} of ${mushafPages.length}`
                 : `Ayah ${currentCardIndex + 1} of ${currentSurah?.numberOfAyahs || 1}`}
@@ -519,14 +531,14 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         </div>
       )}
 
-      {/* 4A. THEMATIC PARAGRAPH STUDY MODE (ZERO VERTICAL SCROLLING • ONE PARAGRAPH PER SLIDE • SMALL NOTICEABLE LETTERS) */}
-      {!isLoading && currentSurah && isThematicMode && currentParagraph && (
+      {/* 4A. THEMATIC STUDY MODE (CONTINUOUS FULL-PAGE SLIDES • NO BLANK SPACE • FILLED WITH AYAHS OF SAME SURAH) */}
+      {!isLoading && currentSurah && isThematicMode && currentThematicPage && (
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           className="flex-1 min-h-0 flex flex-col justify-between p-2.5 sm:p-3 overflow-hidden select-none"
         >
-          {/* Physical Study Page Slide Card (Fits screen height perfectly with zero vertical scrolling) */}
+          {/* Physical Study Page Slide Card (Continuously filled without leaving blank space) */}
           <div
             onAnimationEnd={() => setParagraphAnimation('none')}
             className={`flex-1 min-h-0 flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-800 shadow-md text-left overflow-hidden ${
@@ -539,29 +551,29 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           >
             {/* Top Bar of Slide */}
             <div className="flex items-center justify-between pb-1.5 mb-1 border-b border-stone-200 dark:border-stone-800 text-xs shrink-0">
-              <div className="flex items-center gap-1.5">
-                <span className="font-cinzel text-xs font-bold text-stone-900 dark:text-stone-100">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="font-cinzel text-xs font-bold text-stone-900 dark:text-stone-100 truncate">
                   {currentSurah.number}. {currentSurah.nameEnglish}
                 </span>
                 <span className="text-stone-400">·</span>
-                <span className="font-cinzel text-[11px] text-amber-700 dark:text-amber-400 font-bold">
-                  {currentParagraph.fromAyah === currentParagraph.toAyah
-                    ? `Ayah ${currentParagraph.fromAyah}`
-                    : `Ayahs ${currentParagraph.fromAyah}–${currentParagraph.toAyah}`}
+                <span className="font-cinzel text-[11px] text-amber-700 dark:text-amber-400 font-bold truncate">
+                  {currentThematicPage.fromAyah === currentThematicPage.toAyah
+                    ? `Ayah ${currentThematicPage.fromAyah}`
+                    : `Ayahs ${currentThematicPage.fromAyah}–${currentThematicPage.toAyah}`}
                 </span>
               </div>
 
-              <div className="flex items-center gap-1.5">
-                {/* Audio recitation for this paragraph */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                {/* Audio recitation for this page */}
                 <button
                   onClick={() => {
-                    onPlayAyahInReciter(currentParagraph.fromAyah);
+                    onPlayAyahInReciter(currentThematicPage.fromAyah);
                     onVerseRead();
                   }}
                   className="p-1 rounded-lg text-black dark:text-white hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
-                  title="Play recitation for this paragraph"
+                  title="Play recitation for this page"
                 >
-                  {isPlayingAudio && activePlayingAyah && activePlayingAyah >= currentParagraph.fromAyah && activePlayingAyah <= currentParagraph.toAyah ? (
+                  {isPlayingAudio && activePlayingAyah && activePlayingAyah >= currentThematicPage.fromAyah && activePlayingAyah <= currentThematicPage.toAyah ? (
                     <Pause className="w-3.5 h-3.5 text-amber-500" />
                   ) : (
                     <Play className="w-3.5 h-3.5" />
@@ -570,7 +582,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
                 {/* Tafsir button */}
                 <button
-                  onClick={() => onOpenTafsir(currentParagraph.ayahs[0])}
+                  onClick={() => onOpenTafsir(currentThematicPage.allAyahs[0])}
                   className="px-2 py-0.5 rounded-lg bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] shadow-2xs hover:opacity-90 transition-opacity"
                   title="Open In-Depth Tafsir for this section"
                 >
@@ -579,155 +591,163 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               </div>
             </div>
 
-            {/* Slide Body: Centered Topic Name, Reflective Question, and Properly Arranged Text (Scrollable if needed) */}
-            <div className="flex-1 min-h-0 flex flex-col justify-start py-1 overflow-y-auto overscroll-contain space-y-3 pr-1">
-              {/* Bismillah on First Paragraph */}
+            {/* Slide Body: Continuously Filled with Ayahs of the same Surah (Zero blank space) */}
+            <div className="flex-1 min-h-0 flex flex-col justify-start py-1 overflow-y-auto overscroll-contain space-y-4 pr-1 scrollbar-thin">
+              {/* Bismillah on First Page of Surah */}
               {currentParagraphIndex === 0 && currentSurah.bismillahPre && (
-                <div className="text-center shrink-0">
+                <div className="text-center shrink-0 pb-1">
                   <p className={`font-quran text-sm sm:text-base text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                   </p>
                 </div>
               )}
 
-              {/* Centered Topic Title (e.g. *Order to Worship God Alone*) */}
-              <div className="text-center shrink-0">
-                <h3 className="font-serif italic text-sm sm:text-base font-bold text-stone-900 dark:text-stone-100 tracking-wide">
-                  {currentParagraph.topicTitle}
-                </h3>
-              </div>
-
-              {/* Specific Question for this Paragraph */}
-              <div className="px-2.5 py-1.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20 text-center shrink-0">
-                <span className="text-[9px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider block mb-0.5">
-                  Reflective Question
-                </span>
-                <p className="font-serif italic text-[11.5px] sm:text-xs text-stone-800 dark:text-stone-200 leading-snug">
-                  "{currentParagraph.topicQuestion}"
-                </p>
-              </div>
-
-              {/* 1. SACRED ARABIC VERSES - PROPERLY ARRANGED & HIGHLY VISIBLE WITH MILD GLOW */}
-              <div
-                className="pt-1 text-right leading-[2.3] select-text"
-                dir="rtl"
-              >
-                {currentParagraph.ayahs.map((ayah) => {
-                  const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
-                  const waqfSigns = getVerseWaqfSigns(currentSurah.number, ayah.numberInSurah, ayah.textArabic);
-
-                  return (
-                    <span
-                      key={ayah.numberInSurah}
-                      onClick={() => {
-                        handleAyahVisible(ayah.numberInSurah);
-                        onOpenTafsir(ayah);
-                      }}
-                      className={`inline cursor-pointer transition-all rounded px-1 ${
-                        isPlayingThis ? 'bg-amber-400/25 ring-2 ring-amber-500 rounded-md' : 'hover:bg-amber-500/10'
-                      }`}
-                      title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
-                    >
-                      <span
-                        className={`${
-                          profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                        } text-stone-950 dark:text-stone-50 font-bold font-arabic-clean ${getGlowClass()}`}
-                        style={{
-                          fontSize: `${Math.max(24, profile.arabicFontSize)}px`,
-                          lineHeight: '2.3',
-                        }}
-                      >
-                        {ayah.textArabic}{' '}
-                      </span>
-
-                      {profile.showTajweedSigns && waqfSigns.length > 0 && (
-                        <span className="inline-flex items-center gap-0.5 mx-0.5 align-middle select-none">
-                          {waqfSigns.map((sign, sIdx) => (
-                            <button
-                              key={sIdx}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedWaqfSign(sign);
-                              }}
-                              className={`inline-flex items-center justify-center px-1 py-0.2 rounded border text-[9px] font-bold ${sign.badgeColor}`}
-                              title={sign.ruleSimple}
-                            >
-                              <span className="font-quran text-[10px]">{sign.symbol}</span>
-                            </button>
-                          ))}
-                        </span>
-                      )}
-
-                      <span className="inline-block text-amber-700 dark:text-amber-400 font-cinzel text-xs font-bold mx-0.5 select-none">
-                        ۝ {ayah.numberInSurah}
-                      </span>
-                      {' '}
-                    </span>
-                  );
-                })}
-              </div>
-
-              {/* 2. ENGLISH TRANSLATION - PLACED RESPECTFULLY BELOW ARABIC IN REFINED BOOK SERIF (LORA / CRIMSON PRO) */}
-              {profile.showEnglish && (
-                <div className="pt-2.5 border-t border-stone-200 dark:border-stone-800/80 text-left font-book-serif text-[14px] sm:text-[15px] leading-[1.75] text-stone-900 dark:text-stone-200 select-text">
-                  {currentParagraph.ayahs.map((ayah) => {
-                    const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
-                    return (
-                      <span
-                        key={ayah.numberInSurah}
-                        onClick={() => {
-                          handleAyahVisible(ayah.numberInSurah);
-                          onOpenTafsir(ayah);
-                        }}
-                        className={`inline cursor-pointer transition-all rounded px-0.5 ${
-                          isPlayingThis
-                            ? 'bg-amber-400/20 font-semibold ring-1 ring-amber-500 rounded'
-                            : 'hover:bg-amber-500/10'
-                        }`}
-                        title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
-                      >
-                        <strong className="font-sans font-bold text-stone-950 dark:text-white mr-1 text-[13px]">
-                          {ayah.numberInSurah}.
-                        </strong>
-                        <span>{ayah.textEnglish} </span>
-                      </span>
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* 3. URDU TRANSLATION - ELEGANT NASTALIQ (IF ENABLED) */}
-              {profile.showUrdu && (
+              {/* Flow all topics and continuous ayahs on this slide without blank space */}
+              {currentThematicPage.paragraphs.map((paragraph, pIdx) => (
                 <div
-                  className="pt-2 border-t border-stone-200 dark:border-stone-800 text-right leading-[2.1] font-urdu text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-bold"
-                  dir="rtl"
+                  key={paragraph.id}
+                  className={`${pIdx > 0 ? 'pt-3.5 border-t border-stone-200/80 dark:border-stone-800/80' : ''} space-y-2`}
                 >
-                  {currentParagraph.ayahs.map((ayah) => (
-                    <span key={ayah.numberInSurah} className="inline ml-1">
-                      <span className="font-sans text-[11px] font-bold text-amber-700 dark:text-amber-400 ml-0.5">
-                        ({ayah.numberInSurah})
-                      </span>
-                      <span>{ayah.textUrdu} </span>
+                  {/* Topic Title (Centered italic serif, matching printed reference) */}
+                  <div className="text-center shrink-0">
+                    <h3 className="font-serif italic text-sm sm:text-base font-bold text-stone-900 dark:text-stone-100 tracking-wide">
+                      {paragraph.topicTitle}
+                    </h3>
+                  </div>
+
+                  {/* Specific Reflective Question for this Section */}
+                  <div className="px-2.5 py-1 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20 text-center shrink-0">
+                    <span className="text-[9px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider block mb-0.5">
+                      Reflective Inquiry
                     </span>
-                  ))}
+                    <p className="font-serif italic text-[11px] sm:text-xs text-stone-800 dark:text-stone-200 leading-snug">
+                      "{paragraph.topicQuestion}"
+                    </p>
+                  </div>
+
+                  {/* Sacred Arabic Verses for this Section */}
+                  <div
+                    className="pt-1 text-right leading-[2.3] select-text"
+                    dir="rtl"
+                  >
+                    {paragraph.ayahs.map((ayah) => {
+                      const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
+                      const waqfSigns = getVerseWaqfSigns(currentSurah.number, ayah.numberInSurah, ayah.textArabic);
+
+                      return (
+                        <span
+                          key={ayah.numberInSurah}
+                          onClick={() => {
+                            handleAyahVisible(ayah.numberInSurah);
+                            onOpenTafsir(ayah);
+                          }}
+                          className={`inline cursor-pointer transition-all rounded px-1 ${
+                            isPlayingThis ? 'bg-amber-400/25 ring-2 ring-amber-500 rounded-md' : 'hover:bg-amber-500/10'
+                          }`}
+                          title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
+                        >
+                          <span
+                            className={`${
+                              profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
+                            } text-stone-950 dark:text-stone-50 font-bold font-arabic-clean ${getGlowClass()}`}
+                            style={{
+                              fontSize: `${Math.max(22, profile.arabicFontSize)}px`,
+                              lineHeight: '2.3',
+                            }}
+                          >
+                            {ayah.textArabic}{' '}
+                          </span>
+
+                          {profile.showTajweedSigns && waqfSigns.length > 0 && (
+                            <span className="inline-flex items-center gap-0.5 mx-0.5 align-middle select-none">
+                              {waqfSigns.map((sign, sIdx) => (
+                                <button
+                                  key={sIdx}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedWaqfSign(sign);
+                                  }}
+                                  className={`inline-flex items-center justify-center px-1 py-0.2 rounded border text-[9px] font-bold ${sign.badgeColor}`}
+                                  title={sign.ruleSimple}
+                                >
+                                  <span className="font-quran text-[10px]">{sign.symbol}</span>
+                                </button>
+                              ))}
+                            </span>
+                          )}
+
+                          <span className="inline-block text-amber-700 dark:text-amber-400 font-cinzel text-xs font-bold mx-0.5 select-none">
+                            ۝ {ayah.numberInSurah}
+                          </span>
+                          {' '}
+                        </span>
+                      );
+                    })}
+                  </div>
+
+                  {/* English Translation for this Section */}
+                  {profile.showEnglish && (
+                    <div className="pt-2 border-t border-stone-200/60 dark:border-stone-800/60 text-left font-book-serif text-[13.5px] sm:text-[14.5px] leading-[1.75] text-stone-900 dark:text-stone-200 select-text">
+                      {paragraph.ayahs.map((ayah) => {
+                        const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
+                        return (
+                          <span
+                            key={ayah.numberInSurah}
+                            onClick={() => {
+                              handleAyahVisible(ayah.numberInSurah);
+                              onOpenTafsir(ayah);
+                            }}
+                            className={`inline cursor-pointer transition-all rounded px-0.5 ${
+                              isPlayingThis
+                                ? 'bg-amber-400/20 font-semibold ring-1 ring-amber-500 rounded'
+                                : 'hover:bg-amber-500/10'
+                            }`}
+                            title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
+                          >
+                            <strong className="font-sans font-bold text-stone-950 dark:text-white mr-1 text-[12.5px]">
+                              {ayah.numberInSurah}.
+                            </strong>
+                            <span>{ayah.textEnglish} </span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {/* Urdu Translation for this Section (if enabled) */}
+                  {profile.showUrdu && (
+                    <div
+                      className="pt-1.5 border-t border-stone-200/60 dark:border-stone-800/60 text-right leading-[2.1] font-urdu text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-bold"
+                      dir="rtl"
+                    >
+                      {paragraph.ayahs.map((ayah) => (
+                        <span key={ayah.numberInSurah} className="inline ml-1">
+                          <span className="font-sans text-[11px] font-bold text-amber-700 dark:text-amber-400 ml-0.5">
+                            ({ayah.numberInSurah})
+                          </span>
+                          <span>{ayah.textUrdu} </span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
 
-            {/* Quick Paragraph Scrubber Slider */}
+            {/* Quick Page Scrubber Slider */}
             <div className="pt-1.5 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
-              <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 shrink-0">
-                Topic {currentParagraphIndex + 1} / {thematicParagraphs.length}
+              <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 shrink-0 font-mono">
+                Page {currentParagraphIndex + 1} / {thematicSlidePages.length}
               </span>
               <input
                 type="range"
                 min="1"
-                max={thematicParagraphs.length}
+                max={thematicSlidePages.length}
                 value={currentParagraphIndex + 1}
                 onChange={(e) => {
                   const idx = Number(e.target.value) - 1;
                   setCurrentParagraphIndex(idx);
-                  const firstAyah = thematicParagraphs[idx]?.ayahs[0];
+                  const firstAyah = thematicSlidePages[idx]?.allAyahs[0];
                   if (firstAyah) handleAyahVisible(firstAyah.numberInSurah);
                 }}
                 className="w-full h-1.5 bg-stone-300 dark:bg-stone-700 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
@@ -735,23 +755,23 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             </div>
           </div>
 
-          {/* Tactile Next & Prev Paragraph Buttons (High Contrast Black / White) */}
+          {/* Tactile Next & Prev Page Navigation Buttons */}
           <div className="mt-1.5 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={goToPrevParagraph}
               className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
-              title="Previous Topic (or swipe right)"
+              title="Previous Page (or swipe right)"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-              <span>{currentParagraphIndex === 0 ? 'Prev Surah' : 'Prev Topic'}</span>
+              <span>{currentParagraphIndex === 0 ? 'Prev Surah' : 'Prev Page'}</span>
             </button>
 
             <button
               onClick={goToNextParagraph}
               className="flex-1 py-2 px-3 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-sm transition-all active:scale-95 flex items-center justify-center gap-1"
-              title="Next Topic (or swipe left)"
+              title="Next Page (or swipe left)"
             >
-              <span>{currentParagraphIndex === thematicParagraphs.length - 1 ? 'Next Surah' : 'Next Topic'}</span>
+              <span>{currentParagraphIndex === thematicSlidePages.length - 1 ? 'Next Surah' : 'Next Page'}</span>
               <ChevronRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>

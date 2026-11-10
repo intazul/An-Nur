@@ -13,6 +13,10 @@ import { QiblaFinderView } from './components/QiblaFinderView';
 import { SurahListView } from './components/SurahListView';
 import { HadithLibraryView } from './components/HadithLibraryView';
 import { HadithJourneyView } from './components/HadithJourneyView';
+import { SmartTasbihView } from './components/SmartTasbihView';
+import { DailyInspirationView } from './components/DailyInspirationView';
+import { KhatmahPlannerView } from './components/KhatmahPlannerView';
+import { PrayerTimesModal } from './components/PrayerTimesModal';
 import { ALL_SURAHS } from './data/surahList';
 import {
   AudioBookmark,
@@ -45,7 +49,18 @@ import { getAyahAudioUrl } from './data/reciters';
 import { playGentleChime } from './utils/notifications';
 import { useOnlineStatus } from './hooks/usePWA';
 
-type ActiveView = 'dashboard' | 'surah_list' | 'reading' | 'recitation' | 'qibla' | 'settings' | 'hadith_library' | 'hadith_journey';
+type ActiveView =
+  | 'dashboard'
+  | 'surah_list'
+  | 'reading'
+  | 'recitation'
+  | 'qibla'
+  | 'settings'
+  | 'hadith_library'
+  | 'hadith_journey'
+  | 'tasbih'
+  | 'inspiration'
+  | 'khatmah';
 
 export default function App() {
   // Active Screen
@@ -116,6 +131,9 @@ export default function App() {
   const [profileInitialTab, setProfileInitialTab] = useState<'profile' | 'bookmarks' | 'offline' | 'reminders'>('profile');
   const [isTafsirOpen, setIsTafsirOpen] = useState(false);
   const [selectedTafsirAyah, setSelectedTafsirAyah] = useState<Ayah | null>(null);
+
+  // New Feature Modals
+  const [isPrayerTimesOpen, setIsPrayerTimesOpen] = useState(false);
 
   // Audio Bookmark Dialog State
   const [isBookmarkDialogOpen, setIsBookmarkDialogOpen] = useState(false);
@@ -536,6 +554,10 @@ export default function App() {
             }}
             onOpenFavoritesModal={() => setIsFavoritesModalOpen(true)}
             onOpenQibla={() => setActiveView('qibla')}
+            onOpenPrayerTimes={() => setIsPrayerTimesOpen(true)}
+            onOpenSmartTasbih={() => setActiveView('tasbih')}
+            onOpenDailyInspiration={() => setActiveView('inspiration')}
+            onOpenKhatmahPlanner={() => setActiveView('khatmah')}
           />
         )}
 
@@ -674,6 +696,46 @@ export default function App() {
             onOpenLibrary={() => setActiveView('hadith_library')}
           />
         )}
+
+        {/* 8. Smart Digital Tasbih Full Tab View */}
+        {activeView === 'tasbih' && (
+          <SmartTasbihView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onDhikrCountUpdated={() => {
+              handleUpdateImanRecord({
+                ...imanRecord,
+                dhikrCount: imanRecord.dhikrCount + 1,
+              });
+            }}
+          />
+        )}
+
+        {/* 9. Daily Inspiration Full Tab View */}
+        {activeView === 'inspiration' && (
+          <DailyInspirationView
+            onBackToDashboard={() => setActiveView('dashboard')}
+          />
+        )}
+
+        {/* 10. Personalized Khatmah & Quran Analysis Full Tab View */}
+        {activeView === 'khatmah' && (
+          <KhatmahPlannerView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onStartReadingAtPage={(pageNum) => {
+              const approxSurah = Math.min(114, Math.max(1, Math.floor(pageNum / 5.5) + 1));
+              setCurrentSurahNumber(approxSurah);
+              setActiveAyahNumber(1);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+            onReadingMarked={(pagesRead) => {
+              handleUpdateImanRecord({
+                ...imanRecord,
+                versesRead: imanRecord.versesRead + pagesRead * 15,
+              });
+            }}
+          />
+        )}
       </div>
 
       {/* Fallback Settings Sheet if triggered via legacy modal state */}
@@ -717,6 +779,9 @@ export default function App() {
           setCurrentSurahNumber(surahNum);
           if (ayahNum) setActiveAyahNumber(ayahNum);
           setActiveView('reading');
+        }}
+        onSelectHadithChapter={() => {
+          setActiveView('hadith_journey');
         }}
       />
 
@@ -774,6 +839,16 @@ export default function App() {
         surah={currentSurah}
         onPlayAyah={(num) => handlePlayAyahInReciter(num)}
         onBookmarkAyah={(num) => handleInitiateBookmark(num, 0)}
+      />
+
+      {/* 1. Smart Prayer Times & Live Adhan Schedule Modal */}
+      <PrayerTimesModal
+        isOpen={isPrayerTimesOpen}
+        onClose={() => setIsPrayerTimesOpen(false)}
+        prayerStatus={prayerStatus}
+        onUpdatePrayerStatus={(st) => setPrayerStatus(st)}
+        onTogglePrayer={handleTogglePrayer}
+        prayersRecord={imanRecord.prayers}
       />
     </div>
   );

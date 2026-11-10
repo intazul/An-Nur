@@ -128,11 +128,14 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
 
         {/* Row 2: Quick-Access Buttons for Prayer Times Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-0.5">
-          {prayerStatus.prayers.map((prayer) => {
-            const isCompleted = imanRecord.prayers[prayer.id];
-            const isNext = prayer.isNext;
+          {prayerStatus.prayers
+            .filter((p) => !p.isVoluntary)
+            .map((prayer) => {
+              const prayerKey = prayer.id as keyof DailyPrayers;
+              const isCompleted = imanRecord.prayers[prayerKey];
+              const isNext = prayer.isNext;
 
-            return (
+              return (
               <div
                 key={prayer.id}
                 className={`relative group flex items-center justify-between p-2.5 rounded-lg border transition-all ${
@@ -168,7 +171,7 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
                 {/* Quick-Access 1-Click Prayer Check Button */}
                 <button
                   type="button"
-                  onClick={() => onTogglePrayer(prayer.id)}
+                  onClick={() => onTogglePrayer(prayerKey)}
                   className={`p-1 rounded-md transition-colors shrink-0 ${
                     isCompleted
                       ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50'

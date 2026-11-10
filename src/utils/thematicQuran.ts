@@ -11,6 +11,16 @@ export interface ThematicParagraph {
   keyTheme?: string;
 }
 
+export interface ThematicSlidePage {
+  id: string;
+  pageIndex: number;
+  fromAyah: number;
+  toAyah: number;
+  paragraphs: ThematicParagraph[];
+  allAyahs: Ayah[];
+  primaryTopicTitle: string;
+}
+
 interface CuratedThemeRule {
   from: number;
   to: number;
@@ -807,3 +817,84 @@ function chunkAndPushParagraphs(
     });
   }
 }
+
+/**
+ * Groups thematic paragraphs into continuous, full-page slide decks so that
+ * every slide page is filled with continuous ayahs of the same Surah without
+ * leaving empty blank space at the bottom of the card.
+ */
+export function getThematicSlidePages(surah: SurahDetail): ThematicSlidePage[] {
+  const paragraphs = getThematicParagraphs(surah);
+  if (paragraphs.length === 0) return [];
+
+  // Short Surahs (10 ayahs or less, e.g. Al-Fatihah, Al-Ikhlas, Al-Falaq, An-Nas, etc.)
+  // are displayed on 1 continuous, rich full-page slide with their topics
+  if (surah.ayahs.length <= 10) {
+    return [
+      {
+        id: `${surah.number}:1-${surah.ayahs.length}`,
+        pageIndex: 0,
+        fromAyah: 1,
+        toAyah: surah.ayahs.length,
+        paragraphs,
+        allAyahs: surah.ayahs,
+        primaryTopicTitle: paragraphs[0]?.topicTitle || surah.nameEnglish,
+      },
+    ];
+  }
+
+  const pages: ThematicSlidePage[] = [];
+  let currentGroup: ThematicParagraph[] = [];
+  let currentWeight = 0;
+  // Target ~650-800 character weight comfortably fills a mobile phone slide without empty space
+  const TARGET_PAGE_WEIGHT = 680;
+
+  for (const para of paragraphs) {
+    const paraWeight =
+      para.ayahs.reduce(
+        (sum, a) => sum + (a.textArabic?.length || 0) + (a.textEnglish?.length || 0),
+        0
+      ) + 120;
+
+    if (currentGroup.length > 0 && currentWeight + paraWeight > TARGET_PAGE_WEIGHT) {
+      const allAyahsInPage = currentGroup.flatMap((p) => p.ayahs);
+      const from = allAyahsInPage[0].numberInSurah;
+      const to = allAyahsInPage[allAyahsInPage.length - 1].numberInSurah;
+
+      pages.push({
+        id: `${surah.number}:${from}-${to}`,
+        pageIndex: pages.length,
+        fromAyah: from,
+        toAyah: to,
+        paragraphs: [...currentGroup],
+        allAyahs: allAyahsInPage,
+        primaryTopicTitle: currentGroup[0].topicTitle,
+      });
+
+      currentGroup = [para];
+      currentWeight = paraWeight;
+    } else {
+      currentGroup.push(para);
+      currentWeight += paraWeight;
+    }
+  }
+
+  if (currentGroup.length > 0) {
+    const allAyahsInPage = currentGroup.flatMap((p) => p.ayahs);
+    const from = allAyahsInPage[0].numberInSurah;
+    const to = allAyahsInPage[allAyahsInPage.length - 1].numberInSurah;
+
+    pages.push({
+      id: `${surah.number}:${from}-${to}`,
+      pageIndex: pages.length,
+      fromAyah: from,
+      toAyah: to,
+      paragraphs: currentGroup,
+      allAyahs: allAyahsInPage,
+      primaryTopicTitle: currentGroup[0].topicTitle,
+    });
+  }
+
+  return pages;
+}
+

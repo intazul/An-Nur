@@ -10,6 +10,7 @@ import {
   BookmarkCheck,
   Sparkles,
   Compass,
+  Clock,
 } from 'lucide-react';
 import { FluidCircle } from './FluidCircle';
 import { DailyPrayers, ImanDayRecord, LastReadPosition, UserProfileData } from '../types/quran';
@@ -32,6 +33,10 @@ interface AndroidDashboardProps {
   onSelectFavoriteSurah: (surahNumber: number) => void;
   onOpenFavoritesModal: () => void;
   onOpenQibla: () => void;
+  onOpenPrayerTimes?: () => void;
+  onOpenSmartTasbih?: () => void;
+  onOpenDailyInspiration?: () => void;
+  onOpenKhatmahPlanner?: () => void;
 }
 
 export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
@@ -50,6 +55,10 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   onSelectFavoriteSurah,
   onOpenFavoritesModal,
   onOpenQibla,
+  onOpenPrayerTimes,
+  onOpenSmartTasbih,
+  onOpenDailyInspiration,
+  onOpenKhatmahPlanner,
 }) => {
   // Calculate completed prayers
   const prayersList: (keyof DailyPrayers)[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -148,20 +157,33 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
         {/* Quick Prayer Times Strip */}
         <div className="w-full pt-1">
           <div className="flex items-center justify-between pb-1 px-1 text-[11px]">
-            <span className="font-bold uppercase tracking-wider text-black dark:text-white">Today's Prayers</span>
-            <span className="font-bold text-black dark:text-amber-400">
+            <button
+              onClick={onOpenPrayerTimes}
+              className="font-bold uppercase tracking-wider text-black dark:text-white flex items-center gap-1 hover:text-amber-500 transition-colors"
+              title="Open Full Prayer Times & Adhan Settings"
+            >
+              <span>Today's Prayers</span>
+              <span className="text-[9px] text-amber-500 font-semibold">Schedule ↗</span>
+            </button>
+            <button
+              onClick={onOpenPrayerTimes}
+              className="font-bold text-black dark:text-amber-400 hover:underline"
+            >
               {prayerStatus.nextPrayer?.name} in {prayerStatus.timeUntilNext}
-            </span>
+            </button>
           </div>
 
           <div className="grid grid-cols-5 gap-1.5 pt-0.5">
-            {prayerStatus.prayers.map((prayer) => {
-              const done = imanRecord.prayers[prayer.id];
-              return (
-                <button
-                  key={prayer.id}
-                  onClick={() => onTogglePrayer(prayer.id)}
-                  className={`flex flex-col items-center py-2.5 px-1 rounded-xl border transition-all text-center ${
+            {prayerStatus.prayers
+              .filter((p) => !p.isVoluntary)
+              .map((prayer) => {
+                const prayerKey = prayer.id as keyof DailyPrayers;
+                const done = imanRecord.prayers[prayerKey];
+                return (
+                  <button
+                    key={prayer.id}
+                    onClick={() => onTogglePrayer(prayerKey)}
+                    className={`flex flex-col items-center py-2.5 px-1 rounded-xl border transition-all text-center ${
                     done
                       ? 'bg-black text-white border-black dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/40 shadow-xs'
                       : prayer.isNext
@@ -184,6 +206,45 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
                 </button>
               );
             })}
+          </div>
+
+          {/* Quick Spiritual Companion Feature Capsules */}
+          <div className="grid grid-cols-3 gap-1.5 pt-2.5">
+            {/* 1. Smart Tasbih */}
+            {onOpenSmartTasbih && (
+              <button
+                onClick={onOpenSmartTasbih}
+                className="flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-xl border border-stone-300 dark:border-stone-800 bg-white dark:bg-stone-900 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 transition-all text-xs font-bold shadow-2xs active:scale-95"
+                title="Smart Digital Tasbih with Sound & Haptics"
+              >
+                <span>📿</span>
+                <span className="text-[11px] truncate">Tasbih</span>
+              </button>
+            )}
+
+            {/* 2. Daily Inspiration (Ayah & Hadith with Share Card) */}
+            {onOpenDailyInspiration && (
+              <button
+                onClick={onOpenDailyInspiration}
+                className="flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-xl border border-stone-300 dark:border-stone-800 bg-white dark:bg-stone-900 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 transition-all text-xs font-bold shadow-2xs active:scale-95"
+                title="Daily Ayah & Hadith Shareable Cards"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-[11px] truncate">Inspiration</span>
+              </button>
+            )}
+
+            {/* 3. Khatmah Planner */}
+            {onOpenKhatmahPlanner && (
+              <button
+                onClick={onOpenKhatmahPlanner}
+                className="flex items-center justify-center gap-1.5 py-2 px-1.5 rounded-xl border border-stone-300 dark:border-stone-800 bg-white dark:bg-stone-900 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 transition-all text-xs font-bold shadow-2xs active:scale-95"
+                title="Personalized Quran Completion Planner"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-emerald-500" />
+                <span className="text-[11px] truncate">Khatmah</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -243,16 +304,13 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           <span>Quran Recitation</span>
         </button>
 
-        {/* Button 3: Start Hadith’s Journey (116+ Topic Chapters • Questions Sliding Mode • All Hadiths) */}
+        {/* Button 3: Start Hadith’s Journey */}
         <button
           onClick={onStartHadithJourney}
-          className="w-full h-14 rounded-2xl bg-gradient-to-r from-stone-900 via-black to-stone-900 text-white hover:opacity-95 dark:from-stone-100 dark:via-white dark:to-stone-100 dark:text-black font-bold text-base flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all border border-stone-700/60 dark:border-stone-300"
+          className="w-full h-14 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-base flex items-center justify-center gap-3 shadow-lg active:scale-[0.98] transition-all"
         >
-          <Compass className="w-5 h-5 text-amber-400 dark:text-amber-600 stroke-[2.5]" />
-          <div className="flex flex-col items-start leading-tight">
-            <span>Start Hadith’s Journey</span>
-            <span className="text-[10px] opacity-80 font-normal">116+ Chapters · Questions Sliding · Bukhari, Muslim & Tirmidhi</span>
-          </div>
+          <Compass className="w-5 h-5 stroke-[2.5]" />
+          <span>Start Hadith’s Journey</span>
         </button>
       </div>
     </div>

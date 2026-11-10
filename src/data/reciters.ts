@@ -23,6 +23,20 @@ export const ARABIC_RECITERS: Reciter[] = [
     language: 'ar',
   },
   {
+    id: 'husary',
+    name: 'Mahmoud Khalil Al-Husary',
+    style: 'Master of Tajweed & Tarteel',
+    subfolder: 'Husary_128kbps',
+    language: 'ar',
+  },
+  {
+    id: 'minshawi',
+    name: 'Muhammad Siddiq Al-Minshawi',
+    style: 'Reverent & Soul-Stirring',
+    subfolder: 'Minshawy_Murattal_128kbps',
+    language: 'ar',
+  },
+  {
     id: 'sudais',
     name: 'Abdur-Rahman as-Sudais',
     style: 'Haramain Emotional Tarteel',

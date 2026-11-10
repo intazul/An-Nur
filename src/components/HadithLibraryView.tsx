@@ -270,16 +270,6 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
               </div>
 
 
-              {/* Practical Lesson Takeaway Card */}
-              <div className="p-3 rounded-2xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700/80 text-xs space-y-1">
-                <div className="flex items-center gap-1.5 text-stone-800 dark:text-stone-200 font-bold uppercase tracking-wider text-[10px]">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                  <span>Practical Sunnah Takeaway</span>
-                </div>
-                <p className="text-stone-900 dark:text-stone-200 font-medium leading-relaxed">
-                  {currentHadith.keyLesson}
-                </p>
-              </div>
 
               {/* Clickable Reference Citation */}
               <div className="pt-1 text-center">

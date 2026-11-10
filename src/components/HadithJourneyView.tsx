@@ -305,16 +305,6 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                 </p>
               </div>
             </div>
-
-            {/* Jump to Any Hadith # Button */}
-            <button
-              onClick={() => setShowJumpModal(true)}
-              className="py-1.5 px-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs flex items-center gap-1.5 shadow-2xs hover:opacity-90 active:scale-95 transition-all shrink-0"
-              title="Jump directly to any Hadith # (1-7563 in Bukhari, 1-7563 in Muslim, 1-3956 in Tirmidhi)"
-            >
-              <Hash className="w-3.5 h-3.5 text-amber-400 dark:text-amber-600" />
-              <span>Hadith #</span>
-            </button>
           </header>
 
           {/* Quick Search & Category Filters */}
@@ -455,15 +445,6 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
 
             <div className="flex items-center gap-1.5 shrink-0">
               <button
-                onClick={() => setShowJumpModal(true)}
-                className="py-1.5 px-2.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-black dark:text-white hover:bg-stone-200 dark:hover:bg-stone-700 text-xs font-bold transition-all flex items-center gap-1"
-                title="Jump to Hadith #"
-              >
-                <Hash className="w-3.5 h-3.5" />
-                <span>Jump #</span>
-              </button>
-
-              <button
                 onClick={() => setViewMode('chapters_list')}
                 className="py-1.5 px-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black hover:opacity-90 text-xs font-bold transition-all flex items-center gap-1"
                 title="Browse All 116+ Chapters"
@@ -548,41 +529,14 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                   </p>
                 </div>
 
-                {/* Actionable Life Lesson Card */}
-                <div className="p-3 rounded-2xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700/80 text-xs space-y-1">
-                  <div className="flex items-center gap-1.5 text-stone-800 dark:text-stone-200 font-bold uppercase tracking-wider text-[10px]">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                    <span>Living Practice & Reflection</span>
-                  </div>
-                  <p className="text-stone-900 dark:text-stone-200 font-medium leading-relaxed">
-                    {currentHadith.keyLesson}
-                  </p>
-                </div>
-
                 {/* Clickable Verification Citation Link */}
-                <div className="pt-1 text-center">
+                <div className="pt-2 text-center">
                   <button
                     onClick={() => setActiveReferenceHadith(currentHadith)}
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:underline"
                   >
                     <span>Source: {currentHadith.reference} ({currentHadith.collectionName})</span>
                     <Info className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
-                {/* Optional "Load More Hadiths for this Chapter" */}
-                <div className="pt-2 text-center">
-                  <button
-                    onClick={handleLoadMoreForChapter}
-                    disabled={isLoadingMore}
-                    className="px-3 py-1.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-[11px] font-bold inline-flex items-center gap-1.5 disabled:opacity-50"
-                  >
-                    <DownloadCloud className="w-3.5 h-3.5" />
-                    <span>
-                      {isLoadingMore
-                        ? 'Fetching more hadiths...'
-                        : 'Load more Hadiths for this chapter'}
-                    </span>
                   </button>
                 </div>
               </div>
