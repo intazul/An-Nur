@@ -76,6 +76,10 @@ export interface ImanDayRecord {
   versesRead: number;
   dhikrCount: number;
   reflection: string;
+  heartState?: 'peaceful' | 'seeking_forgiveness' | 'grateful' | 'reflective' | 'struggling';
+  fasting?: boolean;
+  charityDone?: boolean;
+  salawatCount?: number;
 }
 
 export interface WaqfSignInfo {

@@ -16,6 +16,8 @@ import { HadithJourneyView } from './components/HadithJourneyView';
 import { SmartTasbihView } from './components/SmartTasbihView';
 import { DailyInspirationView } from './components/DailyInspirationView';
 import { KhatmahPlannerView } from './components/KhatmahPlannerView';
+import { ImanAnalysisView } from './components/ImanAnalysisView';
+import { FavoriteSurahsView } from './components/FavoriteSurahsView';
 import { PrayerTimesModal } from './components/PrayerTimesModal';
 import { ALL_SURAHS } from './data/surahList';
 import {
@@ -60,12 +62,15 @@ type ActiveView =
   | 'hadith_journey'
   | 'tasbih'
   | 'inspiration'
-  | 'khatmah';
+  | 'khatmah'
+  | 'iman'
+  | 'favorites';
 
 export default function App() {
   // Active Screen
   const [activeView, setActiveView] = useState<ActiveView>('dashboard');
   const [startInFullScreen, setStartInFullScreen] = useState<boolean>(true);
+  const [isFavoriteReading, setIsFavoriteReading] = useState<boolean>(false);
   const previousViewRef = useRef<ActiveView>('dashboard');
 
   const handleOpenSettings = () => {
@@ -235,12 +240,16 @@ export default function App() {
     });
   }, []);
 
-  // Update Last Read Position persistently
+  // Update Last Read Position persistently (isolated when reading favorites)
   const handleUpdateLastRead = useCallback(
     (position: LastReadPosition) => {
+      if (isFavoriteReading) {
+        // Reading any favorite surah does NOT interfere with continue reading
+        return;
+      }
       handleUpdateProfile({ lastRead: position });
     },
-    [handleUpdateProfile]
+    [handleUpdateProfile, isFavoriteReading]
   );
 
   // Toggle Favorite Surah
@@ -523,7 +532,7 @@ export default function App() {
           onError={() => setIsPlayingAudio(false)}
         />
 
-        {/* 1. Android Dashboard (No notification bar, fluid Iman circle, favorite Surahs, always start from last read) */}
+        {/* 1. Android Dashboard (No notification bar, fluid Iman circle, favorites in dedicated tab, always start from last read) */}
         {activeView === 'dashboard' && (
           <AndroidDashboard
             imanRecord={imanRecord}
@@ -532,11 +541,20 @@ export default function App() {
             streak={streakInfo.currentStreak}
             lastRead={profile.lastRead}
             onStartReading={() => {
-              // Open the complete list of 114 Surahs as requested
-              setActiveView('surah_list');
+              // Directly resume sequential Quran journey without favorite mode
+              setIsFavoriteReading(false);
+              if (profile.lastRead?.surahNumber) {
+                setCurrentSurahNumber(profile.lastRead.surahNumber);
+                setActiveAyahNumber(profile.lastRead.ayahNumber || 1);
+                setStartInFullScreen(true);
+                setActiveView('reading');
+              } else {
+                setActiveView('surah_list');
+              }
             }}
             onStartRecitation={() => {
               // Always start recitation from last read
+              setIsFavoriteReading(false);
               setCurrentSurahNumber(profile.lastRead?.surahNumber || 1);
               setActiveAyahNumber(profile.lastRead?.ayahNumber || 1);
               setActiveView('recitation');
@@ -545,14 +563,16 @@ export default function App() {
             onStartHadithJourney={() => setActiveView('hadith_journey')}
             onOpenSettings={handleOpenSettings}
             onTogglePrayer={handleTogglePrayer}
-            onOpenImanTracker={() => setIsImanTrackerOpen(true)}
+            onOpenImanTracker={() => setActiveView('iman')}
+            onOpenFavoritesTab={() => setActiveView('favorites')}
             onSelectFavoriteSurah={(sNum) => {
+              setIsFavoriteReading(true);
               setCurrentSurahNumber(sNum);
               setActiveAyahNumber(1);
               setStartInFullScreen(true);
               setActiveView('reading');
             }}
-            onOpenFavoritesModal={() => setIsFavoritesModalOpen(true)}
+            onOpenFavoritesModal={() => setActiveView('favorites')}
             onOpenQibla={() => setActiveView('qibla')}
             onOpenPrayerTimes={() => setIsPrayerTimesOpen(true)}
             onOpenSmartTasbih={() => setActiveView('tasbih')}
@@ -566,6 +586,7 @@ export default function App() {
           <SurahListView
             onBackToDashboard={() => setActiveView('dashboard')}
             onSelectSurah={(num, fullScreen = true) => {
+              setIsFavoriteReading(false);
               setCurrentSurahNumber(num);
               setActiveAyahNumber(1);
               setStartInFullScreen(fullScreen);
@@ -589,16 +610,24 @@ export default function App() {
           <AndroidReadingView
             currentSurah={currentSurah}
             isLoading={isLoadingSurah}
-            onBackToDashboard={() => setActiveView('surah_list')}
+            onBackToDashboard={() => {
+              if (isFavoriteReading) {
+                setActiveView('favorites');
+              } else {
+                setActiveView('surah_list');
+              }
+            }}
             onSelectSurah={(num) => {
               setCurrentSurahNumber(num);
               setActiveAyahNumber(1);
-              handleUpdateLastRead({
-                surahNumber: num,
-                ayahNumber: 1,
-                surahName: currentSurah?.nameEnglish || `Surah ${num}`,
-                updatedAt: new Date().toISOString(),
-              });
+              if (!isFavoriteReading) {
+                handleUpdateLastRead({
+                  surahNumber: num,
+                  ayahNumber: 1,
+                  surahName: currentSurah?.nameEnglish || `Surah ${num}`,
+                  updatedAt: new Date().toISOString(),
+                });
+              }
             }}
             profile={profile}
             onUpdateProfile={handleUpdateProfile}
@@ -615,8 +644,9 @@ export default function App() {
             onToggleAudioPlayPause={handleTogglePlayPause}
             onToggleFavoriteSurah={handleToggleFavoriteSurah}
             isFavoriteSurah={isFavorite}
+            isFavoriteReading={isFavoriteReading}
             onUpdateLastRead={handleUpdateLastRead}
-            initialTargetAyah={profile.lastRead?.ayahNumber}
+            initialTargetAyah={isFavoriteReading ? 1 : profile.lastRead?.ayahNumber}
             initialFullScreen={startInFullScreen}
           />
         )}
@@ -631,7 +661,7 @@ export default function App() {
             duration={duration}
             playbackSpeed={playbackSpeed}
             repeatVerse={repeatVerse}
-            onBackToDashboard={() => setActiveView('dashboard')}
+            onBackToDashboard={() => setActiveView(isFavoriteReading ? 'favorites' : 'dashboard')}
             onTogglePlayPause={handleTogglePlayPause}
             onNextAyah={handleNextAyah}
             onPrevAyah={handlePrevAyah}
@@ -734,6 +764,44 @@ export default function App() {
                 versesRead: imanRecord.versesRead + pagesRead * 15,
               });
             }}
+          />
+        )}
+
+        {/* 11. Iman Level & Deep Spiritual Analysis Full Tab View */}
+        {activeView === 'iman' && (
+          <ImanAnalysisView
+            imanRecord={imanRecord}
+            profile={profile}
+            streak={streakInfo.currentStreak}
+            onUpdateImanRecord={handleUpdateImanRecord}
+            onTogglePrayer={handleTogglePrayer}
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onStartReading={() => setActiveView('surah_list')}
+            onOpenSmartTasbih={() => setActiveView('tasbih')}
+          />
+        )}
+
+        {/* 12. Favorite Surahs Dedicated Tab View */}
+        {activeView === 'favorites' && (
+          <FavoriteSurahsView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onReadSurah={(surahNum) => {
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setActiveAyahNumber(1);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+            onReciteSurah={(surahNum) => {
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setActiveAyahNumber(1);
+              setActiveView('recitation');
+            }}
+            favoriteSurahs={profile.favoriteSurahs || []}
+            onToggleFavorite={handleToggleFavoriteSurah}
+            lastRead={profile.lastRead}
+            profile={profile}
           />
         )}
       </div>

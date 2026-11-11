@@ -50,6 +50,7 @@ interface AndroidReadingViewProps {
   onToggleAudioPlayPause: () => void;
   onToggleFavoriteSurah: (surahNum: number) => void;
   isFavoriteSurah: boolean;
+  isFavoriteReading?: boolean;
   onUpdateLastRead: (position: LastReadPosition) => void;
   initialTargetAyah?: number;
   initialFullScreen?: boolean;
@@ -75,6 +76,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   onToggleAudioPlayPause,
   onToggleFavoriteSurah,
   isFavoriteSurah,
+  isFavoriteReading = false,
   onUpdateLastRead,
   initialTargetAyah,
   initialFullScreen = true,
@@ -213,6 +215,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
   const handleAyahVisible = (ayahNum: number) => {
     if (!currentSurah) return;
+    if (isFavoriteReading) {
+      // Reading a favorite surah must NOT interfere with the main continue reading position
+      return;
+    }
     onUpdateLastRead({
       surahNumber: currentSurah.number,
       ayahNumber: ayahNum,
@@ -392,6 +398,11 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   >
                     <Star className={`w-3.5 h-3.5 ${isFavoriteSurah ? 'fill-amber-500' : ''}`} />
                   </button>
+                )}
+                {isFavoriteReading && (
+                  <span className="text-[9.5px] font-bold text-amber-600 dark:text-amber-400 font-mono px-1.5 py-0.5 rounded-md bg-amber-500/10 shrink-0">
+                    Favorite
+                  </span>
                 )}
               </div>
               <span className="text-[11px] font-quran text-amber-600 dark:text-amber-400 block -mt-0.5">

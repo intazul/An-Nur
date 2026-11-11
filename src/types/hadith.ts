@@ -21,7 +21,7 @@ export interface HadithChapterTopic {
   description: string;
   primaryQuestion: string;
   defaultHadithCount: number;
-  sources: {
+  sources?: {
     book: 'bukhari' | 'muslim' | 'tirmidhi' | 'nawawi' | 'abudawud';
     bookName: string;
     sectionId?: number;

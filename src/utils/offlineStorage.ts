@@ -175,6 +175,21 @@ export function calculateStreak(): { currentStreak: number; bestStreak: number }
   return { currentStreak: streak || 1, bestStreak: Math.max(best, streak || 1) };
 }
 
+/**
+ * Returns past N days of Iman records (chronological from past to today)
+ */
+export function getPastDaysImanRecords(daysCount = 14): ImanDayRecord[] {
+  const records: ImanDayRecord[] = [];
+  const today = new Date();
+  for (let i = daysCount - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(today.getDate() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    records.push(loadImanRecord(key));
+  }
+  return records;
+}
+
 // OFFLINE SURAH & AUDIO CACHING
 export function getDownloadedSurahsList(): DownloadedSurahInfo[] {
   try {

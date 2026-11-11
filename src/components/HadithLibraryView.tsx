@@ -124,7 +124,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
   return (
     <div
-      className="flex-1 flex flex-col max-w-md w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full max-h-screen overflow-hidden select-none pb-1"
+      className="flex-1 flex flex-col max-w-xl sm:max-w-2xl w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full max-h-screen overflow-hidden select-none pb-2"
       style={{ touchAction: 'pan-x', overscrollBehavior: 'none' }}
     >
       {/* 1. App Bar Header */}

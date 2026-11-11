@@ -64,7 +64,7 @@ export const FluidCircle: React.FC<FluidCircleProps> = ({
       onClick={onTap}
       role="button"
       tabIndex={0}
-      title="Tap to view & log today's prayers"
+      title="Tap to open full Iman Level & Spiritual Analysis tab"
       className="relative flex flex-col items-center justify-center cursor-pointer select-none group"
       style={{ width: size, height: size }}
     >

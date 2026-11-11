@@ -94,24 +94,27 @@ export const CATEGORY_METADATA: Record<string, { arabic: string; icon: string; d
   },
 };
 
-// Fast index map by chapterTopicId
+// Fast index map by chapterTopicId and category counts in a single pass
 const CHAPTER_INDEX: Record<string, HadithQuestionRecord[]> = {};
+const CATEGORY_COUNTS: Record<string, number> = {};
+
 ALL_HADITH_QUESTIONS.forEach((q) => {
   if (!CHAPTER_INDEX[q.chapterTopicId]) {
     CHAPTER_INDEX[q.chapterTopicId] = [];
   }
   CHAPTER_INDEX[q.chapterTopicId].push(q);
+  CATEGORY_COUNTS[q.category] = (CATEGORY_COUNTS[q.category] || 0) + 1;
 });
 
 /**
- * Returns all 1,100+ questions
+ * Returns all 10,000+ questions
  */
 export function getAllHadithQuestions(): HadithQuestionRecord[] {
   return ALL_HADITH_QUESTIONS;
 }
 
 /**
- * Total count of offline questions (1,102)
+ * Total count of offline questions (10,200+)
  */
 export function getTotalHadithQuestionsCount(): number {
   return ALL_HADITH_QUESTIONS.length;
@@ -125,13 +128,13 @@ export function getQuestionsByChapterId(chapterId: string): HadithQuestionRecord
 }
 
 /**
- * Returns all broader categories with counts
+ * Returns all broader categories with counts (pre-computed O(1))
  */
 export function getBroaderCategoriesWithStats(): BroaderTopicStat[] {
   const activeCategories = HADITH_TOPIC_CATEGORIES.filter((c) => c !== 'All Topics');
   return activeCategories.map((cat) => {
     const subTopics = HADITH_CHAPTER_TOPICS.filter((c) => c.category === cat);
-    const questionsCount = ALL_HADITH_QUESTIONS.filter((q) => q.category === cat).length;
+    const questionsCount = CATEGORY_COUNTS[cat] || 0;
     const meta = CATEGORY_METADATA[cat] || { arabic: 'أحاديث نبوية', icon: '📖', description: '' };
     return {
       category: cat,
@@ -168,13 +171,16 @@ export function getSubTopicsWithStats(category: string = 'All Topics'): SubTopic
 }
 
 /**
- * Search across all 1,100+ questions and sub-topics offline
+ * Instant search across all 10,000+ questions and sub-topics offline with early break
  */
 export function searchHadithQuestionsOffline(query: string): HadithQuestionRecord[] {
-  if (!query.trim()) return [];
+  if (!query.trim() || query.trim().length < 2) return [];
   const q = query.toLowerCase().trim();
-  return ALL_HADITH_QUESTIONS.filter((item) => {
-    return (
+  const results: HadithQuestionRecord[] = [];
+
+  for (let i = 0; i < ALL_HADITH_QUESTIONS.length; i++) {
+    const item = ALL_HADITH_QUESTIONS[i];
+    if (
       item.question.toLowerCase().includes(q) ||
       item.subTopicTitle.toLowerCase().includes(q) ||
       item.textEnglish.toLowerCase().includes(q) ||
@@ -182,6 +188,11 @@ export function searchHadithQuestionsOffline(query: string): HadithQuestionRecor
       item.reference.toLowerCase().includes(q) ||
       item.category.toLowerCase().includes(q) ||
       item.textArabic.includes(q)
-    );
-  }).slice(0, 50);
+    ) {
+      results.push(item);
+      if (results.length >= 50) break;
+    }
+  }
+
+  return results;
 }
