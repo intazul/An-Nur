@@ -162,18 +162,18 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-1 px-3 py-1.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-bold shrink-0">
-            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-xs font-bold shrink-0">
+            <Star className="w-3.5 h-3.5 fill-current" />
             <span className="tabular-nums">{favoriteSurahs.length} Surahs</span>
           </div>
         </div>
       </header>
 
       {/* 2. Protection Notice Banner (Reassures the user that Continue Reading is isolated) */}
-      <div className="shrink-0 bg-stone-100/90 dark:bg-stone-900/90 border-b border-stone-200 dark:border-stone-800 px-4 py-2.5">
+      <div className="shrink-0 bg-stone-100 dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-4 py-2.5">
         <div className="max-w-2xl mx-auto flex items-start sm:items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 min-w-0">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 sm:mt-0" />
+            <ShieldCheck className="w-4 h-4 text-black dark:text-white shrink-0 mt-0.5 sm:mt-0" />
             <p className="text-stone-700 dark:text-stone-300 leading-snug">
               <span className="font-bold text-black dark:text-white">Bookmark Protected: </span>
               Reading any favorite Surah does not alter your main Continue Reading bookmark.
@@ -181,7 +181,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
           </div>
           {lastRead?.surahName && (
             <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-[11px] font-semibold text-stone-600 dark:text-stone-300 shrink-0">
-              <BookmarkCheck className="w-3 h-3 text-amber-500" />
+              <BookmarkCheck className="w-3 h-3 text-black dark:text-white" />
               <span>Continue at {lastRead.surahName}:{lastRead.ayahNumber || 1}</span>
             </div>
           )}
@@ -211,7 +211,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
         </div>
 
         {/* 3-Pill Balanced Segmented Control */}
-        <div className="grid grid-cols-3 gap-1 p-1 bg-stone-100/90 dark:bg-stone-900/90 rounded-2xl border border-stone-200/70 dark:border-stone-800/70 shadow-2xs">
+        <div className="grid grid-cols-3 gap-1 p-1 bg-stone-100 dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-2xs">
           <button
             onClick={() => setActiveTab('favorites')}
             className={`py-2 px-1 text-xs font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-1.5 ${
@@ -220,7 +220,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                 : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
             }`}
           >
-            <Star className={`w-3.5 h-3.5 ${activeTab === 'favorites' ? 'fill-current' : 'text-amber-500'}`} />
+            <Star className={`w-3.5 h-3.5 ${activeTab === 'favorites' ? 'fill-current' : ''}`} />
             <span className="truncate">Saved ({favoriteSurahs.length})</span>
           </button>
 
@@ -232,7 +232,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                 : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">Sunnah ({RECOMMENDED_PROPHETIC_SURAHS.length})</span>
           </button>
 
@@ -244,7 +244,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                 : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">All 114</span>
           </button>
         </div>
@@ -257,8 +257,8 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
           <div className="space-y-3 pb-8">
             {filteredFavorites.length === 0 ? (
               <div className="py-14 text-center px-4 rounded-3xl bg-stone-50 dark:bg-stone-900/50 border border-stone-200 dark:border-stone-800 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl">
-                  <Star className="w-6 h-6 fill-amber-500/20" />
+                <div className="w-12 h-12 rounded-2xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center mx-auto text-xl shadow-xs">
+                  <Star className="w-6 h-6 fill-current" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-black dark:text-white font-cinzel">
@@ -275,7 +275,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                     onClick={() => setActiveTab('recommended')}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold hover:opacity-90 transition-all shadow-xs"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <Sparkles className="w-3.5 h-3.5" />
                     <span>Browse Prophetic Sunnah Surahs</span>
                   </button>
                 )}
@@ -286,7 +286,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                 return (
                   <div
                     key={surah.number}
-                    className="p-4 rounded-3xl bg-stone-50/90 dark:bg-stone-900/60 border border-stone-200/90 dark:border-stone-800/80 shadow-xs hover:border-black dark:hover:border-stone-600 transition-all space-y-3 group"
+                    className="p-4 rounded-3xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 shadow-xs hover:border-black dark:hover:border-white transition-all space-y-3 group"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
@@ -311,21 +311,21 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                       </div>
 
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className="font-quran text-base font-bold text-amber-600 dark:text-amber-400" dir="rtl">
+                        <span className="font-quran text-base font-bold text-black dark:text-white" dir="rtl">
                           {surah.nameArabic}
                         </span>
                         <button
                           onClick={() => onToggleFavorite(surah.number)}
-                          className="p-1.5 rounded-xl text-amber-500 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
+                          className="p-1.5 rounded-xl text-black dark:text-white hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
                           title="Remove from favorites"
                         >
-                          <Star className="w-4 h-4 fill-amber-500" />
+                          <Star className="w-4 h-4 fill-current" />
                         </button>
                       </div>
                     </div>
 
                     {recData && (
-                      <p className="text-xs text-stone-600 dark:text-stone-300 italic bg-white dark:bg-stone-900 p-2.5 rounded-2xl border border-stone-200/70 dark:border-stone-800/70 leading-relaxed">
+                      <p className="text-xs text-stone-600 dark:text-stone-300 italic bg-white dark:bg-stone-900 p-2.5 rounded-2xl border border-stone-200 dark:border-stone-800 leading-relaxed">
                         "{recData.virtue}"
                       </p>
                     )}
@@ -343,7 +343,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
 
                       <button
                         onClick={() => onReciteSurah(surah.number)}
-                        className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-black dark:text-white text-xs font-bold hover:border-black dark:hover:border-stone-500 active:scale-98 transition-all shadow-2xs"
+                        className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-xs font-bold hover:opacity-90 active:scale-98 transition-all shadow-2xs"
                         title="Listen to beautiful audio recitation"
                       >
                         <Headphones className="w-3.5 h-3.5 stroke-[2.3]" />
@@ -360,12 +360,12 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
         {/* ===================== TAB 2: PROPHETIC SUNNAH SURAHS ===================== */}
         {activeTab === 'recommended' && (
           <div className="space-y-3 pb-8">
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 dark:text-amber-200 space-y-1">
-              <span className="font-bold flex items-center gap-1.5 font-cinzel text-amber-800 dark:text-amber-400">
+            <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs text-black dark:text-white space-y-1">
+              <span className="font-bold flex items-center gap-1.5 font-cinzel text-black dark:text-white">
                 <Sparkles className="w-3.5 h-3.5" />
                 Prophetic Virtues & Daily Sunnahs
               </span>
-              <p className="text-[11px] leading-relaxed opacity-90">
+              <p className="text-[11px] leading-relaxed text-stone-600 dark:text-stone-400">
                 These sacred Surahs hold specific Hadith virtues for protection, forgiveness, and light. Star them to add them to your personal favorites list.
               </p>
             </div>
@@ -378,7 +378,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
               return (
                 <div
                   key={rec.number}
-                  className="p-4 rounded-3xl bg-stone-50/90 dark:bg-stone-900/60 border border-stone-200/90 dark:border-stone-800/80 shadow-xs hover:border-black dark:hover:border-stone-600 transition-all space-y-3 group"
+                  className="p-4 rounded-3xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 shadow-xs hover:border-black dark:hover:border-white transition-all space-y-3 group"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
@@ -395,22 +395,22 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                             {surah.englishTranslation}
                           </span>
                         </div>
-                        <p className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 mt-0.5 truncate">
+                        <p className="text-[11px] font-semibold text-stone-600 dark:text-stone-300 mt-0.5 truncate">
                           {rec.bestTime} · {surah.numberOfAyahs} Verses
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="font-quran text-base font-bold text-amber-600 dark:text-amber-400" dir="rtl">
+                      <span className="font-quran text-base font-bold text-black dark:text-white" dir="rtl">
                         {surah.nameArabic}
                       </span>
                       <button
                         onClick={() => onToggleFavorite(surah.number)}
                         className={`p-2 rounded-xl border transition-all ${
                           isFav
-                            ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
-                            : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-400 hover:text-amber-500'
+                            ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
+                            : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-400 hover:text-black dark:hover:text-white'
                         }`}
                         title={isFav ? 'Remove from favorites' : 'Add to favorites'}
                       >
@@ -419,14 +419,14 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/70 dark:border-stone-800/70 space-y-1.5">
+                  <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-1.5">
                     <p className="text-xs text-stone-700 dark:text-stone-200 leading-relaxed font-medium">
                       "{rec.virtue}"
                     </p>
                     <div className="flex items-center justify-between text-[10px] text-stone-500 dark:text-stone-400 font-mono">
                       <span>Source: {rec.hadithSource}</span>
                       {isFav && (
-                        <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 font-sans">
+                        <span className="text-black dark:text-white font-bold flex items-center gap-1 font-sans">
                           <CheckCircle2 className="w-3 h-3" />
                           In Favorites
                         </span>
@@ -446,7 +446,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
 
                     <button
                       onClick={() => onReciteSurah(surah.number)}
-                      className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-black dark:text-white text-xs font-bold hover:border-black dark:hover:border-stone-500 active:scale-98 transition-all shadow-2xs"
+                      className="flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-xs font-bold hover:opacity-90 active:scale-98 transition-all shadow-2xs"
                       title="Listen audio recitation"
                     >
                       <Headphones className="w-3.5 h-3.5 stroke-[2.3]" />
@@ -467,13 +467,13 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
               return (
                 <div
                   key={surah.number}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-stone-50/90 dark:bg-stone-900/60 border border-stone-200/90 dark:border-stone-800/80 hover:border-black dark:hover:border-stone-600 transition-all text-xs"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-xs"
                 >
                   <div
                     onClick={() => onReadSurah(surah.number)}
                     className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer"
                   >
-                    <span className="w-7 h-7 rounded-xl bg-stone-200/80 dark:bg-stone-800 font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                    <span className="w-7 h-7 rounded-xl bg-stone-200 dark:bg-stone-800 font-mono font-bold text-xs flex items-center justify-center shrink-0">
                       {surah.number}
                     </span>
                     <div className="min-w-0 pr-2">
@@ -482,7 +482,7 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                           {surah.nameEnglish}
                         </span>
                         <span className="text-stone-400">·</span>
-                        <span className="font-quran text-amber-600 dark:text-amber-400 font-bold" dir="rtl">
+                        <span className="font-quran text-black dark:text-white font-bold" dir="rtl">
                           {surah.nameArabic}
                         </span>
                       </div>
@@ -495,14 +495,14 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={() => onReadSurah(surah.number)}
-                      className="p-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 transition-colors"
+                      className="p-1.5 rounded-xl bg-stone-200 dark:bg-stone-800 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-black dark:text-white transition-colors"
                       title="Read Surah"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => onReciteSurah(surah.number)}
-                      className="p-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 transition-colors"
+                      className="p-1.5 rounded-xl bg-stone-200 dark:bg-stone-800 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black text-black dark:text-white transition-colors"
                       title="Listen Recitation"
                     >
                       <Headphones className="w-3.5 h-3.5" />
@@ -511,8 +511,8 @@ export const FavoriteSurahsView: React.FC<FavoriteSurahsViewProps> = ({
                       onClick={() => onToggleFavorite(surah.number)}
                       className={`p-1.5 rounded-xl border transition-all ${
                         isFav
-                          ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
-                          : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-400 hover:text-amber-500'
+                          ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
+                          : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-400 hover:text-black dark:hover:text-white'
                       }`}
                       title={isFav ? 'Remove from favorites' : 'Add to favorites'}
                     >

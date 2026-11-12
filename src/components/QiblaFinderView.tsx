@@ -343,7 +343,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
         </button>
 
         <div className="text-center min-w-0">
-          <span className="text-[10px] uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-cinzel font-bold block">
+          <span className="text-[10px] uppercase tracking-widest text-black dark:text-white font-cinzel font-bold block">
             Sacred Direction
           </span>
           <h1 className="text-base font-bold text-stone-900 dark:text-stone-100 font-cinzel leading-none">
@@ -357,7 +357,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
           disabled={gpsLoading}
           className={`p-2 -mr-2 rounded-xl transition-all ${
             isUsingLiveGps
-              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10'
+              ? 'bg-black text-white dark:bg-white dark:text-black'
               : 'text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-900'
           }`}
           title="Detect Live Device GPS Location"
@@ -365,7 +365,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
         >
           <LocateFixed
             className={`w-5 h-5 ${
-              gpsLoading ? 'animate-spin text-emerald-500' : isUsingLiveGps ? 'stroke-[2.5]' : ''
+              gpsLoading ? 'animate-spin' : isUsingLiveGps ? 'stroke-[2.5]' : ''
             }`}
           />
         </button>
@@ -379,7 +379,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
               onClick={() => setShowCityPicker(true)}
               className="flex items-center gap-1.5 min-w-0 text-left hover:opacity-80 transition-opacity"
             >
-              <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 stroke-[2.2]" />
+              <MapPin className="w-4 h-4 text-black dark:text-white shrink-0 stroke-[2.2]" />
               <div className="min-w-0">
                 <span className="font-bold text-stone-950 dark:text-stone-50 truncate block text-xs">
                   {locationTitle}
@@ -398,7 +398,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
           <div className="pt-2 border-t border-stone-100 dark:border-stone-800/80 flex items-center justify-between text-[11.5px]">
             <div className="flex items-center gap-1">
               <span className="text-stone-500">Qibla:</span>
-              <strong className="text-emerald-700 dark:text-emerald-400 font-bold font-mono text-xs">
+              <strong className="text-black dark:text-white font-bold font-mono text-xs">
                 {qiblaBearing}° from North
               </strong>
             </div>
@@ -414,14 +414,8 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
 
         {/* Live GPS Feedback message */}
         {gpsStatusMessage && (
-          <div
-            className={`p-2.5 rounded-xl text-xs flex items-start gap-2 ${
-              isUsingLiveGps
-                ? 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border border-emerald-500/20'
-                : 'bg-amber-500/10 text-amber-900 dark:text-amber-300 border border-amber-500/20'
-            }`}
-          >
-            <Radio className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600 dark:text-emerald-400" />
+          <div className="p-2.5 rounded-xl text-xs flex items-start gap-2 bg-stone-100 dark:bg-stone-900 text-stone-800 dark:text-stone-200 border border-stone-200 dark:border-stone-800">
+            <Radio className="w-4 h-4 shrink-0 mt-0.5 text-black dark:text-white" />
             <div className="flex-1 text-[11px] leading-relaxed">
               <span>{gpsStatusMessage}</span>
             </div>
@@ -430,8 +424,8 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
 
         {/* iOS Orientation Permission Trigger if required */}
         {requiresPermission && (
-          <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-2">
-            <span className="text-xs text-amber-900 dark:text-amber-300 font-medium">
+          <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-300 dark:border-stone-700 flex items-center justify-between gap-2">
+            <span className="text-xs text-black dark:text-white font-medium">
               Enable iPhone/iPad compass sensor
             </span>
             <button
@@ -448,10 +442,11 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
       <div className="flex-1 flex flex-col items-center justify-center py-4">
         <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
           {/* Luminous Emerald Aura when accurately aligned with the Kaaba */}
+          {/* Luminous Monochrome Aura when accurately aligned with the Kaaba */}
           <div
             className={`absolute inset-0 rounded-full transition-all duration-700 ease-out ${
               isAligned
-                ? 'bg-emerald-500/25 shadow-[0_0_60px_rgba(16,185,129,0.45)] scale-105'
+                ? 'bg-black/10 dark:bg-white/20 shadow-[0_0_50px_rgba(255,255,255,0.4)] scale-105'
                 : 'bg-transparent shadow-none scale-100'
             }`}
           />
@@ -465,7 +460,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
             }}
           >
             {/* Cardinal Directions */}
-            <span className="absolute top-2.5 font-bold font-cinzel text-xs text-red-600 tracking-wider">
+            <span className="absolute top-2.5 font-bold font-cinzel text-xs text-black dark:text-white underline tracking-wider">
               N
             </span>
             <span className="absolute right-3.5 font-bold font-cinzel text-xs text-stone-400">
@@ -496,7 +491,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
             ))}
           </div>
 
-          {/* Precise Golden Kaaba Needle pointing toward Qibla */}
+          {/* Precise Kaaba Needle pointing toward Qibla */}
           <div
             className="absolute inset-0 flex items-center justify-center pointer-events-none will-change-transform"
             style={{
@@ -506,12 +501,12 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
           >
             {/* Pointer toward Kaaba with distance and emblem */}
             <div className="relative flex flex-col items-center -top-12 sm:-top-14">
-              {/* Kaaba Golden Icon Emblem */}
+              {/* Kaaba Icon Emblem */}
               <div
                 className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shadow-lg border-2 transition-all ${
                   isAligned
-                    ? 'bg-black text-amber-300 border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.6)] scale-110'
-                    : 'bg-stone-900 text-amber-400 border-amber-400/80'
+                    ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xl scale-110'
+                    : 'bg-stone-900 text-white dark:bg-stone-100 dark:text-black border-stone-700 dark:border-stone-300'
                 }`}
               >
                 🕋
@@ -519,13 +514,13 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
               {/* Arrow Triangle pointing up */}
               <div
                 className={`w-0 h-0 border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-b-[16px] -mt-1 ${
-                  isAligned ? 'border-b-emerald-500' : 'border-b-amber-500'
+                  isAligned ? 'border-b-black dark:border-b-white' : 'border-b-stone-600 dark:border-b-stone-300'
                 }`}
               />
             </div>
 
             {/* Central Dial Pivot */}
-            <div className="w-8 h-8 rounded-full bg-stone-950 dark:bg-white text-white dark:text-stone-950 border-2 border-amber-400 shadow-md flex items-center justify-center font-bold text-xs select-none">
+            <div className="w-8 h-8 rounded-full bg-black text-white dark:bg-white dark:text-black border-2 border-black dark:border-white shadow-md flex items-center justify-center font-bold text-xs select-none">
               ن
             </div>
           </div>
@@ -533,13 +528,13 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
           {/* Center Status Feedback */}
           <div className="absolute -bottom-8 flex flex-col items-center">
             {isAligned ? (
-              <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 text-white rounded-full text-xs font-bold shadow-lg animate-bounce">
-                <CheckCircle2 className="w-4 h-4 fill-white text-emerald-700" />
-                <span>Facing the Kaaba! ✨</span>
+              <div className="flex items-center gap-1.5 px-3.5 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-full text-xs font-bold border border-black dark:border-white shadow-lg animate-bounce">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Facing the Kaaba!</span>
               </div>
             ) : (
               <div className="flex items-center gap-1 px-3 py-1 bg-stone-100 dark:bg-stone-800 rounded-full border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 text-[11px] font-semibold">
-                <Compass className="w-3.5 h-3.5 text-amber-500 animate-spin" style={{ animationDuration: '6s' }} />
+                <Compass className="w-3.5 h-3.5 text-black dark:text-white animate-spin" style={{ animationDuration: '6s' }} />
                 <span>Turn until the Kaaba needle points up</span>
               </div>
             )}
@@ -568,9 +563,9 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
         {/* Primary Action 2: Choose Country / City (India & Worldwide) */}
         <button
           onClick={() => setShowCityPicker(true)}
-          className="w-full h-11 rounded-2xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-stone-900 dark:text-stone-100 font-semibold text-xs flex items-center justify-center gap-2 shadow-2xs hover:bg-stone-100 dark:hover:bg-stone-800 active:scale-[0.98] transition-all"
+          className="w-full h-11 rounded-2xl bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white font-bold text-xs flex items-center justify-center gap-2 shadow-2xs active:scale-[0.98] transition-all"
         >
-          <Globe2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <Globe2 className="w-4 h-4 text-black dark:text-white" />
           <span>Select City Preset (All Countries & India)</span>
         </button>
 

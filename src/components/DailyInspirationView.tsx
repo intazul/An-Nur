@@ -286,22 +286,22 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
           className="p-2 -mr-1 rounded-xl bg-black text-white dark:bg-white dark:text-black transition-all active:scale-95 shadow-2xs"
           title="Copy Today's Wisdom"
         >
-          {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-4 h-4 text-black dark:text-white" /> : <Copy className="w-4 h-4" />}
         </button>
       </div>
 
       {/* 2. Well-Animated Spiritual Reflection Progress Ring Banner */}
-      <div className="my-3 p-4 rounded-3xl bg-linear-to-b from-stone-900 to-black text-white border-2 border-amber-500/30 shadow-xl flex items-center justify-between gap-3">
+      <div className="my-3 p-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black border-2 border-black dark:border-white shadow-xl flex items-center justify-between gap-3">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400">
+          <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">
             Contemplation Radiance
           </span>
           <h3 className="text-lg font-bold font-cinzel">
             {reflectionPercent === 100
-              ? 'Heart Fully Illuminated ✨'
+              ? 'Heart Fully Illuminated'
               : 'Daily Spiritual Reflection'}
           </h3>
-          <p className="text-xs text-stone-300">
+          <p className="text-xs opacity-90">
             {reflectionPercent === 100
               ? 'All daily reflections and journal thoughts recorded.'
               : 'Complete reading the Ayah, Hadith & write your insight.'}
@@ -316,23 +316,21 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               cy="50%"
               r={ringRadius}
               fill="none"
-              stroke="#292524"
+              stroke="currentColor"
               strokeWidth="7"
+              className="opacity-20"
             />
             <circle
               cx="50%"
               cy="50%"
               r={ringRadius}
               fill="none"
-              stroke="#fbbf24"
+              stroke="currentColor"
               strokeWidth="8"
               strokeDasharray={ringCircumference}
               strokeDashoffset={ringOffset}
               strokeLinecap="round"
               className="transition-all duration-500 ease-out"
-              style={{
-                filter: 'drop-shadow(0px 0px 6px rgba(251, 191, 36, 0.5))',
-              }}
             />
           </svg>
           <span className="absolute font-bold text-sm font-cinzel tabular-nums">
@@ -380,7 +378,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
           {/* Card 1: Ayah of the Day */}
           <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-800 shadow-md space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 text-[10px]">
+              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-black dark:text-white text-[10px]">
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>Ayah of the Day • {inspirations.ayah.theme}</span>
               </span>
@@ -394,7 +392,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                 }}
                 className={`flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full transition-all ${
                   readAyah
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
                     : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:text-black dark:hover:text-white'
                 }`}
               >
@@ -404,7 +402,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
             </div>
 
             <p
-              className="font-quran text-2xl sm:text-3xl text-black dark:text-amber-200 leading-relaxed font-bold text-right pt-1"
+              className="font-quran text-2xl sm:text-3xl text-black dark:text-white leading-relaxed font-bold text-right pt-1"
               dir="rtl"
             >
               {inspirations.ayah.arabicText}
@@ -415,7 +413,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
             </p>
 
             <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
-              <span className="font-bold text-amber-600 dark:text-amber-400">
+              <span className="font-bold text-black dark:text-white">
                 {inspirations.ayah.reference}
               </span>
               <button
@@ -431,7 +429,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
           {/* Card 2: Hadith of the Day */}
           <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-800 shadow-md space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 text-[10px]">
+              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-black dark:text-white text-[10px]">
                 <Quote className="w-3.5 h-3.5" />
                 <span>Sahih Hadith • {inspirations.hadith.theme}</span>
               </span>
@@ -445,7 +443,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                 }}
                 className={`flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full transition-all ${
                   readHadith
-                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
                     : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:text-black dark:hover:text-white'
                 }`}
               >
@@ -455,7 +453,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
             </div>
 
             <p
-              className="font-quran text-2xl text-black dark:text-stone-100 leading-relaxed font-bold text-right pt-1"
+              className="font-quran text-2xl text-black dark:text-white leading-relaxed font-bold text-right pt-1"
               dir="rtl"
             >
               {inspirations.hadith.arabicText}
@@ -466,7 +464,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
             </p>
 
             <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="font-bold text-black dark:text-white">
                 {inspirations.hadith.reference}
               </span>
               <button
@@ -486,7 +484,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
           {/* Detailed Exegesis Breakdown */}
           <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
             <h3 className="text-sm font-bold text-black dark:text-white font-cinzel flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Sparkles className="w-4 h-4 text-black dark:text-white" />
               <span>Deep Linguistic Exegesis</span>
             </h3>
             <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
@@ -494,7 +492,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
             </p>
 
             <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-2 text-xs">
-              <span className="font-bold uppercase tracking-wider text-[10px] text-amber-600 dark:text-amber-400 block">
+              <span className="font-bold uppercase tracking-wider text-[10px] text-black dark:text-white block">
                 Quranic Linguistic Nuance
               </span>
               <p className="text-stone-700 dark:text-stone-300 leading-relaxed">
@@ -511,8 +509,8 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
             <div className="grid grid-cols-3 gap-2 text-xs">
               {[
                 { id: 'obsidian' as const, label: 'Obsidian Night' },
-                { id: 'emerald' as const, label: 'Deep Emerald' },
-                { id: 'gold' as const, label: 'Royal Gold' },
+                { id: 'emerald' as const, label: 'Charcoal Deep' },
+                { id: 'gold' as const, label: 'Monochrome Luxe' },
               ].map((th) => (
                 <button
                   key={th.id}
@@ -536,7 +534,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
           {/* Note Input */}
           <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
             <h3 className="text-sm font-bold text-black dark:text-white font-cinzel flex items-center gap-2">
-              <PenLine className="w-4 h-4 text-emerald-500" />
+              <PenLine className="w-4 h-4 text-black dark:text-white" />
               <span>Record Personal Spiritual Insight</span>
             </h3>
 
@@ -561,7 +559,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               value={journalNote}
               onChange={(e) => setJournalNote(e.target.value)}
               placeholder="What did today's verse awaken in your soul? Note a moment of gratitude or a private prayer..."
-              className="w-full h-28 p-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-black dark:text-white placeholder:text-stone-400 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full h-28 p-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-black dark:text-white placeholder:text-stone-400 text-xs focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
             />
 
             <button
@@ -588,7 +586,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                   >
                     <div className="flex items-center justify-between text-[10px] text-stone-400 font-bold">
                       <span>{e.date}</span>
-                      <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-700 dark:text-amber-300">
+                      <span className="px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black font-bold">
                         {e.mood}
                       </span>
                     </div>

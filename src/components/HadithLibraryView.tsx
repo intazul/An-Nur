@@ -151,10 +151,10 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
         {/* PRIMARY "START HADITH JOURNEY" BUTTON INSIDE HADITH READING */}
         <button
           onClick={onStartJourney}
-          className="py-1.5 px-3 rounded-xl bg-gradient-to-r from-stone-900 via-black to-stone-900 text-white hover:opacity-95 dark:from-stone-100 dark:via-white dark:to-stone-100 dark:text-black font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 shrink-0 border border-stone-700/60 dark:border-stone-300"
+          className="py-1.5 px-3 rounded-xl bg-black text-white hover:opacity-95 dark:bg-white dark:text-black font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all active:scale-95 shrink-0 border border-black dark:border-white"
           title="Start Questions-Based Hadith Journey"
         >
-          <Compass className="w-3.5 h-3.5 text-amber-400 dark:text-amber-600 stroke-[2.5]" />
+          <Compass className="w-3.5 h-3.5 text-white dark:text-black stroke-[2.5]" />
           <span className="tracking-tight">Hadith Journey</span>
         </button>
       </header>
@@ -169,7 +169,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             onClick={() => setShowBookCoverModal(true)}
             className="text-stone-700 dark:text-stone-300 font-bold hover:underline flex items-center gap-1 text-[10.5px]"
           >
-            <Info className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+            <Info className="w-3 h-3 text-black dark:text-white" />
             <span>Book Cover & Info</span>
           </button>
         </div>
@@ -227,7 +227,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
                   {currentHadith.bookName}
                 </span>
                 <span className="text-stone-400">·</span>
-                <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400 truncate">
+                <span className="text-[11px] font-bold text-black dark:text-white truncate">
                   {currentHadith.categoryLabel}
                 </span>
               </div>
@@ -238,7 +238,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
                 className="px-2.5 py-1 rounded-xl bg-black text-white dark:bg-white dark:text-black font-cinzel text-[11px] font-bold flex items-center gap-1 shadow-2xs hover:opacity-90 active:scale-95 transition-all shrink-0"
                 title="Click to view verified source & transmission chain"
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 dark:text-emerald-600" />
+                <ShieldCheck className="w-3.5 h-3.5 text-white dark:text-black" />
                 <span>{currentHadith.reference}</span>
               </button>
             </div>
@@ -250,7 +250,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
                 <span>
                   Narrated by: <strong className="text-black dark:text-white font-bold">{currentHadith.narrator}</strong>
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-bold text-[9.5px]">
+                <span className="px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black font-bold text-[9.5px]">
                   صحيح · Authentic
                 </span>
               </div>
@@ -275,7 +275,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
               <div className="pt-1 text-center">
                 <button
                   onClick={() => setActiveReferenceHadith(currentHadith)}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 dark:text-amber-400 hover:underline"
+                  className="inline-flex items-center gap-1 text-[11px] font-bold text-black dark:text-white hover:underline"
                 >
                   <span>Verification: {currentHadith.reference} ({currentHadith.bookName})</span>
                   <Info className="w-3.5 h-3.5" />
@@ -315,7 +315,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
               className="p-2.5 rounded-2xl border-2 border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 font-bold transition-all active:scale-95 shadow-xs"
               title="Copy Hadith"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-4 h-4 text-black dark:text-white" /> : <Copy className="w-4 h-4" />}
             </button>
 
             <button
@@ -345,7 +345,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
                 {activeBook.authenticity}
               </span>
               <h2 className="text-xl font-bold font-cinzel">{activeBook.nameEnglish}</h2>
-              <p className="font-quran text-lg text-amber-200 font-bold" dir="rtl">
+              <p className="font-quran text-lg text-white font-bold" dir="rtl">
                 {activeBook.nameArabic}
               </p>
               <p className="text-xs text-stone-300 font-medium pt-1">

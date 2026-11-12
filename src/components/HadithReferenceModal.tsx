@@ -47,7 +47,7 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
         <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between shrink-0 bg-stone-50 dark:bg-stone-900/80">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-8 h-8 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold shadow-xs">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <ShieldCheck className="w-4 h-4 text-white dark:text-black" />
             </div>
             <div className="min-w-0">
               <h3 className="text-sm font-bold text-black dark:text-white font-cinzel truncate">
@@ -71,19 +71,19 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
         {/* Modal Body */}
         <div className="p-4 overflow-y-auto space-y-3.5 text-xs">
           {/* Authenticity Grade Badge */}
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-black dark:text-white" />
               <div>
-                <span className="font-bold text-emerald-800 dark:text-emerald-300 block text-[11px]">
+                <span className="font-bold text-black dark:text-white block text-[11px]">
                   Canonical Authenticity Grade:
                 </span>
-                <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                <span className="font-mono text-xs font-bold text-black dark:text-white">
                   {hadith.grade}
                 </span>
               </div>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold text-[10px]">
+            <span className="px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black font-bold text-[10px]">
               صحيح
             </span>
           </div>
@@ -157,7 +157,7 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
           >
             {copied ? (
               <>
-                <Check className="w-3.5 h-3.5 text-emerald-500" />
+                <Check className="w-3.5 h-3.5 text-black dark:text-white" />
                 <span>Copied Reference</span>
               </>
             ) : (

@@ -393,19 +393,19 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 {currentSurah && (
                   <button
                     onClick={() => onToggleFavoriteSurah(currentSurah.number)}
-                    className="p-0.5 text-amber-500 hover:scale-110 transition-transform"
+                    className="p-0.5 text-black dark:text-white hover:scale-110 transition-transform"
                     title={isFavoriteSurah ? 'Remove from favorites' : 'Add to favorite Surahs'}
                   >
-                    <Star className={`w-3.5 h-3.5 ${isFavoriteSurah ? 'fill-amber-500' : ''}`} />
+                    <Star className={`w-3.5 h-3.5 ${isFavoriteSurah ? 'fill-current' : ''}`} />
                   </button>
                 )}
                 {isFavoriteReading && (
-                  <span className="text-[9.5px] font-bold text-amber-600 dark:text-amber-400 font-mono px-1.5 py-0.5 rounded-md bg-amber-500/10 shrink-0">
+                  <span className="text-[9.5px] font-bold text-black dark:text-white font-mono px-1.5 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 shrink-0">
                     Favorite
                   </span>
                 )}
               </div>
-              <span className="text-[11px] font-quran text-amber-600 dark:text-amber-400 block -mt-0.5">
+              <span className="text-[11px] font-quran text-black dark:text-white block -mt-0.5">
                 {currentSurah?.nameArabic}
               </span>
             </div>
@@ -517,7 +517,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             disabled={isDownloading}
             className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[10.5px] font-bold transition-colors ${
               isDownloaded
-                ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
                 : 'bg-stone-50 dark:bg-stone-800 text-black dark:text-white border-stone-200 dark:border-stone-700'
             }`}
             title={isDownloaded ? 'Downloaded for offline reading' : 'Download this Surah offline'}
@@ -525,7 +525,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             {isDownloading ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
             ) : isDownloaded ? (
-              <Check className="w-3.5 h-3.5 text-emerald-600" />
+              <Check className="w-3.5 h-3.5 text-white dark:text-black" />
             ) : (
               <Download className="w-3.5 h-3.5" />
             )}
@@ -537,7 +537,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
       {/* 3. Loading State */}
       {isLoading && (
         <div className="flex-1 flex flex-col items-center justify-center space-y-2 py-12">
-          <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-black dark:text-white" />
           <p className="text-xs text-stone-600 dark:text-stone-400 font-bold">Loading Sacred Verses...</p>
         </div>
       )}
@@ -567,7 +567,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   {currentSurah.number}. {currentSurah.nameEnglish}
                 </span>
                 <span className="text-stone-400">·</span>
-                <span className="font-cinzel text-[11px] text-amber-700 dark:text-amber-400 font-bold truncate">
+                <span className="font-cinzel text-[11px] text-black dark:text-white font-bold truncate">
                   {currentThematicPage.fromAyah === currentThematicPage.toAyah
                     ? `Ayah ${currentThematicPage.fromAyah}`
                     : `Ayahs ${currentThematicPage.fromAyah}–${currentThematicPage.toAyah}`}
@@ -585,7 +585,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   title="Play recitation for this page"
                 >
                   {isPlayingAudio && activePlayingAyah && activePlayingAyah >= currentThematicPage.fromAyah && activePlayingAyah <= currentThematicPage.toAyah ? (
-                    <Pause className="w-3.5 h-3.5 text-amber-500" />
+                    <Pause className="w-3.5 h-3.5 text-black dark:text-white" />
                   ) : (
                     <Play className="w-3.5 h-3.5" />
                   )}
@@ -607,7 +607,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               {/* Bismillah on First Page of Surah */}
               {currentParagraphIndex === 0 && currentSurah.bismillahPre && (
                 <div className="text-center shrink-0 pb-1">
-                  <p className={`font-quran text-sm sm:text-base text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
+                  <p className={`font-quran text-sm sm:text-base text-black dark:text-white ${getGlowClass()}`}>
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                   </p>
                 </div>
@@ -627,8 +627,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   </div>
 
                   {/* Specific Reflective Question for this Section */}
-                  <div className="px-2.5 py-1 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/20 text-center shrink-0">
-                    <span className="text-[9px] font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider block mb-0.5">
+                  <div className="px-2.5 py-1 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-center shrink-0">
+                    <span className="text-[9px] font-bold text-black dark:text-white uppercase tracking-wider block mb-0.5">
                       Reflective Inquiry
                     </span>
                     <p className="font-serif italic text-[11px] sm:text-xs text-stone-800 dark:text-stone-200 leading-snug">
@@ -653,7 +653,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                             onOpenTafsir(ayah);
                           }}
                           className={`inline cursor-pointer transition-all rounded px-1 ${
-                            isPlayingThis ? 'bg-amber-400/25 ring-2 ring-amber-500 rounded-md' : 'hover:bg-amber-500/10'
+                            isPlayingThis ? 'bg-stone-200 dark:bg-stone-800 ring-2 ring-black dark:ring-white rounded-md' : 'hover:bg-stone-100 dark:hover:bg-stone-800'
                           }`}
                           title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
                         >
@@ -687,7 +687,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                             </span>
                           )}
 
-                          <span className="inline-block text-amber-700 dark:text-amber-400 font-cinzel text-xs font-bold mx-0.5 select-none">
+                          <span className="inline-block text-black dark:text-white font-cinzel text-xs font-bold mx-0.5 select-none">
                             ۝ {ayah.numberInSurah}
                           </span>
                           {' '}
@@ -710,8 +710,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                             }}
                             className={`inline cursor-pointer transition-all rounded px-0.5 ${
                               isPlayingThis
-                                ? 'bg-amber-400/20 font-semibold ring-1 ring-amber-500 rounded'
-                                : 'hover:bg-amber-500/10'
+                                ? 'bg-stone-200 dark:bg-stone-800 font-semibold ring-1 ring-black dark:ring-white rounded'
+                                : 'hover:bg-stone-100 dark:hover:bg-stone-800'
                             }`}
                             title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
                           >
@@ -733,7 +733,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     >
                       {paragraph.ayahs.map((ayah) => (
                         <span key={ayah.numberInSurah} className="inline ml-1">
-                          <span className="font-sans text-[11px] font-bold text-amber-700 dark:text-amber-400 ml-0.5">
+                          <span className="font-sans text-[11px] font-bold text-black dark:text-white ml-0.5">
                             ({ayah.numberInSurah})
                           </span>
                           <span>{ayah.textUrdu} </span>
@@ -799,7 +799,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           {/* Authentically framed physical Mushaf Page */}
           <div
             onAnimationEnd={() => setFlipAnimation('none')}
-            className={`flex-1 min-h-0 flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-amber-600/30 dark:border-amber-500/30 shadow-md text-right overflow-hidden ${
+            className={`flex-1 min-h-0 flex flex-col justify-between p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-800 shadow-md text-right overflow-hidden ${
               flipAnimation === 'next'
                 ? 'animate-mushaf-flip-next'
                 : flipAnimation === 'prev'
@@ -808,9 +808,9 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             }`}
           >
             {/* Page Header */}
-            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-amber-600/20 dark:border-amber-500/20 text-xs shrink-0">
+            <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-stone-200 dark:border-stone-800 text-xs shrink-0">
               <div className="flex items-center gap-1.5">
-                <span className="font-cinzel text-[11px] font-bold text-amber-800 dark:text-amber-300">
+                <span className="font-cinzel text-[11px] font-bold text-black dark:text-white">
                   Juz {currentJuz}
                 </span>
                 <span className="text-stone-400">·</span>
@@ -819,7 +819,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 </span>
               </div>
 
-              <span className="font-quran text-sm font-bold text-amber-700 dark:text-amber-300">
+              <span className="font-quran text-sm font-bold text-black dark:text-white">
                 سُورَةُ {currentSurah.nameArabic}
               </span>
             </div>
@@ -827,7 +827,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             {/* Bismillah on Page 1 if applicable */}
             {currentPageIndex === 0 && currentSurah.bismillahPre && (
               <div className="text-center py-0.5 shrink-0">
-                <p className={`font-quran text-base sm:text-lg text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
+                <p className={`font-quran text-base sm:text-lg text-black dark:text-white ${getGlowClass()}`}>
                   بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
               </div>
@@ -854,10 +854,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                       }}
                       className={`inline transition-all rounded-md cursor-pointer px-1 py-0.5 ${
                         isPlayingThis
-                          ? 'bg-amber-500/20 text-amber-950 dark:text-amber-100 ring-2 ring-amber-500'
+                          ? 'bg-stone-200 dark:bg-stone-800 ring-2 ring-black dark:ring-white'
                           : isSelected
                           ? 'bg-stone-200/70 dark:bg-stone-800'
-                          : 'hover:bg-amber-500/10'
+                          : 'hover:bg-stone-100 dark:hover:bg-stone-800'
                       }`}
                     >
                       <span
@@ -893,7 +893,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
                       {/* Ayah End Emblem */}
                       <span
-                        className="inline-block text-amber-700 dark:text-amber-400 font-cinzel text-xs font-bold mx-1 select-none"
+                        className="inline-block text-black dark:text-white font-cinzel text-xs font-bold mx-1 select-none"
                         title={`Ayah ${ayah.numberInSurah}`}
                       >
                         ۝ {ayah.numberInSurah}
@@ -906,12 +906,12 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             </div>
 
             {/* Page Bottom Details */}
-            <div className="pt-1.5 mt-1 border-t border-amber-600/20 dark:border-amber-500/20 flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 shrink-0">
+            <div className="pt-1.5 mt-1 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs text-stone-600 dark:text-stone-400 shrink-0">
               <span className="text-[11px] font-medium">
                 Ayahs {currentPageAyahs[0]?.numberInSurah}–
                 {currentPageAyahs[currentPageAyahs.length - 1]?.numberInSurah}
               </span>
-              <div className="w-5 h-5 rounded-full border border-amber-600/40 dark:border-amber-500/40 flex items-center justify-center font-cinzel text-[11px] font-bold text-amber-700 dark:text-amber-300">
+              <div className="w-5 h-5 rounded-full border border-stone-300 dark:border-stone-700 flex items-center justify-center font-cinzel text-[11px] font-bold text-black dark:text-white">
                 {currentPageIndex + 1}
               </div>
             </div>
@@ -1007,7 +1007,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     }
                     className={`flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-lg transition-colors ${
                       expandedHadithAyah === activeVerseAyah.numberInSurah
-                        ? 'bg-amber-500 text-white'
+                        ? 'bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white shadow-2xs'
                         : 'bg-stone-100 dark:bg-stone-800 text-black dark:text-white border border-stone-300 dark:border-stone-700'
                     }`}
                     title="View Authenticated Prophetic Hadith"
@@ -1027,7 +1027,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   title="Play recitation"
                 >
                   {isPlayingAudio && activePlayingAyah === activeVerseAyah.numberInSurah ? (
-                    <Pause className="w-4 h-4 text-amber-500" />
+                    <Pause className="w-4 h-4 text-black dark:text-white" />
                   ) : (
                     <Play className="w-4 h-4" />
                   )}
@@ -1036,7 +1036,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 {/* Bookmark */}
                 <button
                   onClick={() => onAddBookmark(activeVerseAyah.numberInSurah, 0)}
-                  className="p-1.5 text-black dark:text-white hover:text-amber-500 rounded-lg transition-colors"
+                  className="p-1.5 text-black dark:text-white hover:opacity-70 rounded-lg transition-colors"
                   title="Bookmark verse"
                 >
                   <Bookmark className="w-4 h-4" />
@@ -1048,7 +1048,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             <div className="flex-1 min-h-0 flex flex-col justify-start py-1 space-y-3 overflow-y-auto overscroll-contain px-1 scrollbar-thin">
               {currentCardIndex === 0 && currentSurah.bismillahPre && (
                 <div className="text-center shrink-0">
-                  <p className={`font-quran text-base sm:text-lg text-amber-900 dark:text-amber-200 ${getGlowClass()}`}>
+                  <p className={`font-quran text-base sm:text-lg text-black dark:text-white ${getGlowClass()}`}>
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                   </p>
                 </div>
@@ -1063,7 +1063,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   style={{ fontSize: `${Math.max(26, profile.arabicFontSize)}px` }}
                 >
                   {activeVerseAyah.textArabic}
-                  <span className="inline-block mr-2 text-amber-600 dark:text-amber-400 font-cinzel text-base select-none">
+                  <span className="inline-block mr-2 text-black dark:text-white font-cinzel text-base select-none">
                     ۝ {activeVerseAyah.numberInSurah}
                   </span>
                 </p>
@@ -1092,8 +1092,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
               {/* Expandable Related Hadith */}
               {expandedHadithAyah === activeVerseAyah.numberInSurah && activeHadith && (
-                <div className="p-2.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 space-y-1 text-xs shrink-0 animate-in fade-in">
-                  <div className="flex items-center justify-between text-amber-800 dark:text-amber-300 font-bold">
+                <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-300 dark:border-stone-700 space-y-1 text-xs shrink-0 animate-in fade-in">
+                  <div className="flex items-center justify-between text-black dark:text-white font-bold">
                     <div className="flex items-center gap-1.5">
                       <Quote className="w-3.5 h-3.5" />
                       <span>Authentic Prophetic Hadith:</span>
@@ -1105,7 +1105,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     "{activeHadith.textEnglish}"
                   </p>
 
-                  <div className="p-1 rounded-lg bg-white/80 dark:bg-stone-900/80 text-[10.5px] text-amber-900 dark:text-amber-200">
+                  <div className="p-1 rounded-lg bg-white dark:bg-black border border-stone-200 dark:border-stone-800 text-[10.5px] text-stone-900 dark:text-stone-200">
                     <strong>Connection to Verse:</strong> {activeHadith.relevance}
                   </div>
                 </div>
@@ -1159,7 +1159,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
       {activePlayingAyah && (
         <div className="shrink-0 max-w-md mx-auto w-full p-2 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 shadow-xl flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
-            <Volume2 className="w-4 h-4 text-amber-500 shrink-0" />
+            <Volume2 className="w-4 h-4 text-black dark:text-white shrink-0" />
             <div className="min-w-0">
               <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 truncate">
                 <span>Reciting Ayah {activePlayingAyah}</span>

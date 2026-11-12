@@ -69,13 +69,13 @@ export const FluidCircle: React.FC<FluidCircleProps> = ({
       style={{ width: size, height: size }}
     >
       {/* Outer subtle halo ring */}
-      <div className="absolute inset-0 rounded-full border-2 border-emerald-500/20 dark:border-emerald-400/25 shadow-xl transition-all duration-300 group-hover:scale-105" />
+      <div className="absolute inset-0 rounded-full border-2 border-black/20 dark:border-white/30 shadow-xl transition-all duration-300 group-hover:scale-105" />
 
       {/* SVG Liquid Container */}
       <svg
         width={size}
         height={size}
-        className="rounded-full shadow-inner overflow-hidden"
+        className="rounded-full shadow-inner overflow-hidden border border-black/10 dark:border-white/20"
         style={{ borderRadius: '50%' }}
       >
         <defs>
@@ -83,33 +83,45 @@ export const FluidCircle: React.FC<FluidCircleProps> = ({
             <circle cx={size / 2} cy={size / 2} r={size / 2 - 3} />
           </clipPath>
 
-          {/* Liquid Emerald-to-Gold Gradient */}
-          <linearGradient id="fluid-grad-primary" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.85" />
-            <stop offset="60%" stopColor="#059669" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#047857" stopOpacity="1" />
+          {/* Monochrome Dark Mode Waves: Pure White / Silver */}
+          <linearGradient id="fluid-grad-primary-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0.88" />
+          </linearGradient>
+          <linearGradient id="fluid-grad-secondary-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0.35" />
           </linearGradient>
 
-          <linearGradient id="fluid-grad-secondary" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#34d399" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#065f46" stopOpacity="0.75" />
+          {/* Monochrome Light Mode Waves: Pure Black / Carbon */}
+          <linearGradient id="fluid-grad-primary-light" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#000000" stopOpacity="0.92" />
+            <stop offset="100%" stopColor="#171717" stopOpacity="0.85" />
+          </linearGradient>
+          <linearGradient id="fluid-grad-secondary-light" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#000000" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#262626" stopOpacity="0.3" />
           </linearGradient>
         </defs>
 
-        {/* Circular Background Tank */}
+        {/* Circular Background Tank: White in Light Mode, Black in Dark Mode */}
         <circle
           cx={size / 2}
           cy={size / 2}
           r={size / 2 - 3}
-          className="fill-stone-100 dark:fill-stone-900/90"
+          className="fill-white dark:fill-black"
         />
 
-        {/* Clipped Fluid Waves */}
-        <g clipPath="url(#circle-fluid-clip)">
-          {/* Secondary background wave */}
-          <path d={secondaryWave} fill="url(#fluid-grad-secondary)" />
-          {/* Primary foreground wave */}
-          <path d={primaryWave} fill="url(#fluid-grad-primary)" />
+        {/* Clipped Fluid Waves - Light Mode (Black ink) */}
+        <g clipPath="url(#circle-fluid-clip)" className="dark:hidden">
+          <path d={secondaryWave} fill="url(#fluid-grad-secondary-light)" />
+          <path d={primaryWave} fill="url(#fluid-grad-primary-light)" />
+        </g>
+
+        {/* Clipped Fluid Waves - Dark Mode (White light) */}
+        <g clipPath="url(#circle-fluid-clip)" className="hidden dark:block">
+          <path d={secondaryWave} fill="url(#fluid-grad-secondary-dark)" />
+          <path d={primaryWave} fill="url(#fluid-grad-primary-dark)" />
         </g>
 
         {/* Subtle glass edge highlight */}
@@ -120,28 +132,28 @@ export const FluidCircle: React.FC<FluidCircleProps> = ({
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
-          className="text-white/20"
+          className="text-black/10 dark:text-white/20"
         />
       </svg>
 
-      {/* Center Label Overlay */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-4">
-        <span className="font-cinzel text-xs uppercase tracking-widest font-bold text-black dark:text-stone-300 drop-shadow-xs">
+      {/* Center Label Overlay with perfect Black & White contrast inversion */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center px-4 mix-blend-difference text-white">
+        <span className="font-cinzel text-xs uppercase tracking-widest font-bold drop-shadow-xs">
           Iman Level
         </span>
         <div className="flex items-baseline justify-center">
-          <span className="text-4xl sm:text-5xl font-extrabold font-cinzel text-black dark:text-white drop-shadow-md tabular-nums">
+          <span className="text-4xl sm:text-5xl font-extrabold font-cinzel drop-shadow-md tabular-nums">
             {displayPercent}
           </span>
-          <span className="text-xl sm:text-2xl font-bold text-black dark:text-stone-200 ml-0.5">
+          <span className="text-xl sm:text-2xl font-bold ml-0.5">
             %
           </span>
         </div>
         <div className="mt-1 flex flex-col items-center">
-          <span className="text-[11px] font-bold text-black dark:text-stone-100 drop-shadow-xs">
+          <span className="text-[11px] font-bold drop-shadow-xs">
             {completedPrayers}/{totalPrayers} Prayers
           </span>
-          <span className="text-[10px] text-stone-900 dark:text-stone-300 font-bold">
+          <span className="text-[10px] font-bold">
             {versesRead} Verses Read
           </span>
         </div>

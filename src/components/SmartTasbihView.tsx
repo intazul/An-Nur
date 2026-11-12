@@ -344,12 +344,12 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
           {/* Active Dhikr Display Card */}
           <div className="w-full text-center space-y-1.5 py-2">
             {stageName && (
-              <span className="inline-block px-3 py-0.5 rounded-full bg-amber-400/20 text-amber-800 dark:text-amber-300 font-bold text-[11px] uppercase tracking-wider animate-pulse">
+              <span className="inline-block px-3 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black font-bold text-[11px] uppercase tracking-wider animate-pulse">
                 {stageName}
               </span>
             )}
             <div
-              className="font-quran text-2xl sm:text-3xl text-black dark:text-amber-200 leading-relaxed font-bold px-2"
+              className="font-quran text-2xl sm:text-3xl text-black dark:text-white leading-relaxed font-bold px-2"
               dir="rtl"
             >
               {stageArabic}
@@ -381,27 +381,23 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
                   strokeWidth="8"
                   className="text-stone-200 dark:text-stone-800"
                 />
-                {/* Outer Glow filter */}
+                {/* Outer Progress Ring */}
                 <circle
                   cx="50%"
                   cy="50%"
                   r={radius}
                   fill="none"
-                  stroke="#fbbf24"
                   strokeWidth="10"
                   strokeDasharray={circumference}
                   strokeDashoffset={strokeOffset}
                   strokeLinecap="round"
-                  className="transition-all duration-300 ease-out"
-                  style={{
-                    filter: 'drop-shadow(0px 0px 8px rgba(251, 191, 36, 0.4))',
-                  }}
+                  className="stroke-black dark:stroke-white transition-all duration-300 ease-out"
                 />
               </svg>
 
-              {/* Central Tactile Bead Core */}
+              {/* Central Tactile Bead Core: White with black fonts in Dark Mode; Black with white fonts in Light Mode */}
               <div
-                className={`absolute w-44 h-44 sm:w-48 sm:h-48 rounded-full border-4 border-stone-900 dark:border-amber-400/50 bg-linear-to-b from-stone-900 to-black text-white shadow-2xl flex flex-col items-center justify-center transition-transform duration-100 ${
+                className={`absolute w-44 h-44 sm:w-48 sm:h-48 rounded-full border-4 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-2xl flex flex-col items-center justify-center transition-transform duration-100 ${
                   isPressing ? 'scale-95' : 'hover:scale-[1.02] active:scale-95'
                 }`}
               >
@@ -409,11 +405,11 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
                   {currentCount}
                 </span>
 
-                <span className="text-[11px] font-bold text-amber-400 uppercase tracking-widest mt-1.5">
+                <span className="text-[11px] font-bold uppercase tracking-widest mt-1.5 opacity-80">
                   Target: {activePreset.target}
                 </span>
 
-                <span className="text-[10px] text-stone-400 font-mono mt-1 font-bold">
+                <span className="text-[10px] font-mono mt-1 font-bold opacity-70">
                   {presetProgressPercent}% Done
                 </span>
               </div>
@@ -427,15 +423,15 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
           {/* Completed Sets Bar & Reset Action */}
           <div className="w-full flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs my-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Sparkles className="w-4 h-4 text-black dark:text-white" />
               <span className="font-bold text-black dark:text-white">
-                Completed Sets: <strong className="text-amber-500 font-bold">{sessionCompletedSets}</strong>
+                Completed Sets: <strong className="font-bold">{sessionCompletedSets}</strong>
               </span>
             </div>
 
             <button
               onClick={handleReset}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:text-black dark:hover:text-white font-bold transition-colors active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold transition-all active:scale-95 shadow-2xs"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset</span>
@@ -444,7 +440,7 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
 
           {/* Authentic Hadith Virtue Footer */}
           <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-left space-y-1">
-            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-black dark:text-white">
               <span>Hadith Merit</span>
               <span>{activePreset.source}</span>
             </div>
@@ -457,17 +453,17 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
         /* 3. Deep Analysis & Progress Dashboard */
         <div className="flex-1 space-y-4 py-3">
           {/* Daily Goal Animated Percent Ring Card */}
-          <div className="p-5 rounded-3xl bg-linear-to-b from-stone-900 to-black text-white border-2 border-amber-500/30 shadow-xl flex items-center justify-between gap-4">
+          <div className="p-5 rounded-3xl bg-black text-white dark:bg-white dark:text-black border-2 border-black dark:border-white shadow-xl flex items-center justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400">
+              <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">
                 Today's Spiritual Progress
               </span>
               <h3 className="text-2xl font-bold font-cinzel">
-                {todayTotal} <span className="text-sm font-normal text-stone-400">/ {dailyGoal} beads</span>
+                {todayTotal} <span className="text-sm font-normal opacity-70">/ {dailyGoal} beads</span>
               </h3>
-              <p className="text-xs text-stone-300">
+              <p className="text-xs opacity-90">
                 {todayTotal >= dailyGoal
-                  ? 'Daily Remembrance Goal Achieved! 🎉'
+                  ? 'Daily Remembrance Goal Achieved!'
                   : `${dailyGoal - todayTotal} beads remaining to hit daily benchmark.`}
               </p>
             </div>
@@ -480,15 +476,16 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
                   cy="50%"
                   r="38"
                   fill="none"
-                  stroke="#333"
+                  stroke="currentColor"
                   strokeWidth="6"
+                  className="opacity-20"
                 />
                 <circle
                   cx="50%"
                   cy="50%"
                   r="38"
                   fill="none"
-                  stroke="#10b981"
+                  stroke="currentColor"
                   strokeWidth="6"
                   strokeDasharray={238}
                   strokeDashoffset={238 - (238 * dailyGoalPercent) / 100}
@@ -506,7 +503,7 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
           <div className="grid grid-cols-2 gap-2.5">
             <div className="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-stone-500 font-bold">
-                <Trophy className="w-4 h-4 text-amber-500" />
+                <Trophy className="w-4 h-4 text-black dark:text-white" />
                 <span>Lifetime Total</span>
               </div>
               <div className="text-2xl font-bold font-cinzel text-black dark:text-white tabular-nums">
@@ -517,7 +514,7 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
 
             <div className="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-stone-500 font-bold">
-                <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
+                <Flame className="w-4 h-4 text-black dark:text-white" />
                 <span>Active Streak</span>
               </div>
               <div className="text-2xl font-bold font-cinzel text-black dark:text-white tabular-nums">
@@ -541,15 +538,15 @@ export const SmartTasbihView: React.FC<SmartTasbihViewProps> = ({
                     setSelectedPresetIndex(idx);
                     setActiveTab('counter');
                   }}
-                  className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800/80 flex items-center justify-between cursor-pointer hover:border-amber-500 transition-all"
+                  className="p-3 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800/80 flex items-center justify-between cursor-pointer hover:border-black dark:hover:border-white transition-all"
                 >
                   <div>
                     <div className="text-xs font-bold text-black dark:text-white">{p.name}</div>
-                    <div className="text-[11px] font-quran text-amber-600 dark:text-amber-400 line-clamp-1" dir="rtl">
+                    <div className="text-[11px] font-quran text-black dark:text-white line-clamp-1" dir="rtl">
                       {p.arabic}
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-black text-white dark:bg-white dark:text-black">
                     {p.target}x
                   </span>
                 </div>

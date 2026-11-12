@@ -155,9 +155,9 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
         title: 'Al-Muqarrabun',
         arabic: 'المُقَرَّبُونَ',
         desc: 'The Foremost in Faith & Closeness to the Divine',
-        colorClass: 'text-emerald-500 dark:text-emerald-400',
-        bgClass: 'bg-emerald-500/10 border-emerald-500/30',
-        ringGradient: ['#10b981', '#059669'],
+        colorClass: 'text-black dark:text-white',
+        bgClass: 'bg-stone-100 dark:bg-stone-900 border-stone-200 dark:border-stone-800',
+        ringGradient: ['#ffffff', '#e5e5e5'],
       };
     }
     if (totalImanScore >= 75) {
@@ -165,9 +165,9 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
         title: 'Al-Muhsinun',
         arabic: 'المُحْسِنُونَ',
         desc: 'Those Living in Conscious Spiritual Excellence',
-        colorClass: 'text-amber-500 dark:text-amber-400',
-        bgClass: 'bg-amber-500/10 border-amber-500/30',
-        ringGradient: ['#f59e0b', '#d97706'],
+        colorClass: 'text-black dark:text-white',
+        bgClass: 'bg-stone-100 dark:bg-stone-900 border-stone-200 dark:border-stone-800',
+        ringGradient: ['#ffffff', '#d4d4d4'],
       };
     }
     if (totalImanScore >= 50) {
@@ -175,18 +175,18 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
         title: 'Al-Muqtisidun',
         arabic: 'المُقْتَصِدُونَ',
         desc: 'The Steadfast on the Middle Upright Path',
-        colorClass: 'text-stone-800 dark:text-stone-200',
-        bgClass: 'bg-stone-500/10 border-stone-500/30',
-        ringGradient: ['#78716c', '#57534e'],
+        colorClass: 'text-black dark:text-white',
+        bgClass: 'bg-stone-100 dark:bg-stone-900 border-stone-200 dark:border-stone-800',
+        ringGradient: ['#a8a29e', '#78716c'],
       };
     }
     return {
       title: 'Talib ar-Rahmah',
       arabic: 'طَالِبُ الرَّحْمَة',
       desc: 'The Sincere Seeker of Divine Mercy & Elevation',
-      colorClass: 'text-stone-600 dark:text-stone-400',
-      bgClass: 'bg-stone-200 dark:bg-stone-800 border-stone-300 dark:border-stone-700',
-      ringGradient: ['#a8a29e', '#78716c'],
+      colorClass: 'text-black dark:text-white',
+      bgClass: 'bg-stone-100 dark:bg-stone-900 border-stone-200 dark:border-stone-800',
+      ringGradient: ['#78716c', '#57534e'],
     };
   }, [totalImanScore]);
 
@@ -290,7 +290,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
 
           {/* Spiritual Streak Badge */}
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shrink-0 shadow-2xs">
-            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+            <Flame className="w-3.5 h-3.5 fill-black text-black dark:fill-white dark:text-white" />
             <span className="text-xs font-bold text-black dark:text-white tabular-nums">{streak}d Streak</span>
           </div>
         </div>
@@ -307,7 +307,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
               }`}
               title="Today's Score & Ring"
             >
-              <Sparkles className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden sm:inline truncate">Today's Score</span>
               <span className="sm:hidden truncate">Score</span>
             </button>
@@ -321,7 +321,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
               }`}
               title="Multi-Day Trends & Analytics"
             >
-              <BarChart3 className="w-3.5 h-3.5 shrink-0 text-blue-500" />
+              <BarChart3 className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate">Trends</span>
             </button>
 
@@ -334,7 +334,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
               }`}
               title="Muhasabah Reflection Journal"
             >
-              <Feather className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
+              <Feather className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden sm:inline truncate">Muhasabah</span>
               <span className="sm:hidden truncate">Journal</span>
             </button>
@@ -348,7 +348,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
               }`}
               title="Prophetic Remedies & Guidance"
             >
-              <Lightbulb className="w-3.5 h-3.5 shrink-0 text-amber-400" />
+              <Lightbulb className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate">Remedies</span>
             </button>
           </div>
@@ -362,20 +362,17 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
           <>
             {/* Centerpiece Animated Multi-layered Percent Ring */}
             <div className="flex flex-col items-center justify-center p-6 rounded-3xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800/80 shadow-xs relative overflow-hidden">
-              {/* Subtle background glow */}
-              <div className="absolute inset-0 bg-radial from-amber-500/5 via-transparent to-transparent pointer-events-none" />
-
+              {/* Centerpiece SVG Percent Ring */}
               <div className="relative flex items-center justify-center w-56 h-56">
                 <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 200 200">
                   <defs>
-                    <linearGradient id="imanRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#d97706" />
-                      <stop offset="50%" stopColor="#f59e0b" />
-                      <stop offset="100%" stopColor="#10b981" />
+                    <linearGradient id="imanRingGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#f5f5f4" />
                     </linearGradient>
-                    <linearGradient id="innerPrayerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" />
-                      <stop offset="100%" stopColor="#6366f1" />
+                    <linearGradient id="imanRingGradLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#000000" />
+                      <stop offset="100%" stopColor="#262626" />
                     </linearGradient>
                   </defs>
 
@@ -390,18 +387,32 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     className="text-stone-200 dark:text-stone-800"
                   />
 
-                  {/* Animated Outer Progress Ring */}
+                  {/* Animated Outer Progress Ring - Light Mode (Black) */}
                   <circle
                     cx="100"
                     cy="100"
                     r={circleRadius}
                     fill="transparent"
-                    stroke="url(#imanRingGrad)"
+                    stroke="url(#imanRingGradLight)"
                     strokeWidth="10"
                     strokeDasharray={circleCircumference}
                     strokeDashoffset={strokeDashoffset}
                     strokeLinecap="round"
-                    className="transition-all duration-1000 ease-out"
+                    className="transition-all duration-1000 ease-out dark:hidden"
+                  />
+
+                  {/* Animated Outer Progress Ring - Dark Mode (White) */}
+                  <circle
+                    cx="100"
+                    cy="100"
+                    r={circleRadius}
+                    fill="transparent"
+                    stroke="url(#imanRingGradDark)"
+                    strokeWidth="10"
+                    strokeDasharray={circleCircumference}
+                    strokeDashoffset={strokeDashoffset}
+                    strokeLinecap="round"
+                    className="transition-all duration-1000 ease-out hidden dark:block"
                   />
 
                   {/* Inner Concentric Track for Prayers */}
@@ -419,14 +430,14 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     cy="100"
                     r={circleRadius - 15}
                     fill="transparent"
-                    stroke="#10b981"
+                    stroke="currentColor"
                     strokeWidth="4"
                     strokeDasharray={2 * Math.PI * (circleRadius - 15)}
                     strokeDashoffset={
                       2 * Math.PI * (circleRadius - 15) - (prayerPercent / 100) * 2 * Math.PI * (circleRadius - 15)
                     }
                     strokeLinecap="round"
-                    className="transition-all duration-1000 ease-out"
+                    className="text-stone-600 dark:text-stone-400 transition-all duration-1000 ease-out"
                   />
                 </svg>
 
@@ -439,7 +450,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     <span className="text-4xl sm:text-5xl font-extrabold font-cinzel text-black dark:text-white tabular-nums">
                       {totalImanScore}
                     </span>
-                    <span className="text-xl font-bold text-amber-500 dark:text-amber-400 ml-0.5">%</span>
+                    <span className="text-xl font-bold text-black dark:text-white ml-0.5">%</span>
                   </div>
                   <span className="font-quran text-sm text-stone-800 dark:text-stone-200 font-bold mt-0.5">
                     {levelInfo.arabic}
@@ -456,16 +467,16 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                   {levelInfo.desc}
                 </p>
                 <div className="mt-2.5 flex items-center justify-center gap-3 text-[11px] font-bold">
-                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="flex items-center gap-1 text-black dark:text-white">
+                    <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                     Salah {completedFard}/5
                   </span>
-                  <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
+                  <span className="flex items-center gap-1 text-black dark:text-white">
+                    <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                     Quran {imanRecord.versesRead}v
                   </span>
-                  <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span className="flex items-center gap-1 text-black dark:text-white">
+                    <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                     Dhikr {imanRecord.dhikrCount}
                   </span>
                 </div>
@@ -481,13 +492,13 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                       Obligatory Salah
                     </span>
-                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="text-xs font-bold text-black dark:text-white">
                       {completedFard}/5
                     </span>
                   </div>
                   <div className="w-full bg-stone-200 dark:bg-stone-800 h-2 rounded-full overflow-hidden mb-3">
                     <div
-                      className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                      className="bg-black dark:bg-white h-full rounded-full transition-all duration-500"
                       style={{ width: `${prayerPercent}%` }}
                     />
                   </div>
@@ -508,7 +519,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                           onClick={() => onTogglePrayer(p.id)}
                           className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all ${
                             isDone
-                              ? 'bg-emerald-600 text-white shadow-2xs'
+                              ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
                               : 'bg-stone-200 dark:bg-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-300'
                           }`}
                           title={`Toggle ${p.label}`}
@@ -528,13 +539,13 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                       Quran Recitation
                     </span>
-                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                    <span className="text-xs font-bold text-black dark:text-white">
                       {imanRecord.versesRead}/{verseGoal} v
                     </span>
                   </div>
                   <div className="w-full bg-stone-200 dark:bg-stone-800 h-2 rounded-full overflow-hidden mb-3">
                     <div
-                      className="bg-blue-500 h-full rounded-full transition-all duration-500"
+                      className="bg-black dark:bg-white h-full rounded-full transition-all duration-500"
                       style={{ width: `${versePercent}%` }}
                     />
                   </div>
@@ -562,13 +573,13 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                       Sacred Dhikr
                     </span>
-                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                    <span className="text-xs font-bold text-black dark:text-white">
                       {imanRecord.dhikrCount} Tally
                     </span>
                   </div>
                   <div className="w-full bg-stone-200 dark:bg-stone-800 h-2 rounded-full overflow-hidden mb-3">
                     <div
-                      className="bg-amber-500 h-full rounded-full transition-all duration-500"
+                      className="bg-black dark:bg-white h-full rounded-full transition-all duration-500"
                       style={{ width: `${dhikrPercent}%` }}
                     />
                   </div>
@@ -579,7 +590,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                 <div className="mt-3 flex items-center gap-1.5">
                   <button
                     onClick={handleQuickDhikr}
-                    className="flex-1 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-bold text-xs transition-all flex items-center justify-center gap-1 shadow-2xs"
+                    className="flex-1 py-1.5 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs hover:opacity-90 transition-all flex items-center justify-center gap-1 shadow-2xs"
                   >
                     <Sparkles className="w-3 h-3" />
                     <span>+1 Tap</span>
@@ -608,7 +619,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     The pillar of Islam; the first deed questioned on the Day of Judgment.
                   </p>
                 </div>
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-stone-200 dark:bg-stone-800 text-black dark:text-white">
                   {completedFard} / 5 Done
                 </span>
               </div>
@@ -622,13 +633,13 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                       onClick={() => onTogglePrayer(prayer.id)}
                       className={`w-full flex items-center justify-between p-3 rounded-2xl border transition-all text-left ${
                         isDone
-                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200'
-                          : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-stone-300'
+                          ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
+                          : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         {isDone ? (
-                          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 fill-emerald-500/20 shrink-0" />
+                          <CheckCircle2 className="w-5 h-5 text-white dark:text-black fill-transparent stroke-[2.5] shrink-0" />
                         ) : (
                           <Circle className="w-5 h-5 text-stone-300 dark:text-stone-700 shrink-0" />
                         )}
@@ -641,7 +652,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                               {prayer.arabic}
                             </span>
                           </div>
-                          <span className="text-[11px] text-stone-500 dark:text-stone-400">
+                          <span className={`text-[11px] ${isDone ? 'opacity-80' : 'text-stone-500 dark:text-stone-400'}`}>
                             {prayer.timeHint}
                           </span>
                         </div>
@@ -649,7 +660,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                       <span
                         className={`text-xs font-bold px-2.5 py-1 rounded-xl transition-colors ${
                           isDone
-                            ? 'bg-emerald-600 text-white'
+                            ? 'bg-white/20 text-white dark:bg-black/10 dark:text-black'
                             : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400'
                         }`}
                       >
@@ -679,25 +690,25 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                         onClick={() => onTogglePrayer(nawafil.id)}
                         className={`flex items-start gap-2.5 p-3 rounded-2xl border transition-all text-left ${
                           isDone
-                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200'
-                            : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800'
+                            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
+                            : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white'
                         }`}
                       >
                         {isDone ? (
-                          <CheckCircle2 className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                          <CheckCircle2 className="w-4 h-4 text-white dark:text-black fill-transparent stroke-[2.5] shrink-0 mt-0.5" />
                         ) : (
                           <Circle className="w-4 h-4 text-stone-300 dark:text-stone-700 shrink-0 mt-0.5" />
                         )}
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5">
-                            <span className="font-bold text-xs text-black dark:text-white">
+                            <span className="font-bold text-xs">
                               {nawafil.label}
                             </span>
-                            <span className="font-quran text-[11px] text-stone-500">
+                            <span className="font-quran text-[11px] opacity-75">
                               {nawafil.arabic}
                             </span>
                           </div>
-                          <p className="text-[10px] text-stone-500 leading-tight mt-0.5">
+                          <p className={`text-[10px] leading-tight mt-0.5 ${isDone ? 'opacity-80' : 'text-stone-500'}`}>
                             {nawafil.virtue}
                           </p>
                         </div>
@@ -719,7 +730,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     How is your spiritual presence and contentment today?
                   </p>
                 </div>
-                <Heart className="w-4 h-4 text-rose-500 fill-rose-500/20" />
+                <Heart className="w-4 h-4 text-black dark:text-white" />
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -796,19 +807,19 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                 </div>
                 <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-center">
                   <span className="text-[10px] text-stone-500 uppercase font-bold">Prayer Adherence</span>
-                  <p className="text-xl font-bold font-cinzel text-emerald-600 dark:text-emerald-400 mt-0.5">
+                  <p className="text-xl font-bold font-cinzel text-black dark:text-white mt-0.5">
                     {weeklyAnalytics.prayerRate}%
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-center">
                   <span className="text-[10px] text-stone-500 uppercase font-bold">Verses Recited</span>
-                  <p className="text-xl font-bold font-cinzel text-blue-600 dark:text-blue-400 mt-0.5">
+                  <p className="text-xl font-bold font-cinzel text-black dark:text-white mt-0.5">
                     {weeklyAnalytics.totalVerses}
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-center">
                   <span className="text-[10px] text-stone-500 uppercase font-bold">Active Streak</span>
-                  <p className="text-xl font-bold font-cinzel text-amber-500 mt-0.5">
+                  <p className="text-xl font-bold font-cinzel text-black dark:text-white mt-0.5">
                     {streak} Days
                   </p>
                 </div>
@@ -845,11 +856,11 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                           <div
                             className={`w-full rounded-t-md transition-all duration-700 ${
                               isSelected
-                                ? 'bg-amber-500'
+                                ? 'bg-black dark:bg-white'
                                 : isToday
                                 ? 'bg-black dark:bg-white'
                                 : dayPercent >= 75
-                                ? 'bg-emerald-500'
+                                ? 'bg-stone-700 dark:bg-stone-300'
                                 : 'bg-stone-400 dark:bg-stone-600'
                             }`}
                             style={{ height: `${Math.max(8, dayPercent)}%` }}
@@ -860,7 +871,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                         <span
                           className={`text-[10px] font-bold mt-1.5 ${
                             isToday
-                              ? 'text-amber-500 font-extrabold'
+                              ? 'text-black dark:text-white font-extrabold underline'
                               : isSelected
                               ? 'text-black dark:text-white'
                               : 'text-stone-400'
@@ -902,13 +913,13 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     </div>
                     <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/60">
                       <span className="text-stone-500 block text-[10px]">Verses</span>
-                      <strong className="text-blue-600 dark:text-blue-400">
+                      <strong className="text-black dark:text-white">
                         {activeDayInspect.versesRead || 0} Verses
                       </strong>
                     </div>
                     <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/60">
                       <span className="text-stone-500 block text-[10px]">Dhikr</span>
-                      <strong className="text-amber-600 dark:text-amber-400">
+                      <strong className="text-black dark:text-white">
                         {activeDayInspect.dhikrCount || 0} Recited
                       </strong>
                     </div>
@@ -928,36 +939,36 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                 <h3 className="text-sm font-bold text-black dark:text-white font-cinzel">
                   Spiritual Milestones & Istiqamah
                 </h3>
-                <Award className="w-4 h-4 text-amber-500" />
+                <Award className="w-4 h-4 text-black dark:text-white" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                <div className={`p-3 rounded-2xl border ${streak >= 3 ? 'bg-amber-500/10 border-amber-500/30' : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 opacity-60'}`}>
+                <div className={`p-3 rounded-2xl border transition-all ${streak >= 3 ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs' : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 opacity-60'}`}>
                   <div className="flex items-center gap-2">
                     <span className="text-lg">🌱</span>
                     <div>
-                      <h4 className="text-xs font-bold text-black dark:text-white">Seed of Istiqamah</h4>
-                      <p className="text-[10px] text-stone-500">3 Consecutive Days</p>
+                      <h4 className="text-xs font-bold">Seed of Istiqamah</h4>
+                      <p className={`text-[10px] ${streak >= 3 ? 'opacity-80' : 'text-stone-500'}`}>3 Consecutive Days</p>
                     </div>
                   </div>
                 </div>
 
-                <div className={`p-3 rounded-2xl border ${streak >= 7 ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 opacity-60'}`}>
+                <div className={`p-3 rounded-2xl border transition-all ${streak >= 7 ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs' : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 opacity-60'}`}>
                   <div className="flex items-center gap-2">
                     <span className="text-lg">✨</span>
                     <div>
-                      <h4 className="text-xs font-bold text-black dark:text-white">Illuminated Week</h4>
-                      <p className="text-[10px] text-stone-500">7 Consecutive Days</p>
+                      <h4 className="text-xs font-bold">Illuminated Week</h4>
+                      <p className={`text-[10px] ${streak >= 7 ? 'opacity-80' : 'text-stone-500'}`}>7 Consecutive Days</p>
                     </div>
                   </div>
                 </div>
 
-                <div className={`p-3 rounded-2xl border ${weeklyAnalytics.totalVerses >= 50 ? 'bg-blue-500/10 border-blue-500/30' : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 opacity-60'}`}>
+                <div className={`p-3 rounded-2xl border transition-all ${weeklyAnalytics.totalVerses >= 50 ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs' : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 opacity-60'}`}>
                   <div className="flex items-center gap-2">
                     <span className="text-lg">📖</span>
                     <div>
-                      <h4 className="text-xs font-bold text-black dark:text-white">Companion of Quran</h4>
-                      <p className="text-[10px] text-stone-500">50+ Verses This Cycle</p>
+                      <h4 className="text-xs font-bold">Companion of Quran</h4>
+                      <p className={`text-[10px] ${weeklyAnalytics.totalVerses >= 50 ? 'opacity-80' : 'text-stone-500'}`}>50+ Verses This Cycle</p>
                     </div>
                   </div>
                 </div>
@@ -1009,7 +1020,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                         const newText = reflectionText ? `${reflectionText}\n\n• ${prompt}\n` : `• ${prompt}\n`;
                         setReflectionText(newText);
                       }}
-                      className="px-2.5 py-1 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-[11px] text-stone-700 dark:text-stone-300 hover:border-amber-500 transition-colors text-left"
+                      className="px-2.5 py-1 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-[11px] text-stone-700 dark:text-stone-300 hover:border-black dark:hover:border-white transition-colors text-left"
                     >
                       {prompt}
                     </button>
@@ -1028,7 +1039,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                 />
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
+                  <span className="text-[11px] text-black dark:text-white font-medium">
                     {saveStatus || ''}
                   </span>
                   <button
@@ -1115,7 +1126,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
 
                   <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-[11px]">
                     <span className="text-stone-400">{remedy.source}</span>
-                    <span className="font-bold text-amber-600 dark:text-amber-400">
+                    <span className="font-bold text-black dark:text-white">
                       Action: {remedy.action}
                     </span>
                   </div>

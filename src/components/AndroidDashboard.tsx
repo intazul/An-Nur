@@ -85,7 +85,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
             <h1 className="font-cinzel font-bold text-base text-black dark:text-white tracking-tight leading-none">
               An-Nur
             </h1>
-            <span className="font-quran text-xs text-stone-700 dark:text-amber-400 font-bold block mt-0.5">
+            <span className="font-quran text-xs text-stone-700 dark:text-stone-300 font-bold block mt-0.5">
               القرآن الكريم
             </span>
           </div>
@@ -96,20 +96,20 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {/* Qibla Direction */}
           <button
             onClick={onOpenQibla}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-bold text-black dark:text-stone-200 hover:border-black dark:hover:border-stone-600 transition-all active:scale-95 shadow-2xs"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-bold text-black dark:text-white hover:border-black dark:hover:border-white transition-all active:scale-95 shadow-2xs"
             title="Qibla Compass Direction Finder"
           >
-            <Compass className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <Compass className="w-3.5 h-3.5 text-black dark:text-white" />
             <span>Qibla</span>
           </button>
 
           {/* Spiritual Streak Badge */}
           <button
             onClick={onOpenImanTracker}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-bold text-black dark:text-amber-400 transition-colors hover:border-amber-500/50"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-bold text-black dark:text-white transition-colors hover:border-black dark:hover:border-white"
             title="View spiritual streak & trends"
           >
-            <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+            <Flame className="w-3.5 h-3.5 fill-black text-black dark:fill-white dark:text-white" />
             <span className="tabular-nums">{streak}d</span>
           </button>
 
@@ -135,10 +135,10 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {onOpenPrayerTimes && (
             <button
               onClick={onOpenPrayerTimes}
-              className="flex items-center gap-1 text-[11px] font-bold text-black dark:text-amber-400 hover:underline"
+              className="flex items-center gap-1 text-[11px] font-bold text-black dark:text-white hover:underline"
               title="View full prayer times table"
             >
-              <Clock className="w-3 h-3 text-amber-500" />
+              <Clock className="w-3 h-3 text-black dark:text-white" />
               <span>{prayerStatus.nextPrayer?.name} in {prayerStatus.timeUntilNext}</span>
             </button>
           )}
@@ -156,7 +156,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           />
           <button
             onClick={onOpenImanTracker}
-            className="mt-2 text-[11px] font-bold text-stone-500 hover:text-black dark:text-stone-400 dark:hover:text-amber-400 transition-colors flex items-center justify-center gap-1"
+            className="mt-2 text-[11px] font-bold text-stone-500 hover:text-black dark:text-stone-400 dark:hover:text-white transition-colors flex items-center justify-center gap-1"
             title="Open comprehensive Iman Analysis & Trends"
           >
             <span>Spiritual Analysis & Trends ↗</span>
@@ -177,24 +177,24 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
                     onClick={() => onTogglePrayer(prayerKey)}
                     className={`flex flex-col items-center py-2 px-1 rounded-xl border transition-all text-center ${
                       done
-                        ? 'bg-black text-white border-black dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/40 shadow-2xs'
+                        ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-2xs font-bold'
                         : prayer.isNext
-                        ? 'bg-white dark:bg-stone-900 border-2 border-black dark:border-amber-500/80 text-black dark:text-white font-bold'
-                        : 'bg-white dark:bg-stone-900/70 border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-300 hover:border-stone-400'
+                        ? 'bg-stone-100 dark:bg-stone-900 border-2 border-black dark:border-white text-black dark:text-white font-bold'
+                        : 'bg-white dark:bg-stone-900/70 border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-300 hover:border-black dark:hover:border-white'
                     }`}
                     title={`Toggle ${prayer.name} prayer`}
                   >
                     <span className="text-[10px] font-bold">{prayer.name}</span>
                     <div className="my-0.5">
                       {done ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-white dark:text-emerald-400 fill-white/20 dark:fill-emerald-500/20" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-white dark:text-black fill-transparent stroke-[2.5]" />
                       ) : (
                         <Circle className="w-3.5 h-3.5 text-stone-400 dark:text-stone-600" />
                       )}
                     </div>
                     <span
                       className={`text-[9px] font-mono tabular-nums font-bold ${
-                        done ? 'text-white/90 dark:text-emerald-200' : 'text-stone-500 dark:text-stone-400'
+                        done ? 'text-white/90 dark:text-black/90' : 'text-stone-500 dark:text-stone-400'
                       }`}
                     >
                       {prayer.timeString.split(' ')[0]}
@@ -210,15 +210,15 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
       <section>
         <button
           onClick={onStartReading}
-          className="w-full flex items-center justify-between p-4 rounded-3xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 transition-all shadow-md group text-left active:scale-[0.99]"
+          className="w-full flex items-center justify-between p-4 rounded-3xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-200 transition-all shadow-md group text-left active:scale-[0.99] border border-black dark:border-white"
           title="Resume from where you last left off"
         >
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-white/10 dark:bg-black/10 flex items-center justify-center shrink-0">
-              <BookOpen className="w-5 h-5 text-amber-400 dark:text-amber-600 stroke-[2.2]" />
+            <div className="w-10 h-10 rounded-2xl bg-white/20 dark:bg-black/10 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5 text-white dark:text-black stroke-[2.2]" />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-stone-400 dark:text-stone-600 block">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-stone-300 dark:text-stone-700 block">
                 Continue Reading
               </span>
               <p className="text-[13px] font-bold truncate">
@@ -227,7 +227,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center gap-1 font-bold text-xs shrink-0 text-amber-400 dark:text-amber-600 group-hover:translate-x-0.5 transition-transform">
+          <div className="flex items-center gap-1 font-bold text-xs shrink-0 text-white dark:text-black group-hover:translate-x-0.5 transition-transform">
             <span>Resume</span>
             <ChevronRight className="w-4 h-4 stroke-[2.5]" />
           </div>
@@ -262,7 +262,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           title="Explore 10,000+ authentic Hadiths and questions"
         >
           <div className="w-9 h-9 rounded-2xl bg-stone-200/80 dark:bg-stone-800 flex items-center justify-center text-black dark:text-white group-hover:scale-105 transition-transform">
-            <Compass className="w-4 h-4 stroke-[2.2] text-amber-500" />
+            <Compass className="w-4 h-4 stroke-[2.2] text-black dark:text-white" />
           </div>
           <div>
             <h2 className="text-xs font-bold text-black dark:text-white font-cinzel">
@@ -286,7 +286,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {onOpenSmartTasbih && (
             <button
               onClick={onOpenSmartTasbih}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-stone-600 transition-all text-left flex flex-col justify-between active:scale-95"
+              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95"
               title="Digital Tasbih & Dhikr Counter"
             >
               <span className="text-lg mb-1">📿</span>
@@ -301,10 +301,10 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {onOpenDailyInspiration && (
             <button
               onClick={onOpenDailyInspiration}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-stone-600 transition-all text-left flex flex-col justify-between active:scale-95"
+              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95"
               title="Daily Ayah & Hadith Shareable Cards"
             >
-              <Sparkles className="w-4 h-4 text-amber-500 mb-1" />
+              <Sparkles className="w-4 h-4 text-black dark:text-white mb-1" />
               <div>
                 <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Inspiration</span>
                 <span className="text-[10px] text-stone-500">Daily Verses</span>
@@ -316,10 +316,10 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {onOpenKhatmahPlanner && (
             <button
               onClick={onOpenKhatmahPlanner}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-stone-600 transition-all text-left flex flex-col justify-between active:scale-95"
+              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95"
               title="Personalized Quran Completion Habit"
             >
-              <BookOpen className="w-4 h-4 text-emerald-500 mb-1" />
+              <BookOpen className="w-4 h-4 text-black dark:text-white mb-1" />
               <div>
                 <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Khatmah</span>
                 <span className="text-[10px] text-stone-500">Habit Plan</span>
@@ -333,10 +333,10 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
               if (onOpenFavoritesTab) onOpenFavoritesTab();
               else if (onOpenFavoritesModal) onOpenFavoritesModal();
             }}
-            className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-stone-600 transition-all text-left flex flex-col justify-between active:scale-95 shadow-2xs"
+            className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95 shadow-2xs"
             title="Open Favourites Tab with Prophetic recommendations & saved Surahs"
           >
-            <Star className="w-4 h-4 text-amber-500 fill-amber-500 mb-1" />
+            <Star className="w-4 h-4 text-black dark:text-white fill-black dark:fill-white mb-1" />
             <div>
               <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Favorites</span>
               <span className="text-[10px] text-stone-500">

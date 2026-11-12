@@ -10,8 +10,8 @@ export const SAHIH_BOOKS: HadithBook[] = [
     description: 'The most authentic book after the Holy Quran, containing universally accepted prophetic traditions compiled with unmatched rigor.',
     totalHadiths: 7563,
     authenticity: 'Agreed Upon (Muttafaq Alayh)',
-    coverGradient: 'from-amber-900 via-stone-900 to-black',
-    accentColor: 'border-amber-500/40 text-amber-500',
+    coverGradient: 'from-stone-900 via-neutral-900 to-black',
+    accentColor: 'border-black dark:border-white text-black dark:text-white',
     themeTitle: 'The Pillar of Prophetic Authenticity',
   },
   {
@@ -23,8 +23,8 @@ export const SAHIH_BOOKS: HadithBook[] = [
     description: 'Renowned for its flawless thematic arrangement and strict criteria of continuous sound chains of transmission.',
     totalHadiths: 7500,
     authenticity: 'Agreed Upon (Muttafaq Alayh)',
-    coverGradient: 'from-emerald-950 via-stone-900 to-black',
-    accentColor: 'border-emerald-500/40 text-emerald-500',
+    coverGradient: 'from-neutral-950 via-stone-900 to-black',
+    accentColor: 'border-black dark:border-white text-black dark:text-white',
     themeTitle: 'The Precision of Systematic Sunnah',
   },
   {
@@ -36,8 +36,8 @@ export const SAHIH_BOOKS: HadithBook[] = [
     description: 'The foundational masterwork distilling the entire essence of Islam into timeless, comprehensive prophetic declarations (All 42 Complete Hadiths included).',
     totalHadiths: 42,
     authenticity: 'Sahih (Highest Authenticity)',
-    coverGradient: 'from-cyan-950 via-stone-900 to-black',
-    accentColor: 'border-cyan-500/40 text-cyan-500',
+    coverGradient: 'from-stone-950 via-neutral-900 to-black',
+    accentColor: 'border-black dark:border-white text-black dark:text-white',
     themeTitle: 'The Core Fundamentals of Religion',
   },
   {
@@ -50,7 +50,7 @@ export const SAHIH_BOOKS: HadithBook[] = [
     totalHadiths: 1896,
     authenticity: 'Canonical Sahih',
     coverGradient: 'from-stone-900 via-zinc-900 to-black',
-    accentColor: 'border-stone-400 text-stone-300',
+    accentColor: 'border-black dark:border-white text-black dark:text-white',
     themeTitle: 'Gardens of Moral & Spiritual Character',
   },
   {
@@ -62,8 +62,8 @@ export const SAHIH_BOOKS: HadithBook[] = [
     description: 'Celebrated for comprehensive legal rulings, character descriptions of the Prophet (Shamail), and spiritual insights.',
     totalHadiths: 3956,
     authenticity: 'Canonical Sahih',
-    coverGradient: 'from-indigo-950 via-stone-900 to-black',
-    accentColor: 'border-indigo-500/40 text-indigo-400',
+    coverGradient: 'from-zinc-950 via-stone-900 to-black',
+    accentColor: 'border-black dark:border-white text-black dark:text-white',
     themeTitle: 'Virtues, Character & Inner Compassion',
   },
   {
@@ -75,8 +75,8 @@ export const SAHIH_BOOKS: HadithBook[] = [
     description: 'The definitive authority on prophetic legal practices, manners of prayer, charity, justice, and practical life.',
     totalHadiths: 5274,
     authenticity: 'Canonical Sahih',
-    coverGradient: 'from-amber-950 via-stone-900 to-black',
-    accentColor: 'border-amber-600/40 text-amber-400',
+    coverGradient: 'from-neutral-900 via-stone-900 to-black',
+    accentColor: 'border-black dark:border-white text-black dark:text-white',
     themeTitle: 'The Living Practical Sunnah',
   },
 ];
