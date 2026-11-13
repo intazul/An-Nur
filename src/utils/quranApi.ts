@@ -5,8 +5,51 @@ import { getOfflineSurahDetail, saveSurahOffline } from './offlineStorage';
 import { getPreciseVerseTafsir } from './verseTafsir';
 
 /**
+ * Fetches Assamese (অসমীয়া) translation for all ayahs of a Surah.
+ * Primary: Quran.com API v4 resource ID 120 (Shaykh Rafeequl Islam Habibur-Rahman)
+ * Fallback: FawazAhmed0 Quran API CDN (asm-shaykhrafeequli)
+ */
+async function fetchAssameseSurahTranslations(surahNumber: number): Promise<string[]> {
+  try {
+    const res = await fetch(
+      `https://api.quran.com/api/v4/quran/translations/120?chapter_number=${surahNumber}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.translations && Array.isArray(data.translations)) {
+        return data.translations.map((t: any) =>
+          String(t.text || '')
+            .replace(/<sup[^>]*>.*?<\/sup>/gi, '')
+            .replace(/<[^>]*>/g, '')
+            .trim()
+        );
+      }
+    }
+  } catch (err) {
+    console.warn('Primary Assamese API failed, trying CDN fallback:', err);
+  }
+
+  try {
+    const cdnRes = await fetch(
+      `https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/asm-shaykhrafeequli/${surahNumber}.min.json`
+    );
+    if (cdnRes.ok) {
+      const cdnData = await cdnRes.json();
+      if (cdnData?.chapter && Array.isArray(cdnData.chapter)) {
+        return cdnData.chapter.map((item: any) => String(item.text || '').trim());
+      }
+    }
+  } catch (err) {
+    console.warn('Fallback Assamese CDN failed:', err);
+  }
+
+  return [];
+}
+
+/**
  * Loads a Surah with full offline-first resilience.
  * Always prioritizes complete offline cache and bundled chapters so the app runs totally offline with full verses.
+ * Automatically hydrates Assamese translations onto cached Surahs if missing when online.
  */
 export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail> {
   // Find meta
@@ -24,6 +67,38 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
   // Ensure it has all declared verses (never incomplete)
   const offline = getOfflineSurahDetail(surahNumber);
   if (offline && offline.ayahs && offline.ayahs.length >= meta.numberOfAyahs) {
+    const missingAssamese = offline.ayahs.some((a) => !a.textAssamese);
+    if (missingAssamese) {
+      // First check pre-bundled data
+      const bundled = BUNDLED_SURAHS[surahNumber];
+      if (bundled && bundled.ayahs.length === offline.ayahs.length && bundled.ayahs[0]?.textAssamese) {
+        const merged: SurahDetail = {
+          ...offline,
+          ayahs: offline.ayahs.map((a, idx) => ({
+            ...a,
+            textAssamese: a.textAssamese || bundled.ayahs[idx]?.textAssamese,
+          })),
+        };
+        saveSurahOffline(merged, false).catch(() => {});
+        return merged;
+      }
+
+      // If online, hydrate Assamese translations for previously cached Surah
+      if (typeof navigator !== 'undefined' && navigator.onLine) {
+        const assameseList = await fetchAssameseSurahTranslations(surahNumber);
+        if (assameseList.length > 0) {
+          const hydrated: SurahDetail = {
+            ...offline,
+            ayahs: offline.ayahs.map((a, idx) => ({
+              ...a,
+              textAssamese: a.textAssamese || assameseList[idx] || '',
+            })),
+          };
+          saveSurahOffline(hydrated, false).catch(() => {});
+          return hydrated;
+        }
+      }
+    }
     return offline;
   }
 
@@ -37,11 +112,12 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
     }
   }
 
-  // 3. Attempt API fetch if online for full 114 Surahs with Arabic, English, and Urdu
+  // 3. Attempt API fetch if online for full 114 Surahs with Arabic, English, Urdu, and Assamese
   try {
-    const res = await fetch(
-      `https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,en.sahih,ur.jalandhry`
-    );
+    const [res, assameseList] = await Promise.all([
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,en.sahih,ur.jalandhry`),
+      fetchAssameseSurahTranslations(surahNumber),
+    ]);
 
     if (res.ok) {
       const data = await res.json();
@@ -53,13 +129,15 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
         const ayahs: Ayah[] = arabicData.ayahs.map((arAyah: any, idx: number) => {
           const enAyah = englishData.ayahs[idx] || {};
           const urAyah = urduData.ayahs[idx] || {};
+          const asText = assameseList[idx] || '';
           const preciseTafsir = getPreciseVerseTafsir(
             surahNumber,
             arAyah.numberInSurah,
             meta.nameEnglish,
             arAyah.text,
             enAyah.text || '',
-            urAyah.text || ''
+            urAyah.text || '',
+            asText
           );
 
           return {
@@ -68,6 +146,7 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
             textArabic: arAyah.text,
             textEnglish: enAyah.text || '',
             textUrdu: urAyah.text || '',
+            textAssamese: asText || undefined,
             tafsirSummary: preciseTafsir.explanation,
           };
         });
@@ -99,13 +178,15 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
     bismillahPre: surahNumber !== 1 && surahNumber !== 9,
     ayahs: Array.from({ length: meta.numberOfAyahs }).map((_, i) => {
       const ayahNum = i + 1;
+      const fallbackAs = `ছূৰা ${meta.nameEnglish}-ৰ আয়াত নম্বৰ ${ayahNum}।`;
       const precise = getPreciseVerseTafsir(
         meta.number,
         ayahNum,
         meta.nameEnglish,
         'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
         `Ayah ${ayahNum} of Surah ${meta.nameEnglish} (${meta.englishTranslation}).`,
-        `سورۃ ${meta.nameUrdu} کی آیت نمبر ${ayahNum}۔`
+        `سورۃ ${meta.nameUrdu} کی آیت نمبر ${ayahNum}۔`,
+        fallbackAs
       );
 
       return {
@@ -114,6 +195,7 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
         textArabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
         textEnglish: `Ayah ${ayahNum} of Surah ${meta.nameEnglish} (${meta.englishTranslation}).`,
         textUrdu: `سورۃ ${meta.nameUrdu} کی آیت نمبر ${ayahNum}۔`,
+        textAssamese: fallbackAs,
         tafsirSummary: precise.explanation,
       };
     }),

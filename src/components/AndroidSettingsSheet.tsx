@@ -294,39 +294,76 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           </div>
         </div>
 
-        {/* SECTION 3: Translations Configuration (Urdu & English) */}
+        {/* SECTION 3: Translations & Tafsir Configuration (Strict Urdu OR Assamese Exclusivity) */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
             <Languages className="w-3.5 h-3.5" />
             <span>Translations & Tafsir</span>
           </div>
 
-          <div className="space-y-2">
-            {/* Urdu Translation Toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
-              <div className="pr-2">
+          <div className="space-y-2.5">
+            {/* Regional Language Mutually Exclusive Selector (Urdu OR Assamese, Never Both) */}
+            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2.5">
+              <div>
                 <div className="text-sm font-bold text-black dark:text-white">
-                  اردو ترجمہ (Urdu Translation)
+                  Regional Translation & Tafseer
                 </div>
-                <div className="text-xs text-stone-800 dark:text-stone-400 font-medium">
-                  Fateh Muhammad Jalandhri in Nastaliq font
+                <div className="text-[11px] text-stone-700 dark:text-stone-400 font-medium">
+                  Select either Urdu or Assamese (only one can be active at a time)
                 </div>
               </div>
-              <button
-                onClick={() => onUpdateProfile({ showUrdu: !profile.showUrdu })}
-                className={`w-12 h-7 rounded-full transition-colors relative p-0.5 shrink-0 ${
-                  profile.showUrdu ? 'bg-black dark:bg-white' : 'bg-stone-300 dark:bg-stone-700'
-                }`}
-                aria-label="Toggle Urdu Translation"
-              >
-                <div
-                  className={`w-6 h-6 rounded-full shadow-md transform transition-transform ${
-                    profile.showUrdu
-                      ? 'translate-x-5 bg-white dark:bg-black'
-                      : 'translate-x-0 bg-white'
+
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                {/* None / Off */}
+                <button
+                  onClick={() => onUpdateProfile({ showUrdu: false, showAssamese: false })}
+                  className={`p-2.5 rounded-xl border-2 text-center transition-all ${
+                    !profile.showUrdu && !profile.showAssamese
+                      ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                      : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
                   }`}
-                />
-              </button>
+                >
+                  <div className="font-bold text-xs">Off</div>
+                  <div className="text-[10px] opacity-80">None</div>
+                </button>
+
+                {/* Urdu */}
+                <button
+                  onClick={() => onUpdateProfile({ showUrdu: true, showAssamese: false })}
+                  className={`p-2.5 rounded-xl border-2 text-center transition-all ${
+                    profile.showUrdu && !profile.showAssamese
+                      ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                      : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+                  }`}
+                >
+                  <div className="font-urdu font-bold text-xs leading-normal">اردو</div>
+                  <div className="text-[10px] opacity-80">Urdu</div>
+                </button>
+
+                {/* Assamese */}
+                <button
+                  onClick={() => onUpdateProfile({ showAssamese: true, showUrdu: false })}
+                  className={`p-2.5 rounded-xl border-2 text-center transition-all ${
+                    profile.showAssamese && !profile.showUrdu
+                      ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                      : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+                  }`}
+                >
+                  <div className="font-assamese font-bold text-xs leading-normal">অসমীয়া</div>
+                  <div className="text-[10px] opacity-80">Assamese</div>
+                </button>
+              </div>
+
+              {profile.showAssamese && !profile.showUrdu && (
+                <div className="text-[11px] font-medium text-stone-800 dark:text-stone-300 pt-0.5">
+                  Active: Shaykh Rafeequl Islam Habibur-Rahman Assamese Translation & Tafseer (Urdu disabled)
+                </div>
+              )}
+              {profile.showUrdu && !profile.showAssamese && (
+                <div className="text-[11px] font-medium text-stone-800 dark:text-stone-300 pt-0.5">
+                  Active: Fateh Muhammad Jalandhri Urdu Translation & Tafseer (Assamese disabled)
+                </div>
+              )}
             </div>
 
             {/* English Translation Toggle */}
@@ -363,7 +400,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   Tafsir Commentary Preview
                 </div>
                 <div className="text-xs text-stone-800 dark:text-stone-400 font-medium">
-                  Show scholarly exegesis summary beneath verses
+                  Show exegesis summary in English & selected regional language
                 </div>
               </div>
               <button
@@ -516,6 +553,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                 onUpdateProfile({
                   recitationLanguageMode: 'urdu',
                   showUrdu: true,
+                  showAssamese: false,
                 })
               }
               className={`p-3 rounded-2xl border-2 text-left transition-all ${
@@ -533,6 +571,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                 onUpdateProfile({
                   recitationLanguageMode: 'both',
                   showUrdu: true,
+                  showAssamese: false,
                 })
               }
               className={`p-3 rounded-2xl border-2 text-left transition-all ${

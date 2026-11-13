@@ -29,6 +29,7 @@ import {
   ThematicParagraph,
 } from '../utils/thematicQuran';
 import { TajweedSignHelpDialog } from './TajweedSignHelpDialog';
+import { getPreciseVerseTafsir } from '../utils/verseTafsir';
 
 interface AndroidReadingViewProps {
   currentSurah: SurahDetail | null;
@@ -725,8 +726,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     </div>
                   )}
 
-                  {/* Urdu Translation for this Section (if enabled) */}
-                  {profile.showUrdu && (
+                  {/* Urdu Translation for this Section (mutually exclusive with Assamese) */}
+                  {profile.showUrdu && !profile.showAssamese && (
                     <div
                       className="pt-1.5 border-t border-stone-200/60 dark:border-stone-800/60 text-right leading-[2.1] font-urdu text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-bold"
                       dir="rtl"
@@ -741,6 +742,65 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                       ))}
                     </div>
                   )}
+
+                  {/* Assamese Translation for this Section (mutually exclusive with Urdu) */}
+                  {profile.showAssamese && !profile.showUrdu && (
+                    <div
+                      className="pt-1.5 border-t border-stone-200/60 dark:border-stone-800/60 text-left leading-[1.8] font-assamese text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-semibold"
+                      dir="ltr"
+                    >
+                      {paragraph.ayahs.map((ayah) => (
+                        <span key={ayah.numberInSurah} className="inline mr-1">
+                          <span className="font-sans text-[11px] font-bold text-black dark:text-white mr-0.5">
+                            ({ayah.numberInSurah})
+                          </span>
+                          <span>{ayah.textAssamese || ayah.textEnglish} </span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Inline Tafsir Preview when enabled */}
+                  {profile.showTafsir && paragraph.ayahs[0] && (() => {
+                    const firstAyah = paragraph.ayahs[0];
+                    const t = getPreciseVerseTafsir(
+                      currentSurah.number,
+                      firstAyah.numberInSurah,
+                      currentSurah.nameEnglish,
+                      firstAyah.textArabic,
+                      firstAyah.textEnglish,
+                      firstAyah.textUrdu,
+                      firstAyah.textAssamese
+                    );
+                    const regionalTafsir =
+                      profile.showAssamese && !profile.showUrdu
+                        ? t.assameseExplanation
+                        : profile.showUrdu && !profile.showAssamese
+                        ? t.urduExplanation
+                        : undefined;
+                    return (
+                      <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs space-y-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-black dark:text-white block">
+                          Tafsir (Ayah {firstAyah.numberInSurah}):
+                        </span>
+                        <p className="text-stone-800 dark:text-stone-200 font-medium leading-snug">
+                          {t.summary}
+                        </p>
+                        {regionalTafsir && (
+                          <p
+                            className={
+                              profile.showAssamese && !profile.showUrdu
+                                ? 'font-assamese text-black dark:text-stone-100 font-semibold text-[12px] pt-1 border-t border-stone-200 dark:border-stone-700'
+                                : 'font-urdu text-black dark:text-stone-100 font-bold text-[12px] text-right pt-1 border-t border-stone-200 dark:border-stone-700'
+                            }
+                            dir={profile.showAssamese && !profile.showUrdu ? 'ltr' : 'rtl'}
+                          >
+                            {regionalTafsir}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               ))}
             </div>
@@ -1078,8 +1138,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 </div>
               )}
 
-              {/* Urdu Translation */}
-              {profile.showUrdu && activeVerseAyah.textUrdu && (
+              {/* Urdu Translation (mutually exclusive with Assamese) */}
+              {profile.showUrdu && !profile.showAssamese && activeVerseAyah.textUrdu && (
                 <div className="pt-1 border-t border-stone-200 dark:border-stone-800 text-right" dir="rtl">
                   <p
                     className="font-urdu text-black dark:text-stone-100 font-bold"
@@ -1089,6 +1149,62 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   </p>
                 </div>
               )}
+
+              {/* Assamese Translation (mutually exclusive with Urdu) */}
+              {profile.showAssamese && !profile.showUrdu && activeVerseAyah.textAssamese && (
+                <div className="pt-2 border-t border-stone-200 dark:border-stone-800 text-left" dir="ltr">
+                  <span className="text-[10px] font-bold text-stone-600 dark:text-stone-400 block mb-0.5">
+                    অসমীয়া অনুবাদ:
+                  </span>
+                  <p
+                    className="font-assamese text-black dark:text-stone-100 font-semibold"
+                    style={{ fontSize: `${Math.max(14, profile.translationFontSize)}px` }}
+                  >
+                    {activeVerseAyah.textAssamese}
+                  </p>
+                </div>
+              )}
+
+              {/* Inline Tafsir Commentary Preview */}
+              {profile.showTafsir && (() => {
+                const t = getPreciseVerseTafsir(
+                  currentSurah.number,
+                  activeVerseAyah.numberInSurah,
+                  currentSurah.nameEnglish,
+                  activeVerseAyah.textArabic,
+                  activeVerseAyah.textEnglish,
+                  activeVerseAyah.textUrdu,
+                  activeVerseAyah.textAssamese
+                );
+                const regionalTafsir =
+                  profile.showAssamese && !profile.showUrdu
+                    ? t.assameseExplanation
+                    : profile.showUrdu && !profile.showAssamese
+                    ? t.urduExplanation
+                    : undefined;
+                return (
+                  <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 space-y-1 text-xs shrink-0">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-black dark:text-white block">
+                      Tafsir Preview:
+                    </span>
+                    <p className="text-stone-800 dark:text-stone-200 font-medium leading-snug">
+                      {t.summary}
+                    </p>
+                    {regionalTafsir && (
+                      <p
+                        className={
+                          profile.showAssamese && !profile.showUrdu
+                            ? 'font-assamese text-black dark:text-stone-100 font-semibold text-xs pt-1 border-t border-stone-200 dark:border-stone-700'
+                            : 'font-urdu text-black dark:text-stone-100 font-bold text-xs text-right pt-1 border-t border-stone-200 dark:border-stone-700'
+                        }
+                        dir={profile.showAssamese && !profile.showUrdu ? 'ltr' : 'rtl'}
+                      >
+                        {regionalTafsir}
+                      </p>
+                    )}
+                  </div>
+                );
+              })()}
 
               {/* Expandable Related Hadith */}
               {expandedHadithAyah === activeVerseAyah.numberInSurah && activeHadith && (

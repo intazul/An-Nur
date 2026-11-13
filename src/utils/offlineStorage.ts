@@ -18,6 +18,7 @@ export const DEFAULT_PROFILE: UserProfileData = {
   calligraphyFont: 'amiri',
   showEnglish: true,
   showUrdu: true,
+  showAssamese: false,
   showTafsir: false,
   readingLayout: 'thematic', // 'thematic' = Thematic paragraph study slides with topic headings & questions | 'paragraph' = Mushaf page sliding | 'cards' = verse cards
   mushafPageMode: 'flip', // 'flip' = horizontal page sliding like physical book
@@ -43,11 +44,23 @@ export const DEFAULT_PROFILE: UserProfileData = {
   preferredUrduReciter: 'shamshad',
 };
 
+function enforceSingleRegionalLanguage(profile: UserProfileData): UserProfileData {
+  const normalized = { ...profile };
+  // Strict mutual exclusivity: Urdu and Assamese can NEVER both be active simultaneously
+  if (normalized.showAssamese && normalized.showUrdu) {
+    normalized.showUrdu = false;
+  }
+  if (normalized.showAssamese && (normalized.recitationLanguageMode === 'urdu' || normalized.recitationLanguageMode === 'both')) {
+    normalized.recitationLanguageMode = 'arabic';
+  }
+  return normalized;
+}
+
 export function loadUserProfile(): UserProfileData {
   try {
     const raw = localStorage.getItem(PROFILE_KEY);
     if (!raw) return DEFAULT_PROFILE;
-    return { ...DEFAULT_PROFILE, ...JSON.parse(raw) };
+    return enforceSingleRegionalLanguage({ ...DEFAULT_PROFILE, ...JSON.parse(raw) });
   } catch {
     return DEFAULT_PROFILE;
   }
@@ -55,7 +68,8 @@ export function loadUserProfile(): UserProfileData {
 
 export function saveUserProfile(profile: UserProfileData): void {
   try {
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    const sanitized = enforceSingleRegionalLanguage(profile);
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(sanitized));
   } catch (err) {
     console.error('Failed to save user profile:', err);
   }

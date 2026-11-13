@@ -29,6 +29,7 @@ export interface Ayah {
   textArabic: string;
   textEnglish: string;
   textUrdu: string;
+  textAssamese?: string;
   tafsirSummary?: string;
   deepTafsir?: DeepTafsir;
   relatedHadith?: RelatedHadith;
@@ -103,6 +104,7 @@ export interface UserProfileData {
   calligraphyFont: 'amiri' | 'scheherazade';
   showEnglish: boolean;
   showUrdu: boolean;
+  showAssamese: boolean;
   showTafsir: boolean;
   readingLayout: 'cards' | 'paragraph' | 'thematic'; // 'paragraph' = pure Mushaf page sliding | 'thematic' = Thematic paragraph study with topic & question | 'cards' = verse cards
   mushafPageMode?: 'flip' | 'scroll';

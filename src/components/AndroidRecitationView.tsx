@@ -182,7 +182,8 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             onClick={() => {
               onUpdateProfile?.({
                 recitationLanguageMode: 'urdu',
-                showUrdu: true, // auto ensure Urdu text is visible
+                showUrdu: true,
+                showAssamese: false,
               });
             }}
             className={`py-2 px-1 rounded-xl text-center transition-all ${
@@ -201,6 +202,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               onUpdateProfile?.({
                 recitationLanguageMode: 'both',
                 showUrdu: true,
+                showAssamese: false,
               });
             }}
             className={`py-2 px-1 rounded-xl text-center transition-all ${
@@ -391,8 +393,28 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             </div>
           )}
 
-          {/* URDU TRANSLATION DISPLAY (Prominently highlighted during Urdu recitation) */}
-          {currentAyah?.textUrdu && (
+          {/* ASSAMESE TRANSLATION DISPLAY (mutually exclusive with Urdu) */}
+          {profile.showAssamese && !profile.showUrdu && currentAyah?.textAssamese && (
+            <div
+              className="p-3 rounded-2xl text-left transition-all border bg-stone-50/50 dark:bg-stone-900/40 border-stone-200 dark:border-stone-800"
+              dir="ltr"
+            >
+              <div className="flex items-center justify-between pb-1 mb-1 border-b border-black/10 dark:border-white/10 text-[10px] font-bold">
+                <span className="text-black dark:text-white font-sans-ui">
+                  অসমীয়া অনুবাদ (Assamese):
+                </span>
+                <span className="text-stone-700 dark:text-stone-300">
+                  Shaykh Rafeequl Islam
+                </span>
+              </div>
+              <p className="font-assamese text-sm sm:text-base text-black dark:text-stone-100 leading-relaxed font-semibold">
+                {currentAyah.textAssamese}
+              </p>
+            </div>
+          )}
+
+          {/* URDU TRANSLATION DISPLAY (mutually exclusive with Assamese) */}
+          {!profile.showAssamese && (profile.showUrdu || recitationMode !== 'arabic') && currentAyah?.textUrdu && (
             <div
               className={`p-3 rounded-2xl text-right transition-all border ${
                 isRecitingUrdu && isPlaying

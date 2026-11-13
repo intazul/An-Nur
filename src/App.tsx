@@ -231,10 +231,28 @@ export default function App() {
     currentAudioPhase,
   ]);
 
-  // Update Profile helper
+  // Update Profile helper with strict Urdu/Assamese mutual exclusivity invariant
   const handleUpdateProfile = useCallback((updates: Partial<UserProfileData>) => {
     setProfile((prev) => {
       const updated = { ...prev, ...updates };
+      if ('showAssamese' in updates && updates.showAssamese) {
+        updated.showUrdu = false;
+        if (updated.recitationLanguageMode === 'urdu' || updated.recitationLanguageMode === 'both') {
+          updated.recitationLanguageMode = 'arabic';
+        }
+      } else if ('showUrdu' in updates && updates.showUrdu) {
+        updated.showAssamese = false;
+      } else if (
+        'recitationLanguageMode' in updates &&
+        (updates.recitationLanguageMode === 'urdu' || updates.recitationLanguageMode === 'both')
+      ) {
+        updated.showUrdu = true;
+        updated.showAssamese = false;
+      }
+      // Guarantee both are never active at the same time
+      if (updated.showUrdu && updated.showAssamese) {
+        updated.showUrdu = false;
+      }
       saveUserProfile(updated);
       return updated;
     });
@@ -905,6 +923,7 @@ export default function App() {
         }}
         ayah={selectedTafsirAyah}
         surah={currentSurah}
+        profile={profile}
         onPlayAyah={(num) => handlePlayAyahInReciter(num)}
         onBookmarkAyah={(num) => handleInitiateBookmark(num, 0)}
       />

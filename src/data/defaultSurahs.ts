@@ -19,6 +19,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
         textEnglish: 'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
         textUrdu: 'شروع اللہ کے نام سے جو بڑا مہربان نہایت رحم والا ہے',
+        textAssamese: '(আৰম্ভ কৰিছো) পৰম কৰুণাময় পৰম দয়ালু আল্লাহৰ নামত।',
         tafsirSummary: 'The Basmalah begins all actions with the remembrance of Allah\'s immense, unconditional mercy (Ar-Rahman) and his specific perpetual mercy to believers (Ar-Rahim). Recited before every prayer and major task.',
       },
       {
@@ -27,6 +28,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
         textEnglish: '[All] praise is [due] to Allah, Lord of the worlds -',
         textUrdu: 'سب تعریفیں اللہ ہی کے لیے ہیں جو تمام جہانوں کا پالنے والا ہے',
+        textAssamese: 'সকলো ধৰণৰ হামদ (প্ৰশংসা) বিশ্বজগতৰ ৰব আল্লাহৰ বাবে।',
         tafsirSummary: 'Al-Hamd expresses both gratitude and unreserved praise for Allah\'s majesty and infinite blessings. Rabb al-Alameen confirms He is Creator, sustainer, and protector of all realms and beings.',
       },
       {
@@ -35,6 +37,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'الرَّحْمَٰنِ الرَّحِيمِ',
         textEnglish: 'The Entirely Merciful, the Especially Merciful,',
         textUrdu: 'بڑا مہربان نہایت رحم فرمانے والا',
+        textAssamese: 'যিজন পৰম কৰুণাময়, পৰম দয়ালু।',
         tafsirSummary: 'Reiteration of divine mercy to temper the majesty of lordship, assuring humanity that creation is governed with compassioned forbearance.',
       },
       {
@@ -43,6 +46,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'مَالِكِ يَوْمِ الدِّينِ',
         textEnglish: 'Sovereign of the Day of Recompense.',
         textUrdu: 'روزِ جزا کا مالک',
+        textAssamese: 'বিচাৰ দিৱসৰ মালিক।',
         tafsirSummary: 'Yawm ad-Deen: The Day of Judgment and Accountability when all earthly pretensions of sovereignty cease and absolute justice reigns.',
       },
       {
@@ -51,6 +55,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ',
         textEnglish: 'It is You we worship and You we ask for help.',
         textUrdu: 'ہم تیری ہی عبادت کرتے ہیں اور تجھ ہی سے مدد مانگتے ہیں',
+        textAssamese: 'আমি কেৱল তোমাৰেই ইবাদত কৰোঁ, আৰু তোমাৰ ওচৰতেই সাহায্য প্ৰাৰ্থনা কৰোঁ।',
         tafsirSummary: 'The core covenant of Tawheed (Islamic Monotheism). Exclusivity in devotion and absolute reliance solely upon the Creator without intermediary.',
       },
       {
@@ -59,6 +64,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
         textEnglish: 'Guide us to the straight path -',
         textUrdu: 'ہمیں سیدھے راستے پر چلا',
+        textAssamese: 'আমাক সৰল পথৰ হিদায়ত দিয়া।',
         tafsirSummary: 'The ultimate human prayer: Guidance (Hidayah) to truth, clarity, steadfast virtue, and righteous conduct that leads to eternal peace.',
       },
       {
@@ -67,6 +73,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ',
         textEnglish: 'The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.',
         textUrdu: 'ان لوگوں کے راستے پر جن پر تو نے انعام فرمایا، نہ کہ ان کے جن پر غضب نازل ہوا اور نہ گمراہوں کے',
+        textAssamese: 'তেওঁলোকৰ পথ, যিসকলক তুমি নিয়ামত (অনুগ্ৰহ) প্ৰদান কৰিছা, সিহঁতৰ নহয়, যিসকলৰ ওপৰত তোমাৰ ক্ৰোধ আপতিত হৈছে আৰু সিহঁতৰো নহয় যিসকল পথভ্ৰষ্ট হৈছে।',
         tafsirSummary: 'The path illuminated by the Prophets, the truthful, martyrs, and the righteous; steering clear of willful disobedience and unwitting deviation.',
       },
     ],
@@ -89,6 +96,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'قُلْ هُوَ اللَّهُ أَحَدٌ',
         textEnglish: 'Say, "He is Allah, [who is] One,',
         textUrdu: 'کہو کہ وہ اللہ ایک ہے',
+        textAssamese: 'কোৱা, ‘তেওঁ আল্লাহ, এক-অদ্বিতীয়,',
         tafsirSummary: 'Equal to one-third of the Quran in meaning. Affirms absolute, indivisible oneness (Ahad) beyond comparison or plurality.',
       },
       {
@@ -97,6 +105,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'اللَّهُ الصَّمَدُ',
         textEnglish: 'Allah, the Eternal Refuge.',
         textUrdu: 'اللہ بے نیاز ہے سب اس کے محتاج ہیں',
+        textAssamese: 'আল্লাহ হৈছে ছামাদ; (তেওঁ কাৰো মুখাপেক্ষী নহয়, সকলো তেওঁৰেই মুখাপেক্ষী)',
         tafsirSummary: 'As-Samad: The self-sufficient master whom all creation depends upon in every instant, while He depends upon nothing.',
       },
       {
@@ -105,6 +114,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'لَمْ يَلِدْ وَلَمْ يُولَدْ',
         textEnglish: 'He neither begets nor is born,',
         textUrdu: 'نہ اس کی کوئی اولاد ہے اور نہ وہ کسی کی اولاد ہے',
+        textAssamese: 'তেওঁ কাকো জন্ম দিয়া নাই আৰু তেৱোঁ জন্ম লোৱা নাই,',
         tafsirSummary: 'Negates anthropomorphism, lineage, ancestry, or progeny; elevated eternally above biological or mortal constraints.',
       },
       {
@@ -113,6 +123,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ',
         textEnglish: 'Nor is there to Him any equivalent."',
         textUrdu: 'اور نہ کوئی اس کا ہمسر ہے',
+        textAssamese: 'আৰু তেওঁৰ সমতুল্য কোনো নাই’।',
         tafsirSummary: 'Absolute peerlessness. Nothing in creation resembles His essence, attributes, knowledge, or sovereign majesty.',
       },
     ],
@@ -135,6 +146,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ',
         textEnglish: 'Say, "I seek refuge in the Lord of daybreak',
         textUrdu: 'کہو کہ میں صبح کے رب کی پناہ مانگتا ہوں',
+        textAssamese: 'কোৱা, মই আশ্ৰয় বিচাৰো উষাৰ প্ৰতিপালকৰ।',
         tafsirSummary: 'Falaq is the bursting light that shatters morning darkness. Seeking refuge in the Lord who manifests clarity from obscurity.',
       },
       {
@@ -143,6 +155,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'مِنْ شَرِّ مَا خَلَقَ',
         textEnglish: 'From the evil of that which He created',
         textUrdu: 'ہر اس چیز کی برائی سے جو اس نے پیدا کی',
+        textAssamese: 'তেওঁ যি সৃষ্টি কৰিছে তাৰ অনিষ্টৰ পৰা,',
         tafsirSummary: 'Comprehensive sanctuary from all perils, visible hazards, predators, illnesses, and harm inherent in mortal creation.',
       },
       {
@@ -151,6 +164,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ',
         textEnglish: 'And from the evil of darkness when it settles',
         textUrdu: 'اور اندھیری رات کی برائی سے جب وہ چھا جائے',
+        textAssamese: 'আৰু ৰাতিৰ অন্ধকাৰৰ অনিষ্টৰ পৰা, যেতিয়া ই গভীৰ হয়,',
         tafsirSummary: 'Protection against nocturnal evils, hidden anxieties, and perils that flourish under the cloak of night.',
       },
       {
@@ -159,6 +173,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ',
         textEnglish: 'And from the evil of the blowers in knots',
         textUrdu: 'اور گرہوں پر پھونکنے والوں کی برائی سے',
+        textAssamese: 'আৰু সেইসকল নাৰীৰ অনিষ্টৰ পৰা যিসকলে গাঁঠিত ফুঁ দিয়ে,',
         tafsirSummary: 'Protection from occult malevolence, ill intent, curses, and malicious psychological harm.',
       },
       {
@@ -167,6 +182,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ',
         textEnglish: 'And from the evil of an envier when he envies."',
         textUrdu: 'اور حسد کرنے والے کی برائی سے جب وہ حسد کرے',
+        textAssamese: 'আৰু হিংসুকৰ অনিষ্টৰ পৰা, যেতিয়া সি হিংসা কৰে।',
         tafsirSummary: 'Sanctuary against destructive envy (Hasad) and toxic malice aimed at depriving others of Allah\'s blessings.',
       },
     ],
@@ -189,6 +205,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'قُلْ أَعُوذُ بِرَبِّ النَّاسِ',
         textEnglish: 'Say, "I seek refuge in the Lord of mankind,',
         textUrdu: 'کہو کہ میں انسانوں کے رب کی پناہ مانگتا ہوں',
+        textAssamese: 'কোৱা- মই মানুহৰ প্ৰতিপালকৰ আশ্ৰয় প্ৰাৰ্থনা কৰিছোঁ',
         tafsirSummary: 'Invoking Allah through His nurturing Lordship over all humanity regardless of status, race, or creed.',
       },
       {
@@ -197,6 +214,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'مَلِكِ النَّاسِ',
         textEnglish: 'The Sovereign of mankind,',
         textUrdu: 'انسانوں کے بادشاہ کی',
+        textAssamese: 'মানুহৰ অধিপতিৰ,',
         tafsirSummary: 'The ultimate King whose decrees cannot be vetoed and whose justice surpasses earthly rulers.',
       },
       {
@@ -205,6 +223,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِلَٰهِ النَّاسِ',
         textEnglish: 'The God of mankind,',
         textUrdu: 'انسانوں کے معبود کی',
+        textAssamese: 'মানুহৰ ইলাহৰ ওচৰত,',
         tafsirSummary: 'The only true deity deserving supreme love, humility, awe, and worship from all human souls.',
       },
       {
@@ -213,6 +232,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ',
         textEnglish: 'From the evil of the retreating whisperer -',
         textUrdu: 'وسوسہ ڈالنے والے اور پیچھے ہٹ جانے والے کی برائی سے',
+        textAssamese: 'আত্মগোপনকাৰী কুমন্ত্ৰণাদাতাৰ অনিষ্টৰ পৰা,',
         tafsirSummary: 'Al-Khannas retreats the moment Allah is remembered. It warns against internal intrusive whispers that sow doubt and discord.',
       },
       {
@@ -221,6 +241,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ',
         textEnglish: 'Who whispers [evil] into the breasts of mankind -',
         textUrdu: 'جو لوگوں کے سینوں میں وسوسے ڈالتا ہے',
+        textAssamese: 'যিয়ে মানুহৰ মনত কুমন্ত্ৰণা দিয়ে,',
         tafsirSummary: 'The battleground of spiritual integrity resides in the chest (Sudur), where whispers seek to erode faith and tranquility.',
       },
       {
@@ -229,6 +250,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'مِنَ الْجِنَّةِ وَالنَّاسِ',
         textEnglish: 'From among the jinn and mankind."',
         textUrdu: 'جنوں میں سے بھی اور انسانوں میں سے بھی',
+        textAssamese: 'জিনৰ মাজৰ পৰা আৰু মানুহৰ মাজৰ পৰা।',
         tafsirSummary: 'Acknowledges that temptation and destructive council come both from unseen spirits and malicious human influencers.',
       },
     ],
@@ -251,6 +273,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ',
         textEnglish: 'Indeed, We have granted you, [O Muhammad], al-Kawthar.',
         textUrdu: 'بے شک ہم نے آپ کو کوثر (بے انتہا بھلائی) عطا فرمائی',
+        textAssamese: 'নিশ্চয় আমি তোমাক আল-কাউছাৰ প্ৰদান কৰিছোঁ।',
         tafsirSummary: 'Al-Kawthar symbolizes infinite abundance: the celestial heavenly river, prophetic station, intercession, and endless spiritual lineage.',
       },
       {
@@ -259,6 +282,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'فَصَلِّ لِرَبِّكَ وَانْحَرْ',
         textEnglish: 'So pray to your Lord and sacrifice [to Him alone].',
         textUrdu: 'پس اپنے رب کے لیے نماز پڑھیں اور قربانی کریں',
+        textAssamese: 'এতেকে তুমি তোমাৰ প্ৰতিপালকৰ উদ্দেশ্যে ছালাত আদায় কৰা আৰু কোৰবানী কৰা।',
         tafsirSummary: 'Gratitude expressed through dedicated prayer and sacrificial charity purely for Allah, refusing idolatrous rituals.',
       },
       {
@@ -267,6 +291,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ',
         textEnglish: 'Indeed, your enemy is the one cut off.',
         textUrdu: 'بے شک آپ کا دشمن ہی بے نام و نشان رہے گا',
+        textAssamese: 'নিশ্চয় তোমাৰ প্ৰতি বিদ্বেষ পোষণকাৰীয়েই নিৰ্বংশ।',
         tafsirSummary: 'Reassurance to the Prophet: his detractors would be cut off from all legacy and mercy, while his message would resound perpetually.',
       },
     ],
@@ -289,6 +314,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَالْعَصْرِ',
         textEnglish: 'By time,',
         textUrdu: 'زمانے کی قسم',
+        textAssamese: 'সময়ৰ শপত,',
         tafsirSummary: 'Allah swears by the precious passage of human time and historical eras as evidence of human transience.',
       },
       {
@@ -297,6 +323,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِنَّ الْإِنْسَانَ لَفِي خُسْرٍ',
         textEnglish: 'Indeed, mankind is in loss,',
         textUrdu: 'بے شک انسان خسارے میں ہے',
+        textAssamese: 'নিশ্চয় মানুহ ক্ষতিগ্ৰস্থতাত নিপতিত,',
         tafsirSummary: 'Without conscious purpose, human capital and life vanish into irreparable spiritual and existential bankruptcy.',
       },
       {
@@ -305,6 +332,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ',
         textEnglish: 'Except for those who have believed and done righteous deeds and advised each other to truth and advised each other to patience.',
         textUrdu: 'سوائے ان کے جو ایمان لائے اور نیک عمل کیے اور ایک دوسرے کو حق اور صبر کی نصیحت کی',
+        textAssamese: 'কিন্তু তেওঁলোকৰ বাহিৰে, যিসকলে ঈমান আনিছে আৰু সত্কাম কৰিছে লগতে (যিসকলে) পৰস্পৰক সত্যৰ উপদেশ দিয়ে আৰু ধৈৰ্য ধাৰণ কৰিবলৈ উত্সাহ দিয়ে।',
         tafsirSummary: 'Imam Al-Shafi\'i noted if mankind contemplated this surah alone, it would suffice: Faith, righteous deeds, mutual advocacy of truth, and steadfast resilience.',
       },
     ],
@@ -327,6 +355,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ',
         textEnglish: 'Did We not expand for you, [O Muhammad], your breast?',
         textUrdu: 'کیا ہم نے آپ کا سینہ کشادہ نہیں کر دیا؟',
+        textAssamese: 'আমি তোমাৰ (কল্যাণৰ) বাবে তোমাৰ বুকু প্ৰশস্ত কৰি দিয়া নাইনে?',
         tafsirSummary: 'Spiritual expansion, inner calm, and enlightenment that replaced grief and uncertainty with divine tranquility.',
       },
       {
@@ -335,6 +364,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَوَضَعْنَا عَنْكَ وِزْرَكَ',
         textEnglish: 'And We removed from you your burden',
         textUrdu: 'اور ہم نے آپ پر سے وہ بوجھ اتار دیا',
+        textAssamese: 'আৰু আমি তোমাৰ পৰা তোমাৰ বোজা অপসাৰণ কৰা নাইনে?',
         tafsirSummary: 'Lifting the agonizing burden of concern for humanity\'s salvation and spiritual darkness.',
       },
       {
@@ -343,6 +373,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'الَّذِي أَنْقَضَ ظَهْرَكَ',
         textEnglish: 'Which had weighed upon your back',
         textUrdu: 'جس نے آپ کی پیٹھ توڑ رکھی تھی',
+        textAssamese: 'যি বোজাই তোমাৰ পিঠি ভাঙি পেলাইছিল,',
         tafsirSummary: 'Vivid imagery of an unbearable burden that threatened to break the spine, resolved by divine grace.',
       },
       {
@@ -351,6 +382,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَرَفَعْنَا لَكَ ذِكْرَكَ',
         textEnglish: 'And raised high for you your repute.',
         textUrdu: 'اور آپ کی خاطر آپ کا ذکر بلند کر دیا',
+        textAssamese: 'আৰু আমিয়েই তোমাৰ (মৰ্যদা বৃদ্ধিৰ) বাবে তোমাৰ স্মৰণক সমুন্নত কৰিছো।',
         tafsirSummary: 'Elevating the Prophet\'s name in the Adhan, Tashahhud, salawat, and across all continents for all eternity.',
       },
       {
@@ -359,6 +391,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا',
         textEnglish: 'For indeed, with hardship [will be] ease.',
         textUrdu: 'پس یقیناً ہر مشکل کے ساتھ آسانی ہے',
+        textAssamese: 'এতেকে দুখৰ লগতেই আছে সুখ',
         tafsirSummary: 'Ease is accompanied intimately alongside hardship, not merely after it. Grammatically, one difficulty cannot overcome two eases.',
       },
       {
@@ -367,6 +400,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا',
         textEnglish: 'Indeed, with hardship [will be] ease.',
         textUrdu: 'بے شک ہر تنگی کے ساتھ فراخی ہے',
+        textAssamese: 'নিশ্চয় দুখৰ লগতেই আছে সুখ।',
         tafsirSummary: 'Divine reinforcement that trial is finite, and deliverance is assured for the patient heart.',
       },
       {
@@ -375,6 +409,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'فَإِذَا فَرَغْتَ فَانْصَبْ',
         textEnglish: 'So when you have finished [your duties], then stand up [for worship].',
         textUrdu: 'پس جب آپ فارغ ہوں تو عبادت میں محنت کریں',
+        textAssamese: 'এতেকে যেতিয়াই তুমি অৱসৰ পোৱা তেতিয়াই কঠোৰ ইবাদতত আত্মনিয়োগ কৰা।',
         tafsirSummary: 'Upon completing worldly obligations, turn whole-heartedly to intimate devotion and nightly communion with Allah.',
       },
       {
@@ -383,6 +418,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَإِلَىٰ رَبِّكَ فَارْغَبْ',
         textEnglish: 'And to your Lord direct [your] longing.',
         textUrdu: 'اور اپنے رب ہی کی طرف راغب ہوں',
+        textAssamese: 'আৰু তোমাৰ প্ৰতিপালকৰ প্ৰতি গভীৰ মনোযোগী হোৱা।',
         tafsirSummary: 'Fix ultimate hopes, aspirations, and longing solely upon Allah.',
       },
     ],
@@ -405,6 +441,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَالضُّحَىٰ',
         textEnglish: 'By the morning brightness',
         textUrdu: 'قسم ہے چاشت کے وقت کی',
+        textAssamese: 'পূৰ্বাহ্নৰ শপত,',
         tafsirSummary: 'The warm, radiant morning light symbolizes the illumination of divine revelation after a period of silent agony.',
       },
       {
@@ -413,6 +450,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَاللَّيْلِ إِذَا سَجَىٰ',
         textEnglish: 'And [by] the night when it covers with darkness,',
         textUrdu: 'اور رات کی جب وہ پرسکون ہو جائے',
+        textAssamese: 'শপত ৰাতিৰ, যেতিয়া ই অন্ধকাৰাচ্ছন্ন হয়।',
         tafsirSummary: 'The still, peaceful night represents rest and respite, balancing the active brilliance of daytime.',
       },
       {
@@ -421,6 +459,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ',
         textEnglish: 'Your Lord has not taken leave of you, [O Muhammad], nor has He detested [you].',
         textUrdu: 'آپ کے رب نے آپ کو نہ چھوڑا ہے اور نہ ہی ناراض ہوا ہے',
+        textAssamese: 'তোমাৰ প্ৰতিপালকে তোমাক পৰিত্যাগ কৰা নাই আৰু অসন্তুষ্টও হোৱা নাই।',
         tafsirSummary: 'Consolation revealed after revelation paused: Allah never abandoned His servant despite the taunts of disbelievers.',
       },
       {
@@ -429,6 +468,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَلَلْآخِرَةُ خَيْرٌ لَكَ مِنَ الْأُولَىٰ',
         textEnglish: 'And the Hereafter is better for you than the first [life].',
         textUrdu: 'اور یقیناً آنے والی زندگی آپ کے لیے پہلی سے کہیں بہتر ہے',
+        textAssamese: 'নিশ্চয় তোমাৰ বাবে পৰবৰ্তী সময় পূৰ্বৱৰ্তী সময়তকৈ উত্তম।',
         tafsirSummary: 'Every succeeding stage of your mission and the ultimate Hereafter far surpasses initial trials.',
       },
       {
@@ -437,6 +477,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ',
         textEnglish: 'And your Lord is going to give you, and you will be satisfied.',
         textUrdu: 'اور عنقریب آپ کا رب آپ کو اتنا عطا فرمائے گا کہ آپ خوش ہو جائیں گے',
+        textAssamese: 'নিশ্চয় অনতিপলমে তোমাৰ প্ৰতিপালকে তোমাক অনুগ্ৰহ প্ৰদান কৰিব, ফলত তুমি সন্তুষ্ট হ’বা।',
         tafsirSummary: 'One of the most hope-inspiring verses in the Quran: unconditional divine benevolence ensuring deep soul contentment.',
       },
       {
@@ -445,6 +486,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'أَلَمْ يَجِدْكَ يَتِيمًا فَآوَىٰ',
         textEnglish: 'Did He not find you an orphan and give [you] refuge?',
         textUrdu: 'کیا اس نے آپ کو یتیم نہیں پایا پھر پناہ دی؟',
+        textAssamese: 'তেওঁ তোমাক অনাথ অৱস্থাত পোৱা নাছিলনে? তাৰ পিছত তেৱেঁই তোমাক আশ্ৰয় দিছে।',
         tafsirSummary: 'Reminder of early childhood: bereft of parents yet shielded and nurtured under divine guardianship.',
       },
       {
@@ -453,6 +495,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَوَجَدَكَ ضَالًّا فَهَدَىٰ',
         textEnglish: 'And He found you lost and guided [you],',
         textUrdu: 'اور آپ کو تلاشِ حق میں سرگرداں پایا تو راستہ دکھایا',
+        textAssamese: 'আৰু তেওঁ তোমাক পাইছিল পথহাৰা অৱস্থাত, তাৰ পিছত তেৱেঁই তোমাক পথনিৰ্দেশ দিছে।',
         tafsirSummary: 'Guiding the Prophet from the perplexity of pre-Islamic ignorance to the clear beacon of prophetic revelation.',
       },
       {
@@ -461,6 +504,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَوَجَدَكَ عَائِلًا فَأَغْنَىٰ',
         textEnglish: 'And He found you poor and made [you] self-sufficient.',
         textUrdu: 'اور آپ کو نادار پایا تو غنی کر دیا',
+        textAssamese: 'আৰু তেওঁ তোমাক পাইছিল সম্বলহীন দৰিদ্ৰৰূপে, তাৰ পিছত তেৱেঁই অভাৱমুক্ত কৰিলে।',
         tafsirSummary: 'Transforming poverty into independence and deep spiritual richness through Khadijah and divine sustenance.',
       },
       {
@@ -469,6 +513,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'فَأَمَّا الْيَتِيمَ فَلَا تَقْهَرْ',
         textEnglish: 'So as for the orphan, do not oppress [him].',
         textUrdu: 'پس آپ یتیم پر سختی نہ کریں',
+        textAssamese: 'এতেকে তুমি এতীমৰ (অনাথৰ) প্ৰতি কঠোৰ নহ’বা।',
         tafsirSummary: 'Treat orphans with tender compassion, dignity, and protective kindness, remembering your own origin.',
       },
       {
@@ -477,6 +522,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَأَمَّا السَّائِلَ فَلَا تَنْهَرْ',
         textEnglish: 'And as for the petitioner, do not repel [him].',
         textUrdu: 'اور سائل کو مت جھڑکیں',
+        textAssamese: 'আৰু ভিখাৰীক ধমক নিদিবা।',
         tafsirSummary: 'Never rebuff those seeking physical charity or spiritual knowledge; address them with gracious patience.',
       },
       {
@@ -485,6 +531,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ',
         textEnglish: 'But as for the favor of your Lord, report [it].',
         textUrdu: 'اور اپنے رب کی نعمتوں کا خوب چرچا کریں',
+        textAssamese: 'আৰু তোমাৰ প্ৰতিপালকৰ অনুগ্ৰহৰ কথা প্ৰচাৰ কৰা।',
         tafsirSummary: 'Express humble proclamation of Allah\'s favors through gratitude, generous sharing, and preaching guidance.',
       },
     ],
@@ -507,6 +554,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'إِنَّا أَنْزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ',
         textEnglish: 'Indeed, We sent the Qur\'an down during the Night of Decree.',
         textUrdu: 'بے شک ہم نے اسے (قرآن کو) شبِ قدر میں اتارا ہے',
+        textAssamese: 'নিশ্চয় আমি ইয়াক লাইলাতুল ক্বদৰত অৱতীৰ্ণ কৰিছো;',
         tafsirSummary: 'The descent of the complete Quran from the Preserved Tablet (Al-Lawh Al-Mahfuz) to the lowest heaven on Laylatul Qadr.',
       },
       {
@@ -515,6 +563,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'وَمَا أَدْرَاكَ مَا لَيْلَةُ الْقَدْرِ',
         textEnglish: 'And what can make you know what is the Night of Decree?',
         textUrdu: 'اور آپ کو کیا معلوم کہ شبِ قدر کیا ہے؟',
+        textAssamese: 'তুমি কি জানিবা লাইলাতুল ক্বদৰ কি?',
         tafsirSummary: 'Rhetorical question emphasizing the unfathomable honor, destiny, and cosmic significance of this night.',
       },
       {
@@ -523,6 +572,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'لَيْلَةُ الْقَدْرِ خَيْرٌ مِنْ أَلْفِ شَهْرٍ',
         textEnglish: 'The Night of Decree is better than a thousand months.',
         textUrdu: 'شبِ قدر ہزار مہینوں سے بہتر ہے',
+        textAssamese: 'লাইলাতুল ক্বদৰ এহেজাৰ মাহতকৈয়ো শ্ৰেষ্ঠ।',
         tafsirSummary: 'Devotion during this single night surpasses eighty-three years and four months of continuous worship.',
       },
       {
@@ -531,6 +581,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'تَنَزَّلُ الْمَلَائِكَةُ وَالرُّوحُ فِيهَا بِإِذْنِ رَبِّهِمْ مِنْ كُلِّ أَمْرٍ',
         textEnglish: 'The angels and the Spirit descend therein by permission of their Lord for every matter.',
         textUrdu: 'اس میں فرشتے اور روح القدس (جبریل علیہ السلام) اپنے رب کے حکم سے ہر کام کی تدبیر لے کر اترتے ہیں',
+        textAssamese: 'সেই ৰাতিত ফিৰিস্তাসকল আৰু ৰূহ তেওঁলোকৰ প্ৰতিপালকৰ অনুমতিক্ৰমে যাৱতীয় সিদ্ধান্ত লৈ অৱতৰণ কৰে।',
         tafsirSummary: 'Hosts of angels alongside Angel Jibril (Ar-Ruh) descend with blessings and divine apportionments of destiny for the year.',
       },
       {
@@ -539,6 +590,7 @@ const BASE_BUNDLED_SURAHS: Record<number, SurahDetail> = {
         textArabic: 'سَلَامٌ هِيَ حَتَّىٰ مَطْلَعِ الْفَجْرِ',
         textEnglish: 'Peace it is until the emergence of dawn.',
         textUrdu: 'وہ رات سراسر سلامتی ہے فجر کے طلوع ہونے تک',
+        textAssamese: 'শান্তিময় সেই ৰাতি, ফজৰৰ আবিৰ্ভাৱ নোহোৱালৈকে (শান্তি বিস্তৃত থাকে)।',
         tafsirSummary: 'Serenity, safety from evil, and continuous salutations of peace bestowed upon praying believers until dawn breaks.',
       },
     ],

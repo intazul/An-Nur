@@ -18,6 +18,11 @@
     line-height: 2.1;
   }
 
+  .font-assamese {
+    font-family: 'Noto Sans Bengali', system-ui, sans-serif;
+    line-height: 1.85;
+  }
+
   .font-cinzel {
     font-family: 'Cinzel', serif;
   }
