@@ -1005,10 +1005,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                         expandedHadithAyah === activeVerseAyah.numberInSurah ? null : activeVerseAyah.numberInSurah
                       )
                     }
-                    className={`flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-lg transition-colors ${
+                    className={`flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-lg transition-colors border ${
                       expandedHadithAyah === activeVerseAyah.numberInSurah
-                        ? 'bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white shadow-2xs'
-                        : 'bg-stone-100 dark:bg-stone-800 text-black dark:text-white border border-stone-300 dark:border-stone-700'
+                        ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
+                        : 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white opacity-90 hover:opacity-100'
                     }`}
                     title="View Authenticated Prophetic Hadith"
                   >
@@ -1023,11 +1023,11 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     onPlayAyahInReciter(activeVerseAyah.numberInSurah);
                     onVerseRead();
                   }}
-                  className="p-1.5 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                  className="p-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg transition-transform active:scale-95"
                   title="Play recitation"
                 >
                   {isPlayingAudio && activePlayingAyah === activeVerseAyah.numberInSurah ? (
-                    <Pause className="w-4 h-4 text-black dark:text-white" />
+                    <Pause className="w-4 h-4" />
                   ) : (
                     <Play className="w-4 h-4" />
                   )}
@@ -1036,7 +1036,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 {/* Bookmark */}
                 <button
                   onClick={() => onAddBookmark(activeVerseAyah.numberInSurah, 0)}
-                  className="p-1.5 text-black dark:text-white hover:opacity-70 rounded-lg transition-colors"
+                  className="p-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg transition-transform active:scale-95"
                   title="Bookmark verse"
                 >
                   <Bookmark className="w-4 h-4" />
@@ -1054,12 +1054,12 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 </div>
               )}
 
-              {/* Arabic Calligraphy - Prioritized, Noticeably Bigger with Mild Glowing Letters */}
+              {/* Arabic Calligraphy - Prioritized, Noticeably Bigger with Clean Contrast */}
               <div className="text-right" dir="rtl">
                 <p
                   className={`${
                     profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                  } text-stone-950 dark:text-stone-50 leading-[2.3] select-text font-bold font-arabic-clean ${getGlowClass()}`}
+                  } text-black dark:text-white leading-[2.3] select-text font-bold font-arabic-clean ${getGlowClass()}`}
                   style={{ fontSize: `${Math.max(26, profile.arabicFontSize)}px` }}
                 >
                   {activeVerseAyah.textArabic}
@@ -1157,7 +1157,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 
       {/* Floating Bottom Mini-Player if audio is active */}
       {activePlayingAyah && (
-        <div className="shrink-0 max-w-md mx-auto w-full p-2 bg-white dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 shadow-xl flex items-center justify-between">
+        <div className="shrink-0 max-w-md mx-auto w-full p-2 bg-white dark:bg-black border-t border-stone-200 dark:border-stone-800 shadow-xl flex items-center justify-between">
           <div className="flex items-center gap-2 min-w-0">
             <Volume2 className="w-4 h-4 text-black dark:text-white shrink-0" />
             <div className="min-w-0">

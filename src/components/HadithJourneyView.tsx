@@ -245,7 +245,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
 
   return (
     <div
-      className="flex-1 flex flex-col max-w-xl sm:max-w-2xl w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full max-h-screen overflow-hidden select-none pb-2"
+      className="flex-1 flex flex-col max-w-xl sm:max-w-2xl w-full mx-auto bg-white dark:bg-black h-full max-h-screen overflow-hidden select-none pb-2"
       style={{ touchAction: 'pan-x', overscrollBehavior: 'none' }}
     >
       {/* =========================================================================
@@ -254,7 +254,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
       {viewMode !== 'slide_reader' && (
         <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden">
           {/* Header */}
-          <header className="shrink-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-4 py-3 flex items-center justify-between gap-3 shadow-2xs">
+          <header className="shrink-0 bg-white dark:bg-black border-b border-stone-200 dark:border-stone-800 px-4 py-3 flex items-center justify-between gap-3 shadow-2xs">
             <div className="flex items-center gap-2.5 min-w-0">
               <button
                 onClick={() => {
@@ -264,10 +264,10 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                     onBackToDashboard();
                   }
                 }}
-                className="p-1.5 -ml-1 text-black dark:text-white rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
                 title="Back"
               >
-                <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
+                <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
               </button>
 
               <div className="min-w-0">

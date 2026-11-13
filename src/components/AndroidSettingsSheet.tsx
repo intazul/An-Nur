@@ -47,12 +47,12 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 max-w-md w-full mx-auto bg-white dark:bg-stone-950 flex flex-col h-full animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 max-w-md w-full mx-auto bg-white dark:bg-black flex flex-col h-full animate-in fade-in duration-200 select-none">
       {/* 1. Android Top App Bar for Settings Tab */}
-      <div className="px-4 py-3.5 border-b border-black/10 dark:border-white/10 flex items-center justify-between bg-white dark:bg-stone-950 shrink-0">
+      <div className="px-4 py-3.5 border-b border-black/10 dark:border-white/15 flex items-center justify-between bg-white dark:bg-black shrink-0">
         <button
           onClick={onClose}
-          className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors font-semibold text-xs active:scale-95"
+          className="flex items-center gap-1.5 py-1.5 px-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black transition-transform font-bold text-xs active:scale-95"
           aria-label="Back to App"
         >
           <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
@@ -68,14 +68,14 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
         <button
           onClick={onClose}
-          className="py-1.5 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 active:scale-95 transition-all"
+          className="py-1.5 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs active:scale-95 transition-all"
         >
           Done
         </button>
       </div>
 
       {/* 2. Scrollable Settings Tab Body */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6 bg-white dark:bg-stone-950">
+      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-6 bg-white dark:bg-black">
         {/* SECTION 1: High-Contrast Light vs Dark Theme Selection */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
@@ -91,21 +91,21 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               }}
               className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                 !darkMode
-                  ? 'border-black bg-stone-100 text-black shadow-sm font-bold'
-                  : 'border-stone-800 bg-stone-900/60 text-stone-300 hover:border-stone-700'
+                  ? 'border-black bg-black text-white shadow-sm font-bold'
+                  : 'border-stone-800 bg-stone-950 text-stone-300 hover:border-white'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-sm text-black dark:text-white flex items-center gap-1.5">
-                  <Sun className="w-4 h-4 text-black dark:text-amber-400" />
+                <span className="font-bold text-sm flex items-center gap-1.5">
+                  <Sun className="w-4 h-4" />
                   Light Mode
                 </span>
                 {!darkMode && (
-                  <span className="w-2.5 h-2.5 rounded-full bg-black" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-white" />
                 )}
               </div>
-              <div className="text-[11px] text-stone-900 dark:text-stone-300 font-medium leading-tight">
-                Contrasting black buttons with white fonts & deep black text
+              <div className="text-[11px] opacity-85 font-medium leading-tight">
+                Contrasting black buttons with white fonts & crisp white paper
               </div>
             </button>
 
@@ -116,21 +116,21 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               }}
               className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                 darkMode
-                  ? 'border-white bg-stone-900 text-white shadow-sm font-bold'
-                  : 'border-stone-200 bg-white text-stone-800 hover:border-stone-400'
+                  ? 'border-white bg-white text-black shadow-sm font-bold'
+                  : 'border-stone-200 bg-white text-stone-800 hover:border-black'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-sm text-black dark:text-white flex items-center gap-1.5">
-                  <Moon className="w-4 h-4 text-stone-700 dark:text-white" />
+                <span className="font-bold text-sm flex items-center gap-1.5">
+                  <Moon className="w-4 h-4" />
                   Night Mode
                 </span>
                 {darkMode && (
-                  <span className="w-2.5 h-2.5 rounded-full bg-white" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-black" />
                 )}
               </div>
-              <div className="text-[11px] text-stone-800 dark:text-stone-300 font-medium leading-tight">
-                Obsidian dark canvas with glowing calligraphy for night
+              <div className="text-[11px] opacity-85 font-medium leading-tight">
+                Pure black canvas with contrasting white buttons & black fonts
               </div>
             </button>
           </div>
@@ -195,7 +195,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                 <span>Thematic Study Style</span>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
                   Zero Vertical Scroll Active
                 </span>
               </div>
@@ -210,7 +210,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                 <span>Verse Slides Style</span>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
                   Zero Vertical Scroll Active
                 </span>
               </div>
@@ -225,7 +225,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             <div className="space-y-3 p-4 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                 <span>Page Turn Style</span>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
                   Horizontal Page Sliding Active
                 </span>
               </div>
@@ -636,9 +636,9 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isOnline ? (
-                <Wifi className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <Wifi className="w-4 h-4 text-black dark:text-white" />
               ) : (
-                <WifiOff className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                <WifiOff className="w-4 h-4 text-black dark:text-white" />
               )}
               <div>
                 <div className="text-xs font-bold text-black dark:text-white">
@@ -667,7 +667,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               </div>
               <button
                 onClick={install}
-                className="py-2 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 active:scale-95 transition-all shrink-0"
+                className="py-2 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs active:scale-95 transition-all shrink-0"
               >
                 Install App
               </button>
@@ -675,7 +675,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           )}
 
           {isInstalled && (
-            <div className="p-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400">
+            <div className="p-3 rounded-2xl border border-black/20 dark:border-white/20 bg-stone-100 dark:bg-stone-900 flex items-center gap-2 text-xs font-bold text-black dark:text-white">
               <Check className="w-4 h-4 stroke-[3]" />
               <span>Installed as Standalone Native PWA</span>
             </div>
@@ -688,9 +688,9 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                 onClose();
                 onOpenBookmarks();
               }}
-              className="p-3 rounded-2xl border-2 border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 hover:border-black dark:hover:border-white text-black dark:text-white text-xs font-bold flex items-center gap-2 justify-center transition-colors active:scale-95"
+              className="p-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center gap-2 justify-center transition-transform active:scale-95 shadow-xs"
             >
-              <Bookmark className="w-4 h-4 text-black dark:text-white" />
+              <Bookmark className="w-4 h-4" />
               <span>Audio Bookmarks</span>
             </button>
             <button
@@ -698,17 +698,17 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                 onClose();
                 onOpenOfflineManager();
               }}
-              className="p-3 rounded-2xl border-2 border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 hover:border-black dark:hover:border-white text-black dark:text-white text-xs font-bold flex items-center gap-2 justify-center transition-colors active:scale-95"
+              className="p-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center gap-2 justify-center transition-transform active:scale-95 shadow-xs"
             >
-              <Download className="w-4 h-4 text-black dark:text-white" />
+              <Download className="w-4 h-4" />
               <span>Offline Manager</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* 3. Bottom Action Bar: Pure Black Button with Pure White Font in Light Mode */}
-      <div className="p-4 border-t border-black/10 dark:border-white/10 bg-white dark:bg-stone-950 shrink-0">
+      {/* 3. Bottom Action Bar */}
+      <div className="p-4 border-t border-black/10 dark:border-white/15 bg-white dark:bg-black shrink-0">
         <button
           onClick={onClose}
           className="w-full h-14 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-sm shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"

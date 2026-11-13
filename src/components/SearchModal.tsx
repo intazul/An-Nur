@@ -192,8 +192,8 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 onClick={() => setQuery(c.query)}
                 className={`px-2.5 py-1 rounded-lg border whitespace-nowrap text-[11px] font-bold transition-all active:scale-95 ${
                   query === c.query
-                    ? 'bg-amber-400 text-black border-amber-500 shadow-2xs'
-                    : 'bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                    ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
+                    : 'bg-white dark:bg-stone-900 text-stone-800 dark:text-stone-200 border-stone-300 dark:border-stone-700'
                 }`}
               >
                 {c.label}
@@ -207,7 +207,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           {!query.trim() && (
             <div className="py-6 space-y-5">
               <div className="text-center space-y-1.5">
-                <Sparkles className="w-8 h-8 text-amber-500 mx-auto" />
+                <Sparkles className="w-8 h-8 text-black dark:text-white mx-auto" />
                 <h3 className="text-sm font-bold text-black dark:text-white font-cinzel">
                   Unified Sacred Knowledge Search
                 </h3>
@@ -230,7 +230,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     >
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-quran font-bold text-base text-amber-600 dark:text-amber-400">
+                          <span className="font-quran font-bold text-base text-black dark:text-white">
                             {r.root}
                           </span>
                           <span className="text-xs font-bold text-black dark:text-white">
@@ -239,7 +239,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                         </div>
                         <div className="text-[11px] text-stone-500">{r.meaning}</div>
                       </div>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black">
                         {r.occurrences}x
                       </span>
                     </button>
@@ -284,7 +284,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                         </div>
                       </div>
                     </div>
-                    <span className="font-quran text-base text-amber-600 dark:text-amber-400 shrink-0">
+                    <span className="font-quran text-base text-black dark:text-white shrink-0 font-bold">
                       {s.nameArabic}
                     </span>
                   </button>
@@ -309,7 +309,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     }}
                     className="w-full p-3.5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all text-left space-y-1.5"
                   >
-                    <div className="flex items-center justify-between text-xs font-bold text-amber-600 dark:text-amber-400">
+                    <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                       <span>Surah {v.surahName} : Ayah {v.ayahNumber}</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </div>
@@ -344,7 +344,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     className="w-full p-3.5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all text-left space-y-1"
                   >
                     <div className="flex items-center justify-between text-[11px] font-bold">
-                      <span className="text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+                      <span className="text-black dark:text-white uppercase tracking-wider">
                         {h.category} • Chapter {h.number}
                       </span>
                       <span className="font-quran text-stone-400">{h.nameArabic}</span>
@@ -374,7 +374,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                     className="p-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 space-y-1"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-quran text-lg font-bold text-amber-500">
+                      <span className="font-quran text-lg font-bold text-black dark:text-white">
                         {r.root}
                       </span>
                       <span className="text-xs font-bold font-mono">({r.translit})</span>

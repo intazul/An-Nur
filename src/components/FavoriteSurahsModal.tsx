@@ -45,22 +45,22 @@ export const FavoriteSurahsModal: React.FC<FavoriteSurahsModalProps> = ({
         {/* Header */}
         <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
-            <h3 className="text-base font-semibold text-stone-900 dark:text-stone-100 font-cinzel">
+            <Star className="w-5 h-5 text-black dark:text-white fill-current" />
+            <h3 className="text-base font-semibold text-black dark:text-white font-cinzel">
               Favorite Surahs
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-lg"
+            className="p-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Recommended Daily Devotions */}
-        <div className="p-4 bg-amber-500/5 dark:bg-amber-950/20 border-b border-stone-200 dark:border-stone-800 space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+        <div className="p-4 bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-black dark:text-white uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Recommended Prophetic Traditions</span>
           </div>
@@ -73,10 +73,10 @@ export const FavoriteSurahsModal: React.FC<FavoriteSurahsModalProps> = ({
               return (
                 <div
                   key={rec.number}
-                  className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-xs"
+                  className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs"
                 >
                   <div className="min-w-0 pr-2">
-                    <div className="font-semibold text-stone-900 dark:text-stone-100">
+                    <div className="font-semibold text-black dark:text-white">
                       {surah.number}. {surah.nameEnglish}
                     </div>
                     <div className="text-[10px] text-stone-500 truncate">{rec.reason}</div>
@@ -85,8 +85,8 @@ export const FavoriteSurahsModal: React.FC<FavoriteSurahsModalProps> = ({
                     onClick={() => onToggleFavorite(rec.number)}
                     className={`p-1.5 rounded-lg border transition-colors shrink-0 ${
                       isFav
-                        ? 'bg-amber-500 text-white border-amber-600'
-                        : 'text-stone-400 hover:text-amber-500 border-stone-200 dark:border-stone-600'
+                        ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                        : 'bg-stone-100 dark:bg-stone-800 text-black dark:text-white border-stone-300 dark:border-stone-700'
                     }`}
                     title={isFav ? 'Remove from favorites' : 'Add to favorites'}
                   >
@@ -117,7 +117,7 @@ export const FavoriteSurahsModal: React.FC<FavoriteSurahsModalProps> = ({
             return (
               <div
                 key={surah.number}
-                className="flex items-center justify-between p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-amber-400 transition-colors"
+                className="flex items-center justify-between p-2.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 hover:border-black dark:hover:border-white transition-colors"
               >
                 <button
                   onClick={() => {
@@ -126,11 +126,11 @@ export const FavoriteSurahsModal: React.FC<FavoriteSurahsModalProps> = ({
                   }}
                   className="flex items-center gap-2.5 text-left min-w-0 flex-1"
                 >
-                  <span className="w-6 h-6 rounded bg-stone-100 dark:bg-stone-800 font-cinzel text-xs font-bold flex items-center justify-center shrink-0">
+                  <span className="w-6 h-6 rounded bg-black text-white dark:bg-white dark:text-black font-cinzel text-xs font-bold flex items-center justify-center shrink-0">
                     {surah.number}
                   </span>
                   <div className="truncate">
-                    <div className="text-xs font-semibold text-stone-900 dark:text-stone-100 truncate">
+                    <div className="text-xs font-semibold text-black dark:text-white truncate">
                       {surah.nameEnglish}
                     </div>
                     <div className="text-[10px] text-stone-500 truncate">
@@ -143,12 +143,12 @@ export const FavoriteSurahsModal: React.FC<FavoriteSurahsModalProps> = ({
                   onClick={() => onToggleFavorite(surah.number)}
                   className={`p-2 rounded-lg transition-colors ml-2 ${
                     isFav
-                      ? 'text-amber-500 fill-amber-500'
-                      : 'text-stone-300 dark:text-stone-600 hover:text-amber-500'
+                      ? 'bg-black text-white dark:bg-white dark:text-black'
+                      : 'text-stone-400 dark:text-stone-600 hover:text-black dark:hover:text-white'
                   }`}
                   title={isFav ? 'Remove from favorites' : 'Mark as favorite'}
                 >
-                  <Star className={`w-4 h-4 ${isFav ? 'fill-amber-500' : ''}`} />
+                  <Star className={`w-4 h-4 ${isFav ? 'fill-current' : ''}`} />
                 </button>
               </div>
             );

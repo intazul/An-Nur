@@ -277,12 +277,12 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
           </div>
 
           {/* Central Animated Percent Gauge */}
-          <div className="p-6 rounded-3xl bg-linear-to-b from-stone-900 to-black text-white border-2 border-amber-500/30 shadow-2xl space-y-4 text-center">
+          <div className="p-6 rounded-3xl bg-white text-black dark:bg-black dark:text-white border-2 border-black dark:border-white shadow-2xl space-y-4 text-center">
             <div className="flex items-center justify-between text-xs font-bold px-1">
-              <span className="text-amber-400 uppercase tracking-wider">
+              <span className="text-black dark:text-white uppercase tracking-wider">
                 Current Juz: {currentJuz} / 30
               </span>
-              <span className="text-stone-400">
+              <span className="text-stone-600 dark:text-stone-400">
                 Page {plan.currentPage} of {TOTAL_PAGES}
               </span>
             </div>
@@ -296,24 +296,22 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                   cy="50%"
                   r={mainRadius}
                   fill="none"
-                  stroke="#262626"
+                  stroke="currentColor"
                   strokeWidth="12"
+                  className="text-stone-200 dark:text-stone-800"
                 />
-                {/* Animated Glowing Progress Ring */}
+                {/* Animated Progress Ring */}
                 <circle
                   cx="50%"
                   cy="50%"
                   r={mainRadius}
                   fill="none"
-                  stroke="#fbbf24"
+                  stroke="currentColor"
                   strokeWidth="14"
                   strokeDasharray={mainCircumference}
                   strokeDashoffset={mainStrokeOffset}
                   strokeLinecap="round"
-                  className="transition-all duration-700 ease-out"
-                  style={{
-                    filter: 'drop-shadow(0px 0px 10px rgba(251, 191, 36, 0.4))',
-                  }}
+                  className="text-black dark:text-white transition-all duration-700 ease-out"
                 />
               </svg>
 
@@ -321,10 +319,10 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                 <span className="text-4xl font-bold font-cinzel tabular-nums">
                   {totalCompletedPercent}%
                 </span>
-                <span className="text-[10px] text-amber-300 uppercase tracking-widest mt-1">
+                <span className="text-[10px] text-black dark:text-white uppercase tracking-widest mt-1 font-bold">
                   Holy Quran
                 </span>
-                <span className="text-[11px] text-stone-400 font-mono mt-0.5">
+                <span className="text-[11px] text-stone-600 dark:text-stone-400 font-mono mt-0.5">
                   {remainingPages} pages left
                 </span>
               </div>
@@ -334,7 +332,7 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
             <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
               <button
                 onClick={() => handleAdvancePages(Math.round(pagesPerDay))}
-                className="py-3 rounded-2xl bg-amber-400 text-black hover:bg-amber-300 font-bold flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all"
+                className="py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-bold flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all"
               >
                 <CheckCircle2 className="w-4 h-4" />
                 <span>+ {Math.round(pagesPerDay)} pgs Done</span>
@@ -348,7 +346,7 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                     onBackToDashboard();
                   }
                 }}
-                className="py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 border border-white/20"
+                className="py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-md"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Read in Quran →</span>
@@ -376,12 +374,12 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                     cy="50%"
                     r={smallRadius}
                     fill="none"
-                    stroke="#10b981"
+                    stroke="currentColor"
                     strokeWidth="5"
                     strokeDasharray={smallCircumference}
                     strokeDashoffset={todayStrokeOffset}
                     strokeLinecap="round"
-                    className="transition-all duration-500 ease-out"
+                    className="text-black dark:text-white transition-all duration-500 ease-out"
                   />
                 </svg>
                 <span className="absolute font-bold text-xs font-cinzel">
@@ -416,12 +414,12 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                     cy="50%"
                     r={smallRadius}
                     fill="none"
-                    stroke="#f59e0b"
+                    stroke="currentColor"
                     strokeWidth="5"
                     strokeDasharray={smallCircumference}
                     strokeDashoffset={juzStrokeOffset}
                     strokeLinecap="round"
-                    className="transition-all duration-500 ease-out"
+                    className="text-black dark:text-white transition-all duration-500 ease-out"
                   />
                 </svg>
                 <span className="absolute font-bold text-xs font-cinzel">
@@ -442,7 +440,7 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
           {/* Forecasting & Velocity Analytics Card */}
           <div className="p-4 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
             <span className="text-xs font-bold uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-emerald-500" />
+              <TrendingUp className="w-4 h-4 text-black dark:text-white" />
               <span>Khatmah Forecast & Analytics</span>
             </span>
 
@@ -456,7 +454,7 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
 
               <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800">
                 <span className="text-stone-500 text-[10px] block">Days Remaining</span>
-                <span className="text-sm font-bold text-amber-500 tabular-nums">
+                <span className="text-sm font-bold text-black dark:text-white tabular-nums">
                   {daysNeeded} Days
                 </span>
               </div>
@@ -470,7 +468,7 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
           {/* Daily 5-Prayer Breakdown Guide */}
           <div className="p-4 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-500" />
+              <Sparkles className="w-4 h-4 text-black dark:text-white" />
               <span>Recommended Daily Prayer Routine</span>
             </h3>
             <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
@@ -497,27 +495,27 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                   onClick={() => handleTogglePrayerPortion(p.id)}
                   className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer transition-all ${
                     isDone
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-900 dark:text-emerald-200'
-                      : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-amber-500/50'
+                      ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold shadow-xs'
+                      : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white text-black dark:text-white'
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="shrink-0">
                       {isDone ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-500/20" />
+                        <CheckCircle2 className="w-5 h-5" />
                       ) : (
-                        <Circle className="w-5 h-5 text-stone-400" />
+                        <Circle className="w-5 h-5 opacity-40" />
                       )}
                     </div>
                     <div>
                       <div className="text-xs font-bold">{p.name}</div>
-                      <div className="text-[10px] text-stone-500">
+                      <div className={`text-[10px] ${isDone ? 'opacity-80' : 'text-stone-500'}`}>
                         Pages {pStart} - {pEnd} ({Math.round(currentPlanConfig.perPrayer)} pages)
                       </div>
                     </div>
                   </div>
 
-                  <span className="font-quran text-xs text-stone-400">{p.arabic}</span>
+                  <span className={`font-quran text-xs ${isDone ? 'opacity-90' : 'text-stone-500'}`}>{p.arabic}</span>
                 </div>
               );
             })}
@@ -531,7 +529,7 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
             <span className="text-black dark:text-white uppercase tracking-wider">
               30 Juz Progress Matrix
             </span>
-            <span className="text-amber-500 font-mono">
+            <span className="text-black dark:text-white font-mono">
               {completedJuzCount} / 30 Finished
             </span>
           </div>
@@ -551,14 +549,14 @@ export const KhatmahPlannerView: React.FC<KhatmahPlannerViewProps> = ({
                   }}
                   className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
                     isCompleted
-                      ? 'bg-black text-white dark:bg-emerald-500/20 dark:text-emerald-200 dark:border-emerald-500/40 font-bold shadow-2xs'
+                      ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold shadow-2xs'
                       : isCurrent
-                      ? 'bg-amber-400 text-black border-amber-500 font-bold ring-2 ring-amber-400/50'
+                      ? 'bg-stone-200 text-black dark:bg-stone-800 dark:text-white border-black dark:border-white font-bold ring-2 ring-black dark:ring-white'
                       : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-400'
                   }`}
                 >
                   <div className="text-[10px] uppercase font-bold">Juz {jNum}</div>
-                  <div className="text-[9px] opacity-70">
+                  <div className="text-[9px] opacity-80">
                     {isCompleted ? '✓ Done' : isCurrent ? 'Reading' : 'p.' + ((jNum - 1) * 20 + 1)}
                   </div>
                 </div>

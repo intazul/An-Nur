@@ -129,50 +129,50 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
       return;
     }
 
-    // 1. Theme-based gradient background
+    // 1. Monochrome Gradient Background
     const bgGrad = ctx.createLinearGradient(0, 0, width, height);
     if (exportTheme === 'emerald') {
-      bgGrad.addColorStop(0, '#022c22');
-      bgGrad.addColorStop(0.5, '#064e3b');
-      bgGrad.addColorStop(1, '#022c22');
+      bgGrad.addColorStop(0, '#171717');
+      bgGrad.addColorStop(0.5, '#262626');
+      bgGrad.addColorStop(1, '#0a0a0a');
     } else if (exportTheme === 'gold') {
-      bgGrad.addColorStop(0, '#451a03');
-      bgGrad.addColorStop(0.5, '#78350f');
-      bgGrad.addColorStop(1, '#291003');
+      bgGrad.addColorStop(0, '#000000');
+      bgGrad.addColorStop(0.5, '#171717');
+      bgGrad.addColorStop(1, '#000000');
     } else {
-      bgGrad.addColorStop(0, '#0c0a09');
-      bgGrad.addColorStop(0.5, '#1c1917');
-      bgGrad.addColorStop(1, '#09090b');
+      bgGrad.addColorStop(0, '#0a0a0a');
+      bgGrad.addColorStop(0.5, '#171717');
+      bgGrad.addColorStop(1, '#000000');
     }
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, width, height);
 
-    // 2. Double border
-    ctx.strokeStyle = '#d97706';
+    // 2. Double Monochrome Border
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 4;
     ctx.strokeRect(40, 40, width - 80, height - 80);
 
-    ctx.strokeStyle = '#78350f';
+    ctx.strokeStyle = '#525252';
     ctx.lineWidth = 1.5;
     ctx.strokeRect(55, 55, width - 110, height - 110);
 
     // 3. Header Branding
-    ctx.fillStyle = '#fbbf24';
+    ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 36px serif';
     ctx.textAlign = 'center';
     ctx.fillText('AN-NUR • القرآن الكريم', width / 2, 140);
 
-    ctx.fillStyle = '#a8a29e';
+    ctx.fillStyle = '#a3a3a3';
     ctx.font = '600 24px sans-serif';
     ctx.fillText(`${type.toUpperCase()} OF THE DAY`, width / 2, 180);
 
     // 4. Category / Theme Pill
-    ctx.fillStyle = '#d97706';
+    ctx.fillStyle = '#e5e5e5';
     ctx.font = 'bold 26px sans-serif';
     ctx.fillText(`“${item.theme.toUpperCase()}”`, width / 2, 240);
 
     // 5. Arabic Calligraphy
-    ctx.fillStyle = '#fef3c7';
+    ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 50px "Amiri", "Scheherazade New", serif';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
@@ -203,13 +203,13 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
 
     // 6. Ornamental Divider
     ctx.direction = 'ltr';
-    ctx.fillStyle = '#f59e0b';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '28px serif';
     ctx.fillText('❖  ❖  ❖', width / 2, startY + 40);
     startY += 100;
 
     // 7. English Translation
-    ctx.fillStyle = '#f5f5f4';
+    ctx.fillStyle = '#f5f5f5';
     ctx.font = '400 32px sans-serif';
     ctx.textAlign = 'center';
 
@@ -220,11 +220,11 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
     });
 
     // 8. Reference
-    ctx.fillStyle = '#fbbf24';
+    ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 28px sans-serif';
     ctx.fillText(`— ${item.reference}`, width / 2, height - 190);
 
-    ctx.fillStyle = '#78716c';
+    ctx.fillStyle = '#a3a3a3';
     ctx.font = 'italic 22px sans-serif';
     ctx.fillText(item.reflection, width / 2, height - 130);
 

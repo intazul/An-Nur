@@ -108,11 +108,11 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-              <Heart className="w-4 h-4 fill-emerald-500/20" />
+            <div className="w-8 h-8 rounded-lg bg-black text-white dark:bg-white dark:text-black flex items-center justify-center">
+              <Heart className="w-4 h-4 fill-current" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-stone-900 dark:text-stone-100 font-cinzel">
+              <h2 className="text-base font-semibold text-black dark:text-white font-cinzel">
                 Daily Iman Tracker & Spiritual Progress
               </h2>
               <p className="text-xs text-stone-500">
@@ -122,9 +122,9 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-lg"
+            className="p-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -137,17 +137,17 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
                 Today's Prayer Fulfillment
               </span>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-stone-900 dark:text-stone-100 tabular-nums">
+                <span className="text-2xl font-bold text-black dark:text-white tabular-nums">
                   {completedObligatory} / 5
                 </span>
-                <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                <span className="text-xs font-bold text-black dark:text-white">
                   ({progressPercent}% Completed)
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-800 dark:text-amber-300 text-xs font-semibold">
-              <Flame className="w-4 h-4 fill-amber-500 text-amber-500" />
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold">
+              <Flame className="w-4 h-4 fill-current" />
               <span>{streak} Days Active Streak</span>
             </div>
           </div>
@@ -166,18 +166,18 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
                     onClick={() => handleTogglePrayer(prayer.id)}
                     className={`flex items-center justify-between p-3 rounded-xl border text-left transition-all ${
                       done
-                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-900 dark:text-emerald-100'
-                        : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-stone-300 text-stone-700 dark:text-stone-300'
+                        ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold shadow-xs'
+                        : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white text-stone-800 dark:text-stone-200'
                     }`}
                   >
                     <div>
-                      <div className="text-xs font-semibold">{prayer.label}</div>
-                      <div className="text-[11px] font-quran text-stone-500">{prayer.arabic}</div>
+                      <div className="text-xs font-bold">{prayer.label}</div>
+                      <div className={`text-[11px] font-quran ${done ? 'opacity-80' : 'text-stone-500'}`}>{prayer.arabic}</div>
                     </div>
                     {done ? (
-                      <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 fill-emerald-500/20" />
+                      <CheckCircle2 className="w-5 h-5" />
                     ) : (
-                      <Circle className="w-5 h-5 text-stone-400" />
+                      <Circle className="w-5 h-5 opacity-40" />
                     )}
                   </button>
                 );
@@ -199,18 +199,18 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
                     onClick={() => handleTogglePrayer(prayer.id)}
                     className={`flex items-center justify-between p-3 rounded-xl border text-left transition-all ${
                       done
-                        ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-900 dark:text-emerald-100'
-                        : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-stone-300 text-stone-700 dark:text-stone-300'
+                        ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold shadow-xs'
+                        : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white text-stone-800 dark:text-stone-200'
                     }`}
                   >
                     <div>
-                      <div className="text-xs font-semibold">{prayer.label}</div>
-                      <div className="text-[11px] font-quran text-stone-500">{prayer.arabic}</div>
+                      <div className="text-xs font-bold">{prayer.label}</div>
+                      <div className={`text-[11px] font-quran ${done ? 'opacity-80' : 'text-stone-500'}`}>{prayer.arabic}</div>
                     </div>
                     {done ? (
-                      <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 fill-emerald-500/20" />
+                      <CheckCircle2 className="w-5 h-5" />
                     ) : (
-                      <Circle className="w-5 h-5 text-stone-400" />
+                      <Circle className="w-5 h-5 opacity-40" />
                     )}
                   </button>
                 );
@@ -222,14 +222,14 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
           <div className="p-4 sm:p-5 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <h3 className="text-sm font-semibold text-stone-900 dark:text-stone-100 font-cinzel">
+                <Sparkles className="w-4 h-4 text-black dark:text-white" />
+                <h3 className="text-sm font-semibold text-black dark:text-white font-cinzel">
                   Digital Tasbih & Dhikr
                 </h3>
               </div>
               <button
                 onClick={handleResetDhikr}
-                className="flex items-center gap-1 text-xs text-stone-500 hover:text-stone-800 dark:hover:text-stone-200 transition-colors"
+                className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black text-white dark:bg-white dark:text-black text-xs font-bold transition-transform active:scale-95"
                 title="Reset Count"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -243,10 +243,10 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
                 <button
                   key={d.id}
                   onClick={() => setSelectedDhikrIndex(idx)}
-                  className={`px-3 py-1.5 rounded-lg border whitespace-nowrap transition-colors ${
+                  className={`px-3 py-1.5 rounded-lg border whitespace-nowrap font-bold transition-colors ${
                     selectedDhikrIndex === idx
-                      ? 'bg-amber-500 text-white border-amber-600 shadow-2xs'
-                      : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700'
+                      ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
+                      : 'bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700'
                   }`}
                 >
                   {d.translit} ({d.target})
@@ -256,7 +256,7 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
 
             {/* Large Interactive Tap Counter */}
             <div className="text-center py-4 space-y-2">
-              <div className="font-quran text-2xl sm:text-3xl text-amber-700 dark:text-amber-300 select-none">
+              <div className="font-quran text-2xl sm:text-3xl text-black dark:text-white select-none">
                 {currentDhikr.arabic}
               </div>
               <div className="text-xs text-stone-500">{currentDhikr.meaning}</div>
@@ -264,12 +264,12 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
               <div className="pt-2">
                 <button
                   onClick={handleDhikrTap}
-                  className="w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-full bg-linear-to-b from-stone-900 to-stone-950 dark:from-stone-800 dark:to-stone-900 text-white shadow-xl hover:scale-105 active:scale-95 transition-all flex flex-col items-center justify-center border-4 border-amber-500/40 select-none"
+                  className="w-28 h-28 sm:w-32 sm:h-32 mx-auto rounded-full bg-black text-white dark:bg-white dark:text-black shadow-xl hover:scale-105 active:scale-95 transition-all flex flex-col items-center justify-center border-4 border-black dark:border-white select-none"
                 >
                   <span className="text-3xl font-bold font-cinzel tabular-nums">
                     {imanRecord.dhikrCount}
                   </span>
-                  <span className="text-[10px] text-amber-300 uppercase tracking-widest mt-0.5">
+                  <span className="text-[10px] opacity-80 uppercase tracking-widest mt-0.5 font-bold">
                     Target: {currentDhikr.target}
                   </span>
                 </button>
@@ -287,12 +287,12 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
               value={reflectionInput}
               onChange={(e) => setReflectionInput(e.target.value)}
               placeholder="What verse resonated with your heart today? Record moments of gratitude, dua, or spiritual breakthroughs..."
-              className="w-full h-24 p-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full h-24 p-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-black dark:text-white placeholder:text-stone-400 text-xs focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
             />
             <div className="flex justify-end">
               <button
                 onClick={handleSaveReflection}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 rounded-lg text-xs font-medium hover:bg-stone-800 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold transition-transform active:scale-95"
               >
                 <Save className="w-3.5 h-3.5" />
                 <span>{reflectionSaved ? 'Saved to Journal!' : 'Save Reflection'}</span>

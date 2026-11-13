@@ -74,7 +74,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   const favorites = (profile.favoriteSurahs || [1, 36, 55, 67, 112]).slice(0, 4);
 
   return (
-    <div className="flex-1 flex flex-col max-w-md sm:max-w-lg w-full mx-auto px-4 sm:px-5 py-4 select-none bg-white dark:bg-stone-950 overflow-y-auto space-y-4 pb-8">
+    <div className="flex-1 flex flex-col max-w-md sm:max-w-lg w-full mx-auto px-4 sm:px-5 py-4 select-none bg-white dark:bg-black overflow-y-auto space-y-4 pb-8">
       {/* 1. Modern Minimalist Header */}
       <header className="flex items-center justify-between pt-1 pb-1">
         <div className="flex items-center gap-2.5">
@@ -96,27 +96,27 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {/* Qibla Direction */}
           <button
             onClick={onOpenQibla}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-bold text-black dark:text-white hover:border-black dark:hover:border-white transition-all active:scale-95 shadow-2xs"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold transition-all active:scale-95 shadow-2xs"
             title="Qibla Compass Direction Finder"
           >
-            <Compass className="w-3.5 h-3.5 text-black dark:text-white" />
+            <Compass className="w-3.5 h-3.5" />
             <span>Qibla</span>
           </button>
 
           {/* Spiritual Streak Badge */}
           <button
             onClick={onOpenImanTracker}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-bold text-black dark:text-white transition-colors hover:border-black dark:hover:border-white"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold transition-all active:scale-95 shadow-2xs"
             title="View spiritual streak & trends"
           >
-            <Flame className="w-3.5 h-3.5 fill-black text-black dark:fill-white dark:text-white" />
+            <Flame className="w-3.5 h-3.5 fill-current" />
             <span className="tabular-nums">{streak}d</span>
           </button>
 
           {/* Settings */}
           <button
             onClick={onOpenSettings}
-            className="p-2 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-900 dark:text-stone-300 dark:hover:text-white border border-stone-200 dark:border-stone-800 transition-all active:scale-95 shadow-2xs"
+            className="p-2 rounded-xl bg-black text-white dark:bg-white dark:text-black transition-all active:scale-95 shadow-2xs"
             title="Settings & Preferences"
             aria-label="Settings"
           >
@@ -156,7 +156,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           />
           <button
             onClick={onOpenImanTracker}
-            className="mt-2 text-[11px] font-bold text-stone-500 hover:text-black dark:text-stone-400 dark:hover:text-white transition-colors flex items-center justify-center gap-1"
+            className="mt-2.5 px-3 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black text-[11px] font-bold transition-transform active:scale-95 flex items-center justify-center gap-1 shadow-2xs"
             title="Open comprehensive Iman Analysis & Trends"
           >
             <span>Spiritual Analysis & Trends ↗</span>

@@ -505,14 +505,14 @@ export default function App() {
   const isFavorite = (profile.favoriteSurahs || []).includes(currentSurahNumber);
 
   return (
-    <div className="h-screen sm:min-h-screen bg-stone-100 dark:bg-stone-950 flex flex-col items-center justify-start sm:p-4 transition-colors overflow-hidden">
-      {/* Android Device Portrait Frame (Notification Bar removed as requested) */}
-      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 flex flex-col overflow-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800">
+    <div className="h-screen sm:min-h-screen bg-stone-100 dark:bg-black flex flex-col items-center justify-start sm:p-4 transition-colors overflow-hidden">
+      {/* Android Device Portrait Frame */}
+      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-white text-black dark:bg-black dark:text-white flex flex-col overflow-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800">
         {/* Offline Mode Status Banner (visible when disconnected from network) */}
         {!isOnline && (
           <div className="w-full bg-black text-white dark:bg-white dark:text-black px-4 py-1.5 text-[11px] font-bold flex items-center justify-between border-b border-black/20 dark:border-white/20 shrink-0 select-none z-50">
             <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-white dark:bg-black animate-pulse" />
               <span>Offline Mode Active • Saved Quran & Recitations Ready</span>
             </span>
             <span className="text-[10px] opacity-80 font-mono">100% Offline</span>

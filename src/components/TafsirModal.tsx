@@ -96,19 +96,19 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             {/* Quick Copy */}
             <button
               onClick={handleCopyAll}
-              className="p-2 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors active:scale-95"
+              className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
               title="Copy Verse & Tafsir"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-500 stroke-[3]" /> : <Copy className="w-4 h-4 stroke-[2.5]" />}
+              {copied ? <Check className="w-4 h-4 stroke-[3]" /> : <Copy className="w-4 h-4 stroke-[2.5]" />}
             </button>
 
             {/* Close */}
             <button
               onClick={onClose}
-              className="p-2 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors active:scale-95"
+              className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
               title="Close Tafsir"
             >
-              <X className="w-5 h-5 stroke-[2.5]" />
+              <X className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
         </div>
@@ -142,9 +142,9 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             </div>
 
             <div className="py-2 text-right" dir="rtl">
-              <p className="font-quran text-2xl sm:text-3xl text-stone-950 dark:text-stone-50 leading-[2.5] font-bold font-arabic-clean select-text">
+              <p className="font-quran text-2xl sm:text-3xl text-black dark:text-white leading-[2.5] font-bold font-arabic-clean select-text">
                 {ayah.textArabic}
-                <span className="inline-block mr-2 text-amber-600 dark:text-amber-400 font-cinzel text-base select-none">
+                <span className="inline-block mr-2 text-black dark:text-white font-cinzel text-base select-none">
                   ۝ {ayah.numberInSurah}
                 </span>
               </p>
@@ -176,7 +176,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
           <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-stone-900 border-2 border-black/10 dark:border-stone-700 shadow-sm space-y-3.5">
             <div className="flex items-center justify-between pb-2 border-b border-black/10 dark:border-stone-800">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-black dark:text-amber-400 stroke-[2.5]" />
+                <Sparkles className="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
                 <h4 className="text-sm font-bold text-black dark:text-white font-cinzel tracking-tight">
                   Precise Tafsir & Meaning
                 </h4>

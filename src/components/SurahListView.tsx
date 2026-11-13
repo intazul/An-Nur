@@ -64,23 +64,23 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
   }, [searchQuery, filterType, favorites]);
 
   return (
-    <div className="flex-1 flex flex-col max-w-md w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full overflow-hidden select-none">
+    <div className="flex-1 flex flex-col max-w-md w-full mx-auto bg-white dark:bg-black h-full overflow-hidden select-none">
       {/* 1. Header Bar */}
-      <header className="shrink-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-4 py-3 flex items-center justify-between gap-2 shadow-2xs">
+      <header className="shrink-0 bg-white dark:bg-black border-b border-stone-200 dark:border-stone-800 px-4 py-3 flex items-center justify-between gap-2 shadow-2xs">
         <div className="flex items-center gap-2">
           <button
             onClick={onBackToDashboard}
-            className="p-1.5 -ml-1 text-black dark:text-white rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+            className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
             title="Back to Dashboard"
             aria-label="Back to Dashboard"
           >
-            <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
+            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
           </button>
           <div>
             <h1 className="font-cinzel font-bold text-base text-black dark:text-white leading-tight">
               The Holy Quran
             </h1>
-            <span className="font-quran text-xs text-stone-900 dark:text-amber-400 font-bold block -mt-0.5">
+            <span className="font-quran text-xs text-stone-700 dark:text-stone-300 font-bold block -mt-0.5">
               فهرس السور · 114 Surahs
             </span>
           </div>
@@ -89,7 +89,7 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             onClick={onOpenSettings}
-            className="p-2 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl transition-colors"
+            className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
             title="Settings"
             aria-label="Settings"
           >
@@ -107,7 +107,7 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
             title="Resume reading on full screen mode"
           >
             <div className="flex items-center gap-2.5 min-w-0">
-              <BookmarkCheck className="w-4 h-4 text-amber-400 dark:text-amber-600 shrink-0 stroke-[2.5]" />
+              <BookmarkCheck className="w-4 h-4 text-white dark:text-black shrink-0 stroke-[2.5]" />
               <div className="text-left min-w-0">
                 <span className="text-[10px] uppercase font-bold opacity-80 block tracking-wider">
                   Resume Last Read
@@ -117,7 +117,7 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
                 </span>
               </div>
             </div>
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white/20 dark:bg-black/10 shrink-0 flex items-center gap-1">
+            <span className="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white text-black dark:bg-black dark:text-white shrink-0 flex items-center gap-1">
               <span>Read Full Screen</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </span>
@@ -188,14 +188,14 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
                 onClick={() => onSelectSurah(surah.number, true)}
                 className={`w-full p-3 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 group active:scale-[0.99] ${
                   isLastReadSurah
-                    ? 'bg-amber-500/10 border-amber-500/40 shadow-xs ring-1 ring-amber-500/30'
-                    : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white shadow-2xs'
+                    ? 'bg-stone-100 dark:bg-stone-900 border-black dark:border-white shadow-xs ring-1 ring-black dark:ring-white'
+                    : 'bg-white dark:bg-stone-950 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white shadow-2xs'
                 }`}
                 title={`Open Surah ${surah.nameEnglish} in Full Screen Mode`}
               >
                 {/* Left: Surah Number and Meta */}
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-stone-100 dark:bg-stone-800 text-black dark:text-white flex items-center justify-center font-cinzel font-bold text-xs shrink-0 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors">
+                  <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-cinzel font-bold text-xs shrink-0">
                     {surah.number}
                   </div>
 
@@ -205,7 +205,7 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
                         {surah.nameEnglish}
                       </h3>
                       {isLastReadSurah && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded-md bg-amber-500 text-white font-bold shrink-0">
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black font-bold shrink-0">
                           Last Read
                         </span>
                       )}
@@ -219,7 +219,7 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
                 {/* Right: Arabic Calligraphy Title & Favorite Button */}
                 <div className="flex items-center gap-2.5 shrink-0">
                   <div className="text-right">
-                    <span className="font-quran text-base font-bold text-amber-700 dark:text-amber-400 block">
+                    <span className="font-quran text-base font-bold text-black dark:text-white block">
                       سُورَةُ {surah.nameArabic}
                     </span>
                     <span className="text-[9px] uppercase tracking-wider font-semibold text-stone-600 dark:text-stone-400 block">
@@ -232,12 +232,12 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
                       e.stopPropagation();
                       onToggleFavoriteSurah(surah.number);
                     }}
-                    className="p-1 text-stone-400 hover:text-amber-500 transition-colors"
+                    className="p-1.5 rounded-lg bg-black text-white dark:bg-white dark:text-black transition-transform active:scale-95"
                     title={isFav ? 'Remove from favorites' : 'Add to favorites'}
                   >
                     <Star
-                      className={`w-4 h-4 ${
-                        isFav ? 'fill-amber-500 text-amber-500' : 'text-stone-400 dark:text-stone-600'
+                      className={`w-3.5 h-3.5 ${
+                        isFav ? 'fill-white dark:fill-black' : ''
                       }`}
                     />
                   </button>

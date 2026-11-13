@@ -149,7 +149,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                 Prayer Times & Adhan
               </h2>
               <div className="flex items-center gap-1.5 text-xs text-stone-500">
-                <MapPin className="w-3 h-3 text-amber-500" />
+                <MapPin className="w-3 h-3 text-black dark:text-white" />
                 <span className="truncate max-w-[180px]">{prayerStatus.locationName}</span>
               </div>
             </div>
@@ -161,7 +161,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
               className={`p-2 rounded-xl transition-all ${
                 showSettings
                   ? 'bg-black text-white dark:bg-white dark:text-black'
-                  : 'text-stone-500 hover:text-black dark:hover:text-white'
+                  : 'bg-black text-white dark:bg-white dark:text-black opacity-80 hover:opacity-100'
               }`}
               title="Calculation Settings"
             >
@@ -169,9 +169,9 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-stone-400 hover:text-black dark:hover:text-white rounded-xl"
+              className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -179,20 +179,20 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
           {/* Next Prayer Highlight Banner */}
-          <div className="p-4 rounded-2xl bg-black text-white dark:bg-stone-950 border border-black dark:border-stone-800 flex items-center justify-between">
+          <div className="p-4 rounded-2xl bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white flex items-center justify-between">
             <div className="space-y-0.5">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400">
+              <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">
                 Next Prayer In {prayerStatus.timeUntilNext}
               </span>
               <div className="flex items-baseline gap-2">
                 <span className="text-2xl font-bold font-cinzel">
                   {prayerStatus.nextPrayer?.name}
                 </span>
-                <span className="font-quran text-lg text-stone-300">
+                <span className="font-quran text-lg opacity-85">
                   {prayerStatus.nextPrayer?.arabicName}
                 </span>
               </div>
-              <span className="text-xs text-stone-300 font-mono">
+              <span className="text-xs opacity-80 font-mono">
                 {prayerStatus.nextPrayer?.timeString}
               </span>
             </div>
@@ -200,10 +200,10 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
             <div className="flex flex-col items-end gap-2">
               <button
                 onClick={handleTestAdhan}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black dark:bg-black dark:text-white text-xs font-bold transition-all active:scale-95"
                 title="Preview gentle Adhan chime"
               >
-                <Volume2 className={`w-3.5 h-3.5 ${isPlayingAdhan ? 'text-amber-400 animate-pulse' : ''}`} />
+                <Volume2 className={`w-3.5 h-3.5 ${isPlayingAdhan ? 'animate-pulse' : ''}`} />
                 <span>{isPlayingAdhan ? 'Playing…' : 'Adhan Tone'}</span>
               </button>
 
@@ -213,7 +213,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     onClose();
                     onOpenQibla();
                   }}
-                  className="flex items-center gap-1 text-[11px] text-amber-400 font-bold hover:underline"
+                  className="flex items-center gap-1 text-[11px] font-bold hover:underline"
                 >
                   <Compass className="w-3 h-3" />
                   <span>Qibla Compass →</span>
@@ -225,7 +225,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
           {/* Quick Location & GPS Action */}
           <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs">
             <div className="flex items-center gap-2 truncate">
-              <MapPin className="w-4 h-4 text-emerald-500 shrink-0" />
+              <MapPin className="w-4 h-4 text-black dark:text-white shrink-0" />
               <span className="font-medium text-stone-900 dark:text-stone-200 truncate">
                 {prayerStatus.locationName}
               </span>
@@ -311,7 +311,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     key={prayer.id}
                     className={`flex items-center justify-between p-3 rounded-2xl border transition-all ${
                       prayer.isNext
-                        ? 'bg-black text-white border-black dark:bg-stone-900 dark:text-white dark:border-amber-500/50 shadow-md ring-1 ring-black dark:ring-amber-500/30'
+                        ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-md font-bold'
                         : prayer.isVoluntary
                         ? 'bg-stone-50 dark:bg-stone-950/40 border-stone-200 dark:border-stone-800/60 opacity-80'
                         : isDone
@@ -327,9 +327,9 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                           title="Mark prayer complete"
                         >
                           {isDone ? (
-                            <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-500/20" />
+                            <CheckCircle2 className="w-5 h-5" />
                           ) : (
-                            <Circle className="w-5 h-5 text-stone-400" />
+                            <Circle className="w-5 h-5 opacity-40" />
                           )}
                         </button>
                       )}
@@ -338,7 +338,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-sm">{prayer.name}</span>
                           {prayer.isNext && (
-                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-400 text-black uppercase tracking-wider">
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-white text-black dark:bg-black dark:text-white uppercase tracking-wider">
                               Next
                             </span>
                           )}

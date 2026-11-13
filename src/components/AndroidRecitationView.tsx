@@ -105,16 +105,16 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
   const progressPercent = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
 
   return (
-    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto min-h-screen bg-white dark:bg-stone-950 px-5 py-3 overflow-x-hidden select-none">
+    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto min-h-screen bg-white dark:bg-black px-5 py-3 overflow-x-hidden select-none">
       {/* 1. Android Top Header */}
       <div className="flex items-center justify-between py-2">
         <button
           onClick={onBackToDashboard}
-          className="p-2 -ml-2 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-900 rounded-full transition-colors active:scale-95"
+          className="p-2 -ml-1 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-colors active:scale-95 shadow-2xs"
           title="Back to Dashboard"
           aria-label="Back to Dashboard"
         >
-          <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
         </button>
 
         <div className="text-center min-w-0 flex items-center gap-1.5 justify-center">
@@ -129,10 +129,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               {currentSurah && (
                 <button
                   onClick={() => onToggleFavoriteSurah(currentSurah.number)}
-                  className="p-0.5 text-black dark:text-amber-400"
+                  className="p-0.5 text-black dark:text-white"
                   title="Favorite Surah"
                 >
-                  <Star className={`w-3.5 h-3.5 ${isFavoriteSurah ? 'fill-black dark:fill-amber-400' : ''}`} />
+                  <Star className={`w-3.5 h-3.5 ${isFavoriteSurah ? 'fill-black dark:fill-white' : ''}`} />
                 </button>
               )}
             </div>
@@ -141,7 +141,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
 
         <button
           onClick={onOpenSettings}
-          className="p-2 -mr-2 bg-black text-white hover:bg-stone-900 dark:bg-stone-900 dark:text-stone-300 dark:hover:text-white rounded-xl transition-all active:scale-95 shadow-2xs"
+          className="p-2 -mr-1 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-all active:scale-95 shadow-2xs"
           title="Settings"
           aria-label="Settings"
         >
@@ -309,7 +309,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               {currentAyah && (
                 <button
                   onClick={() => onOpenTafsir(currentAyah)}
-                  className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-black text-white hover:bg-stone-800 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-amber-500 text-[10px] font-bold"
+                  className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold active:scale-95 transition-transform"
                   title="Open In-Depth Tafsir"
                 >
                   <BookOpen className="w-3 h-3 stroke-[2.5]" />
@@ -320,10 +320,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               {hadith && (
                 <button
                   onClick={() => setShowHadith(!showHadith)}
-                  className={`flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors ${
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold transition-colors border ${
                     showHadith
-                      ? 'bg-black text-white dark:bg-amber-500'
-                      : 'bg-stone-100 dark:bg-stone-800 text-black dark:text-stone-300'
+                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+                      : 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white opacity-90'
                   }`}
                   title="Toggle Related Hadith"
                 >
@@ -376,15 +376,15 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                       onClick={() => setActiveWordIndex(activeWordIndex === wIdx ? null : wIdx)}
                       className={`inline-block px-1 rounded-lg transition-colors cursor-pointer select-none ${
                         isWordActive || activeWordIndex === wIdx
-                          ? 'bg-amber-400 text-black dark:bg-amber-400 dark:text-black scale-105 shadow-xs'
-                          : 'hover:text-amber-500'
+                          ? 'bg-black text-white dark:bg-white dark:text-black scale-105 shadow-xs'
+                          : 'hover:opacity-75'
                       }`}
                     >
                       {word}
                     </span>
                   );
                 })}
-                <span className="inline-block mr-2 text-black dark:text-amber-400 font-cinzel text-lg select-none">
+                <span className="inline-block mr-2 text-black dark:text-white font-cinzel text-lg select-none">
                   ۝ {currentAyah.numberInSurah}
                 </span>
               </div>
@@ -506,7 +506,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             className={`p-3 rounded-full transition-all active:scale-95 ${
               repeatVerse
                 ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                : 'text-stone-700 dark:text-stone-300 hover:text-black dark:hover:text-white'
+                : 'bg-black/10 text-black dark:bg-white/15 dark:text-white'
             }`}
             title={repeatVerse ? 'Repeat Verse Active' : 'Repeat Verse for Memorization'}
           >
@@ -517,10 +517,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
           <button
             onClick={onPrevAyah}
             disabled={activeAyahNumber <= 1}
-            className="p-3 text-black dark:text-stone-200 hover:text-stone-700 dark:hover:text-white disabled:opacity-30 transition-colors active:scale-95"
+            className="p-3 rounded-full bg-black text-white dark:bg-white dark:text-black disabled:opacity-30 transition-all active:scale-95 shadow-xs"
             title="Previous Verse"
           >
-            <SkipBack className="w-6 h-6 stroke-[2.5]" />
+            <SkipBack className="w-5 h-5 stroke-[2.5]" />
           </button>
 
           {/* Primary Play/Pause Button: Pure Black in Light Mode with White Icon */}
@@ -540,16 +540,16 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
           <button
             onClick={onNextAyah}
             disabled={activeAyahNumber >= (currentSurah?.ayahs.length || 1)}
-            className="p-3 text-black dark:text-stone-200 hover:text-stone-700 dark:hover:text-white disabled:opacity-30 transition-colors active:scale-95"
+            className="p-3 rounded-full bg-black text-white dark:bg-white dark:text-black disabled:opacity-30 transition-all active:scale-95 shadow-xs"
             title="Next Verse"
           >
-            <SkipForward className="w-6 h-6 stroke-[2.5]" />
+            <SkipForward className="w-5 h-5 stroke-[2.5]" />
           </button>
 
           {/* Bookmark Button */}
           <button
             onClick={() => onAddBookmark(activeAyahNumber, currentTime)}
-            className="p-3 text-stone-700 dark:text-stone-300 hover:text-black dark:hover:text-white transition-colors active:scale-95"
+            className="p-3 rounded-full bg-black text-white dark:bg-white dark:text-black transition-all active:scale-95 shadow-xs"
             title="Bookmark this moment"
           >
             <Bookmark className="w-5 h-5 stroke-[2.5]" />
@@ -566,7 +566,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               className={`px-3 py-1 rounded-full text-xs font-bold transition-all active:scale-95 ${
                 playbackSpeed === spd
                   ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                  : 'text-black dark:text-stone-300 bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700'
+                  : 'text-black dark:text-white bg-stone-200 dark:bg-stone-800 border border-stone-300 dark:border-stone-700'
               }`}
             >
               {spd}x

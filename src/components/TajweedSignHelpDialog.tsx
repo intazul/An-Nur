@@ -26,8 +26,8 @@ export const TajweedSignHelpDialog: React.FC<TajweedSignHelpDialogProps> = ({
 
         <div className="p-4 sm:p-5 text-center space-y-4">
           {/* Symbol Emblem */}
-          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border-2 border-amber-500/40 mx-auto flex items-center justify-center">
-            <span className="font-quran text-3xl font-bold text-amber-700 dark:text-amber-300 select-none">
+          <div className="w-16 h-16 rounded-2xl bg-black text-white dark:bg-white dark:text-black border-2 border-black dark:border-white mx-auto flex items-center justify-center shadow-sm">
+            <span className="font-quran text-3xl font-bold select-none">
               {sign.symbol}
             </span>
           </div>
@@ -36,14 +36,14 @@ export const TajweedSignHelpDialog: React.FC<TajweedSignHelpDialogProps> = ({
             <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
               {sign.name} · {sign.arabicName}
             </span>
-            <h3 className="text-base font-bold text-stone-900 dark:text-stone-100 font-cinzel">
+            <h3 className="text-base font-bold text-black dark:text-white font-cinzel">
               {sign.ruleSimple}
             </h3>
           </div>
 
           {/* Simple Explanation Card */}
           <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-950/70 border border-stone-200 dark:border-stone-800 text-left space-y-2">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-black dark:text-white">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>What To Do When Reading:</span>
             </div>
@@ -54,7 +54,7 @@ export const TajweedSignHelpDialog: React.FC<TajweedSignHelpDialogProps> = ({
 
           <button
             onClick={onClose}
-            className="w-full h-11 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-semibold text-xs shadow-md transition-all active:scale-[0.98]"
+            className="w-full h-11 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-[0.98]"
           >
             Understood, Continue Reading
           </button>

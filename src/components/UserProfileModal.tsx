@@ -208,46 +208,46 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/40">
           <button
             onClick={() => setActiveTab('profile')}
-            className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+            className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap ${
               activeTab === 'profile'
-                ? 'border-amber-500 text-stone-900 dark:text-stone-100'
-                : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'border-black dark:border-white text-black dark:text-white'
+                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
             }`}
           >
             Spiritual Goals & Streaks
           </button>
           <button
             onClick={() => setActiveTab('bookmarks')}
-            className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1 ${
+            className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1 ${
               activeTab === 'bookmarks'
-                ? 'border-amber-500 text-stone-900 dark:text-stone-100'
-                : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'border-black dark:border-white text-black dark:text-white'
+                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
             }`}
           >
             <span>Audio Bookmarks</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-400 text-[10px]">
+            <span className="px-1.5 py-0.2 rounded-full bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
               {bookmarks.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab('offline')}
-            className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap flex items-center gap-1 ${
+            className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1 ${
               activeTab === 'offline'
-                ? 'border-amber-500 text-stone-900 dark:text-stone-100'
-                : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'border-black dark:border-white text-black dark:text-white'
+                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
             }`}
           >
             <span>Offline Downloads</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-stone-200 dark:bg-stone-700 text-stone-700 dark:text-stone-300 text-[10px]">
+            <span className="px-1.5 py-0.2 rounded-full bg-stone-200 dark:bg-stone-800 text-black dark:text-white text-[10px] font-bold">
               {downloadedSurahs.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab('reminders')}
-            className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors whitespace-nowrap ${
+            className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap ${
               activeTab === 'reminders'
-                ? 'border-amber-500 text-stone-900 dark:text-stone-100'
-                : 'border-transparent text-stone-500 hover:text-stone-800 dark:hover:text-stone-300'
+                ? 'border-black dark:border-white text-black dark:text-white'
+                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
             }`}
           >
             Push Reminders
@@ -272,32 +272,32 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     type="text"
                     value={profile.name}
                     onChange={(e) => onUpdateProfile({ name: e.target.value })}
-                    className="flex-1 px-3 py-2 text-sm bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="flex-1 px-3 py-2 text-sm bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                   />
                 </div>
               </div>
 
               {/* Streaks & Consistency Record */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
-                    <Flame className="w-4 h-4 fill-amber-500 text-amber-500" />
+                <div className="p-4 rounded-xl bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold">
+                    <Flame className="w-4 h-4 fill-current" />
                     <span>Current Streak</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-bold font-cinzel text-amber-900 dark:text-amber-200 tabular-nums">
+                  <div className="text-2xl sm:text-3xl font-bold font-cinzel tabular-nums">
                     {streak} Days
                   </div>
-                  <p className="text-[11px] text-amber-700/80 dark:text-amber-400/80">
+                  <p className="text-[11px] opacity-80">
                     Consecutive daily reading & prayer
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 space-y-1">
+                <div className="p-4 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-1">
                   <div className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 dark:text-stone-400">
-                    <Sparkles className="w-4 h-4 text-stone-500" />
+                    <Sparkles className="w-4 h-4 text-black dark:text-white" />
                     <span>Best Record</span>
                   </div>
-                  <div className="text-2xl sm:text-3xl font-bold font-cinzel text-stone-900 dark:text-stone-100 tabular-nums">
+                  <div className="text-2xl sm:text-3xl font-bold font-cinzel text-black dark:text-white tabular-nums">
                     {bestStreak} Days
                   </div>
                   <p className="text-[11px] text-stone-500">
@@ -310,12 +310,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Target className="w-4 h-4 text-emerald-600" />
-                    <span className="text-xs font-semibold uppercase tracking-wider text-stone-700 dark:text-stone-300">
+                    <Target className="w-4 h-4 text-black dark:text-white" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
                       Daily Verse Reading Goal
                     </span>
                   </div>
-                  <span className="text-sm font-bold font-cinzel text-emerald-600 dark:text-emerald-400 tabular-nums">
+                  <span className="text-sm font-bold font-cinzel text-black dark:text-white tabular-nums">
                     {profile.dailyVerseGoal} Verses / Day
                   </span>
                 </div>
@@ -327,7 +327,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   step="1"
                   value={profile.dailyVerseGoal}
                   onChange={(e) => onUpdateProfile({ dailyVerseGoal: Number(e.target.value) })}
-                  className="w-full accent-emerald-600 cursor-pointer"
+                  className="w-full accent-black dark:accent-white cursor-pointer"
                 />
 
                 <div className="flex justify-between text-[11px] text-stone-400">
@@ -362,14 +362,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   {bookmarks.map((bm) => (
                     <div
                       key={bm.id}
-                      className="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center justify-between gap-3 group hover:border-amber-400 transition-colors"
+                      className="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center justify-between gap-3 group hover:border-black dark:hover:border-white transition-colors"
                     >
                       <div className="min-w-0 flex-1 space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-stone-900 dark:text-stone-100 text-sm">
+                          <span className="font-semibold text-black dark:text-white text-sm">
                             Surah {bm.surahName} : Ayah {bm.ayahNumber}
                           </span>
-                          <span className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                          <span className="text-[11px] text-stone-700 dark:text-stone-300 font-bold">
                             at {Math.floor(bm.timestampSeconds)}s
                           </span>
                         </div>
@@ -391,7 +391,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                             onPlayBookmark(bm);
                             onClose();
                           }}
-                          className="flex items-center gap-1 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-medium transition-colors"
+                          className="flex items-center gap-1 px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold transition-transform active:scale-95"
                           title="Resume recitation from this bookmark"
                         >
                           <Play className="w-3.5 h-3.5 fill-current" />
@@ -399,7 +399,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         </button>
                         <button
                           onClick={() => onDeleteBookmark(bm.id)}
-                          className="p-1.5 text-stone-400 hover:text-red-500 rounded-lg transition-colors"
+                          className="p-1.5 text-stone-500 hover:text-black dark:hover:text-white rounded-lg transition-colors"
                           title="Delete bookmark"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -424,7 +424,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       Offline Storage & Cache
                     </span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-black dark:text-white">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
                     <span>100% Offline Capable</span>
                   </div>
@@ -470,7 +470,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <div className="w-full h-2 rounded-full bg-stone-800 dark:bg-stone-200 overflow-hidden">
                     <div
-                      className="h-full bg-amber-400 dark:bg-amber-600 transition-all duration-300 rounded-full"
+                      className="h-full bg-white dark:bg-black transition-all duration-300 rounded-full"
                       style={{ width: `${downloadProgress.percent}%` }}
                     />
                   </div>
@@ -567,9 +567,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                             <span>
                               {s.surahNumber}. {s.nameEnglish}
                             </span>
-                            <span className="font-quran text-amber-600 text-xs">{s.nameArabic}</span>
+                            <span className="font-quran text-black dark:text-white text-xs">{s.nameArabic}</span>
                             {s.hasAudio && (
-                              <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold">
+                              <span className="px-1.5 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-[9px] font-bold">
                                 Audio Cached
                               </span>
                             )}
@@ -581,7 +581,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
                         <button
                           onClick={() => onDeleteDownloadedSurah(s.surahNumber)}
-                          className="p-1.5 text-stone-400 hover:text-red-500 rounded-lg transition-colors"
+                          className="p-1.5 text-stone-400 hover:text-black dark:hover:text-white rounded-lg transition-colors"
                           title="Remove from offline cache"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -609,14 +609,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
 
                   {permissionState === 'granted' ? (
-                    <span className="px-2.5 py-1 bg-emerald-500/10 text-emerald-600 rounded-md text-xs font-semibold flex items-center gap-1">
+                    <span className="px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black rounded-md text-xs font-bold flex items-center gap-1">
                       <Check className="w-3.5 h-3.5" />
                       <span>Enabled</span>
                     </span>
                   ) : (
                     <button
                       onClick={handleEnableNotifications}
-                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-medium transition-colors"
+                      className="px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold transition-transform active:scale-95"
                     >
                       Allow Alerts
                     </button>
@@ -629,9 +629,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </span>
                   <button
                     onClick={handleTestReminder}
-                    className="flex items-center gap-1 px-3 py-1 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-800 dark:text-stone-200 rounded-md text-xs font-medium border border-stone-200 dark:border-stone-700 transition-colors"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold transition-transform active:scale-95"
                   >
-                    <Volume2 className="w-3.5 h-3.5 text-amber-500" />
+                    <Volume2 className="w-3.5 h-3.5" />
                     <span>{testNotificationSent ? 'Chime Sent!' : 'Play Sample Chime'}</span>
                   </button>
                 </div>

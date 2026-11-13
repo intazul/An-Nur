@@ -124,18 +124,18 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
   return (
     <div
-      className="flex-1 flex flex-col max-w-xl sm:max-w-2xl w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full max-h-screen overflow-hidden select-none pb-2"
+      className="flex-1 flex flex-col max-w-xl sm:max-w-2xl w-full mx-auto bg-white dark:bg-black h-full max-h-screen overflow-hidden select-none pb-2"
       style={{ touchAction: 'pan-x', overscrollBehavior: 'none' }}
     >
       {/* 1. App Bar Header */}
-      <header className="shrink-0 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 px-3.5 py-2.5 flex items-center justify-between gap-2 shadow-2xs">
+      <header className="shrink-0 bg-white dark:bg-black border-b border-stone-200 dark:border-stone-800 px-3.5 py-2.5 flex items-center justify-between gap-2 shadow-2xs">
         <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={onBackToDashboard}
-            className="p-1.5 -ml-1 text-black dark:text-white rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+            className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
             title="Back to Dashboard"
           >
-            <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
+            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
           </button>
 
           <div className="min-w-0">
@@ -312,10 +312,10 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
             <button
               onClick={handleCopy}
-              className="p-2.5 rounded-2xl border-2 border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800 font-bold transition-all active:scale-95 shadow-xs"
+              className="p-2.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-bold transition-all active:scale-95 shadow-md"
               title="Copy Hadith"
             >
-              {copied ? <Check className="w-4 h-4 text-black dark:text-white" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </button>
 
             <button
