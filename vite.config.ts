@@ -144,6 +144,21 @@ export default defineConfig(() => {
           navigateFallbackDenylist: [/^\/registerSW\.js$/],
           runtimeCaching: [
             {
+              // Local Offline Quran & Complete Tafsir Packs (/data/quran, /data/tafsir, /data/tafsir-as, /data/tafsir-ur)
+              urlPattern: /\/data\/(quran|tafsir|tafsir-as|tafsir-ur)\/.*\.json$/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'annur-offline-tafsir-quran-v1',
+                expiration: {
+                  maxEntries: 600,
+                  maxAgeSeconds: 60 * 60 * 24 * 365,
+                },
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+              },
+            },
+            {
               // Quran Audio EveryAyah CDN: Cache all audio indefinitely for offline listening
               urlPattern: /^https:\/\/everyayah\.com\/data\/.*/i,
               handler: 'CacheFirst',

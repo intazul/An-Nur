@@ -32,6 +32,7 @@ import {
 } from '../utils/thematicQuran';
 import { TajweedSignHelpDialog } from './TajweedSignHelpDialog';
 import { getPreciseVerseTafsir } from '../utils/verseTafsir';
+import { getCachedVerseTafsirSync, preloadSurahTafsirs } from '../utils/offlineTafsirStore';
 
 interface AndroidReadingViewProps {
   currentSurah: SurahDetail | null;
@@ -92,12 +93,24 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   const [selectedParagraphAyah, setSelectedParagraphAyah] = useState<number | null>(null);
   const [isHifzMaskEnabled, setIsHifzMaskEnabled] = useState<boolean>(initialHifzMask);
   const [revealedAyahs, setRevealedAyahs] = useState<Record<number, boolean>>({});
+  const [, setTafsirCacheRevision] = useState<number>(0);
 
   // Sync mask toggle reset when initialHifzMask changes explicitly
   useEffect(() => {
     setIsHifzMaskEnabled(initialHifzMask);
     setRevealedAyahs({});
   }, [initialHifzMask, currentSurah?.number]);
+
+  // Preload complete offline Tafsir for current Surah whenever opened
+  useEffect(() => {
+    if (!currentSurah?.number) return;
+    preloadSurahTafsirs(currentSurah.number, {
+      includeAssamese: Boolean(profile.showAssamese && !profile.showUrdu),
+      includeUrdu: Boolean(profile.showUrdu && !profile.showAssamese),
+    })
+      .then(() => setTafsirCacheRevision((n) => n + 1))
+      .catch(() => {});
+  }, [currentSurah?.number, profile.showAssamese, profile.showUrdu]);
 
   const toggleHifzMask = () => {
     setIsHifzMaskEnabled((prev) => !prev);
@@ -825,26 +838,35 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                       firstAyah.textUrdu,
                       firstAyah.textAssamese
                     );
+                    const enOffline = getCachedVerseTafsirSync(currentSurah.number, firstAyah.numberInSurah, 'en');
+                    const enSnippet = enOffline
+                      ? enOffline.replace(/\s+/g, ' ').slice(0, 220) + (enOffline.length > 220 ? '…' : '')
+                      : t.summary;
                     const regionalTafsir =
                       profile.showAssamese && !profile.showUrdu
-                        ? t.assameseExplanation
+                        ? getCachedVerseTafsirSync(currentSurah.number, firstAyah.numberInSurah, 'as') ||
+                          t.assameseExplanation
                         : profile.showUrdu && !profile.showAssamese
-                        ? t.urduExplanation
+                        ? getCachedVerseTafsirSync(currentSurah.number, firstAyah.numberInSurah, 'ur') ||
+                          t.urduExplanation
                         : undefined;
                     return (
-                      <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs space-y-1">
+                      <div
+                        onClick={() => onOpenTafsir(firstAyah)}
+                        className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs space-y-1 cursor-pointer hover:border-black dark:hover:border-white transition-colors"
+                      >
                         <span className="text-[10px] font-bold uppercase tracking-wider text-black dark:text-white block">
-                          Tafsir (Ayah {firstAyah.numberInSurah}):
+                          Ibn Kathir Tafsir (Ayah {firstAyah.numberInSurah}) · Tap for full:
                         </span>
                         <p className="text-stone-800 dark:text-stone-200 font-medium leading-snug">
-                          {t.summary}
+                          {enSnippet}
                         </p>
                         {regionalTafsir && (
                           <p
                             className={
                               profile.showAssamese && !profile.showUrdu
-                                ? 'font-assamese text-black dark:text-stone-100 font-semibold text-[12px] pt-1 border-t border-stone-200 dark:border-stone-700'
-                                : 'font-urdu text-black dark:text-stone-100 font-bold text-[12px] text-right pt-1 border-t border-stone-200 dark:border-stone-700'
+                                ? 'font-assamese text-black dark:text-stone-100 font-semibold text-[12px] pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
+                                : 'font-urdu text-black dark:text-stone-100 font-bold text-[12px] text-right pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
                             }
                             dir={profile.showAssamese && !profile.showUrdu ? 'ltr' : 'rtl'}
                           >
@@ -1251,26 +1273,39 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   activeVerseAyah.textUrdu,
                   activeVerseAyah.textAssamese
                 );
+                const enOffline = getCachedVerseTafsirSync(
+                  currentSurah.number,
+                  activeVerseAyah.numberInSurah,
+                  'en'
+                );
+                const enSnippet = enOffline
+                  ? enOffline.replace(/\s+/g, ' ').slice(0, 220) + (enOffline.length > 220 ? '…' : '')
+                  : t.summary;
                 const regionalTafsir =
                   profile.showAssamese && !profile.showUrdu
-                    ? t.assameseExplanation
+                    ? getCachedVerseTafsirSync(currentSurah.number, activeVerseAyah.numberInSurah, 'as') ||
+                      t.assameseExplanation
                     : profile.showUrdu && !profile.showAssamese
-                    ? t.urduExplanation
+                    ? getCachedVerseTafsirSync(currentSurah.number, activeVerseAyah.numberInSurah, 'ur') ||
+                      t.urduExplanation
                     : undefined;
                 return (
-                  <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 space-y-1 text-xs shrink-0">
+                  <div
+                    onClick={() => onOpenTafsir(activeVerseAyah)}
+                    className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 space-y-1 text-xs shrink-0 cursor-pointer hover:border-black dark:hover:border-white transition-colors"
+                  >
                     <span className="text-[10px] font-bold uppercase tracking-wider text-black dark:text-white block">
-                      Tafsir Preview:
+                      Ibn Kathir Tafsir · Tap for full:
                     </span>
                     <p className="text-stone-800 dark:text-stone-200 font-medium leading-snug">
-                      {t.summary}
+                      {enSnippet}
                     </p>
                     {regionalTafsir && (
                       <p
                         className={
                           profile.showAssamese && !profile.showUrdu
-                            ? 'font-assamese text-black dark:text-stone-100 font-semibold text-xs pt-1 border-t border-stone-200 dark:border-stone-700'
-                            : 'font-urdu text-black dark:text-stone-100 font-bold text-xs text-right pt-1 border-t border-stone-200 dark:border-stone-700'
+                            ? 'font-assamese text-black dark:text-stone-100 font-semibold text-xs pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
+                            : 'font-urdu text-black dark:text-stone-100 font-bold text-xs text-right pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
                         }
                         dir={profile.showAssamese && !profile.showUrdu ? 'ltr' : 'rtl'}
                       >

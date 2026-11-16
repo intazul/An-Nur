@@ -100,7 +100,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('annur_theme');
     if (saved) return saved === 'dark';
-    return true; // default to sleek dark mode
+    return false; // default to clean light mode
   });
 
   // User Profile & Settings (includes showUrdu, showEnglish, favoriteSurahs, lastRead)

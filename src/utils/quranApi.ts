@@ -2,6 +2,7 @@ import { BUNDLED_SURAHS } from '../data/defaultSurahs';
 import { ALL_SURAHS } from '../data/surahList';
 import { Ayah, SurahDetail } from '../types/quran';
 import { getOfflineSurahDetail, saveSurahOffline } from './offlineStorage';
+import { preloadSurahTafsirs } from './offlineTafsirStore';
 import { getPreciseVerseTafsir } from './verseTafsir';
 
 /**
@@ -48,10 +49,13 @@ async function fetchAssameseSurahTranslations(surahNumber: number): Promise<stri
 
 /**
  * Loads a Surah with full offline-first resilience.
- * Always prioritizes complete offline cache and bundled chapters so the app runs totally offline with full verses.
- * Automatically hydrates Assamese translations onto cached Surahs if missing when online.
+ * Prioritizes local bundled static Quran datasets (/data/quran/1..114.json) and local storage,
+ * and preloads the corresponding complete Tafsir dataset into IndexedDB.
  */
 export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail> {
+  // Preload complete offline Tafsir for this chapter in the background
+  preloadSurahTafsirs(surahNumber, { includeAssamese: true, includeUrdu: true }).catch(() => {});
+
   // Find meta
   const meta = ALL_SURAHS.find((s) => s.number === surahNumber) || {
     number: surahNumber,
@@ -64,12 +68,31 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
   };
 
   // 1. Check offline persistent storage (instant offline read)
-  // Ensure it has all declared verses (never incomplete)
+  // Ensure it has all declared verses and is not an old placeholder
   const offline = getOfflineSurahDetail(surahNumber);
-  if (offline && offline.ayahs && offline.ayahs.length >= meta.numberOfAyahs) {
+  const isLegacyPlaceholder =
+    offline &&
+    surahNumber !== 1 &&
+    offline.ayahs?.[0]?.textEnglish?.startsWith(`Ayah 1 of Surah `);
+
+  if (offline && !isLegacyPlaceholder && offline.ayahs && offline.ayahs.length >= meta.numberOfAyahs) {
     const missingAssamese = offline.ayahs.some((a) => !a.textAssamese);
     if (missingAssamese) {
-      // First check pre-bundled data
+      // Check local static Surah JSON first (works 100% offline)
+      try {
+        const localRes = await fetch(`/data/quran/${surahNumber}.json`);
+        if (localRes.ok) {
+          const localDetail = (await localRes.json()) as SurahDetail;
+          if (localDetail?.ayahs?.length >= meta.numberOfAyahs) {
+            saveSurahOffline(localDetail, false).catch(() => {});
+            return localDetail;
+          }
+        }
+      } catch {
+        // continue to fallbacks
+      }
+
+      // Check pre-bundled data
       const bundled = BUNDLED_SURAHS[surahNumber];
       if (bundled && bundled.ayahs.length === offline.ayahs.length && bundled.ayahs[0]?.textAssamese) {
         const merged: SurahDetail = {
@@ -102,17 +125,30 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
     return offline;
   }
 
-  // 2. Check pre-bundled rich data (all core chapters fully verified)
+  // 2. Load from complete local static Quran repository (/data/quran/1..114.json) — 100% offline
+  try {
+    const localRes = await fetch(`/data/quran/${surahNumber}.json`);
+    if (localRes.ok) {
+      const localDetail = (await localRes.json()) as SurahDetail;
+      if (localDetail && Array.isArray(localDetail.ayahs) && localDetail.ayahs.length >= meta.numberOfAyahs) {
+        saveSurahOffline(localDetail, false).catch(() => {});
+        return localDetail;
+      }
+    }
+  } catch {
+    // Fallback to bundled JS chapters if fetch failed
+  }
+
+  // 3. Check pre-bundled JS core chapters
   if (BUNDLED_SURAHS[surahNumber]) {
     const bundled = BUNDLED_SURAHS[surahNumber];
     if (bundled.ayahs && bundled.ayahs.length >= meta.numberOfAyahs) {
-      // Automatically persist to offline storage
       saveSurahOffline(bundled, false).catch(() => {});
       return bundled;
     }
   }
 
-  // 3. Attempt API fetch if online for full 114 Surahs with Arabic, English, Urdu, and Assamese
+  // 4. Distant online fallback if local JSON unavailable
   try {
     const [res, assameseList] = await Promise.all([
       fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/editions/quran-uthmani,en.sahih,ur.jalandhry`),
@@ -163,7 +199,6 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
           ayahs,
         };
 
-        // Automatically save offline so it's permanently stored locally
         saveSurahOffline(detail, false).catch(() => {});
         return detail;
       }
@@ -172,7 +207,7 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
     console.warn('Network offline or fetch failed for Surah:', surahNumber, netErr);
   }
 
-  // 4. Offline Fallback for any unbundled Surah when network is completely absent
+  // 5. Last-resort fallback
   const offlineDetail: SurahDetail = {
     ...meta,
     bismillahPre: surahNumber !== 1 && surahNumber !== 9,

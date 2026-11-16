@@ -5,7 +5,6 @@ import {
   Flame,
   CheckCircle2,
   Circle,
-  BookmarkCheck,
   BookOpen,
   Headphones,
   Sparkles,
@@ -13,11 +12,11 @@ import {
   Clock,
   ChevronRight,
   ScrollText,
+  CircleDot,
 } from 'lucide-react';
 import { FluidCircle } from './FluidCircle';
 import { DailyPrayers, ImanDayRecord, LastReadPosition, UserProfileData } from '../types/quran';
 import { PrayerStatus } from '../utils/prayerTimes';
-import { ALL_SURAHS } from '../data/surahList';
 
 interface AndroidDashboardProps {
   imanRecord: ImanDayRecord;
@@ -56,7 +55,6 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   onOpenSettings,
   onTogglePrayer,
   onOpenImanTracker,
-  onSelectFavoriteSurah,
   onOpenFavoritesModal,
   onOpenFavoritesTab,
   onOpenQibla,
@@ -76,21 +74,19 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   const verseScore = Math.min(30, (imanRecord.versesRead / (profile.dailyVerseGoal || 10)) * 30);
   const totalImanPercent = Math.min(100, Math.round(prayerScore + verseScore));
 
-  const favorites = (profile.favoriteSurahs || [1, 36, 55, 67, 112]).slice(0, 4);
-
   return (
     <div className="flex-1 flex flex-col max-w-md sm:max-w-lg w-full mx-auto px-4 sm:px-5 py-4 select-none bg-white dark:bg-black overflow-y-auto space-y-4 pb-8">
-      {/* 1. Modern Minimalist Header */}
+      {/* 1. Clean App Header */}
       <header className="flex items-center justify-between pt-1 pb-1">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-cinzel font-bold text-sm shadow-xs">
+          <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-scheherazade font-bold text-lg shadow-xs shrink-0">
             ن
           </div>
           <div>
             <h1 className="font-cinzel font-bold text-base text-black dark:text-white tracking-tight leading-none">
               An-Nur
             </h1>
-            <span className="font-quran text-xs text-stone-700 dark:text-stone-300 font-bold block mt-0.5">
+            <span dir="rtl" className="font-quran text-xs text-stone-600 dark:text-stone-400 font-bold block mt-0.5">
               القرآن الكريم
             </span>
           </div>
@@ -98,7 +94,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
 
         {/* Top Header Utilities */}
         <div className="flex items-center gap-1.5">
-          {/* Prophets & Sirah Timeline Icon */}
+          {/* Prophets & Sirah Timeline Icon beside Qibla */}
           {onOpenProphetsTimeline && (
             <button
               onClick={onOpenProphetsTimeline}
@@ -142,160 +138,156 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
         </div>
       </header>
 
-      {/* 2. Unified Spiritual Pulse Card (Iman Circle & Daily Prayers) */}
-      <section className="p-4 sm:p-5 rounded-3xl bg-stone-50/90 dark:bg-stone-900/60 border border-stone-200/90 dark:border-stone-800/80 shadow-xs space-y-4">
-        {/* Top status indicator inside card */}
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
-            Daily Faith & Salah
+      {/* 2. Centerpiece Fluid-Filled Iman Circle */}
+      <section className="flex flex-col items-center justify-center pt-1 pb-1 space-y-3">
+        <FluidCircle
+          percent={totalImanPercent}
+          size={220}
+          completedPrayers={completedCount}
+          totalPrayers={5}
+          versesRead={imanRecord.versesRead}
+          onTap={onOpenImanTracker}
+        />
+
+        <button
+          onClick={onOpenImanTracker}
+          className="px-4 py-1.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-xs font-bold transition-transform active:scale-95 flex items-center justify-center gap-1 shadow-2xs"
+          title="Open comprehensive Iman Analysis & Trends"
+        >
+          <span>Spiritual Analysis & Trends ↗</span>
+        </button>
+      </section>
+
+      {/* 3. Daily Prayers Strip */}
+      <section className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 space-y-2.5 shadow-2xs">
+        <div className="flex items-center justify-between text-xs px-0.5">
+          <span className="font-bold text-black dark:text-white">
+            Daily Prayers ({completedCount}/5)
           </span>
           {onOpenPrayerTimes && (
             <button
               onClick={onOpenPrayerTimes}
-              className="flex items-center gap-1 text-[11px] font-bold text-black dark:text-white hover:underline"
+              className="flex items-center gap-1 text-[11px] font-bold text-stone-700 dark:text-stone-300 hover:text-black dark:hover:text-white hover:underline"
               title="View full prayer times table"
             >
-              <Clock className="w-3 h-3 text-black dark:text-white" />
-              <span>{prayerStatus.nextPrayer?.name} in {prayerStatus.timeUntilNext}</span>
+              <Clock className="w-3 h-3" />
+              <span>
+                {prayerStatus.nextPrayer?.name} in {prayerStatus.timeUntilNext}
+              </span>
             </button>
           )}
         </div>
 
-        {/* Centerpiece Fluid-Filled Circle with Animated Waves */}
-        <div className="flex flex-col items-center justify-center py-1">
-          <FluidCircle
-            percent={totalImanPercent}
-            size={200}
-            completedPrayers={completedCount}
-            totalPrayers={5}
-            versesRead={imanRecord.versesRead}
-            onTap={onOpenImanTracker}
-          />
-          <button
-            onClick={onOpenImanTracker}
-            className="mt-2.5 px-3 py-1 rounded-full bg-black text-white dark:bg-white dark:text-black text-[11px] font-bold transition-transform active:scale-95 flex items-center justify-center gap-1 shadow-2xs"
-            title="Open comprehensive Iman Analysis & Trends"
-          >
-            <span>Spiritual Analysis & Trends ↗</span>
-          </button>
-        </div>
-
-        {/* Integrated 5 Daily Prayers Strip */}
-        <div className="pt-1 border-t border-stone-200/80 dark:border-stone-800/80">
-          <div className="grid grid-cols-5 gap-1 sm:gap-1.5 pt-1">
-            {prayerStatus.prayers
-              .filter((p) => !p.isVoluntary)
-              .map((prayer) => {
-                const prayerKey = prayer.id as keyof DailyPrayers;
-                const done = imanRecord.prayers[prayerKey];
-                return (
-                  <button
-                    key={prayer.id}
-                    onClick={() => onTogglePrayer(prayerKey)}
-                    className={`flex flex-col items-center py-2 px-1 rounded-xl border transition-all text-center ${
-                      done
-                        ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-2xs font-bold'
-                        : prayer.isNext
-                        ? 'bg-stone-100 dark:bg-stone-900 border-2 border-black dark:border-white text-black dark:text-white font-bold'
-                        : 'bg-white dark:bg-stone-900/70 border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-300 hover:border-black dark:hover:border-white'
+        <div className="grid grid-cols-5 gap-1.5">
+          {prayerStatus.prayers
+            .filter((p) => !p.isVoluntary)
+            .map((prayer) => {
+              const prayerKey = prayer.id as keyof DailyPrayers;
+              const done = imanRecord.prayers[prayerKey];
+              return (
+                <button
+                  key={prayer.id}
+                  onClick={() => onTogglePrayer(prayerKey)}
+                  className={`flex flex-col items-center py-2 px-1 rounded-xl border transition-all text-center ${
+                    done
+                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-2xs font-bold'
+                      : prayer.isNext
+                      ? 'bg-stone-100 dark:bg-stone-900 border-2 border-black dark:border-white text-black dark:text-white font-bold'
+                      : 'bg-white dark:bg-stone-900/80 border-stone-200 dark:border-stone-800 text-stone-800 dark:text-stone-300 hover:border-black dark:hover:border-white'
+                  }`}
+                  title={`Toggle ${prayer.name} prayer`}
+                >
+                  <span className="text-[11px] font-bold tracking-tight">{prayer.name}</span>
+                  <div className="my-1">
+                    {done ? (
+                      <CheckCircle2 className="w-4 h-4 text-white dark:text-black fill-transparent stroke-[2.5]" />
+                    ) : (
+                      <Circle className="w-4 h-4 text-stone-400 dark:text-stone-600" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-[9px] font-mono tabular-nums font-bold ${
+                      done ? 'text-white/90 dark:text-black/90' : 'text-stone-500 dark:text-stone-400'
                     }`}
-                    title={`Toggle ${prayer.name} prayer`}
                   >
-                    <span className="text-[10px] font-bold">{prayer.name}</span>
-                    <div className="my-0.5">
-                      {done ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-white dark:text-black fill-transparent stroke-[2.5]" />
-                      ) : (
-                        <Circle className="w-3.5 h-3.5 text-stone-400 dark:text-stone-600" />
-                      )}
-                    </div>
-                    <span
-                      className={`text-[9px] font-mono tabular-nums font-bold ${
-                        done ? 'text-white/90 dark:text-black/90' : 'text-stone-500 dark:text-stone-400'
-                      }`}
-                    >
-                      {prayer.timeString.split(' ')[0]}
-                    </span>
-                  </button>
-                );
-              })}
-          </div>
+                    {prayer.timeString.split(' ')[0]}
+                  </span>
+                </button>
+              );
+            })}
         </div>
       </section>
 
-      {/* 3. Primary Sacred Pathway Card: Resume Quran Reading */}
-      <section>
+      {/* 4. Primary Reading, Recitation & Hadith Cards */}
+      <section className="space-y-2.5">
+        {/* Primary CTA: Continue Reading Al-Qur'an */}
         <button
           onClick={onStartReading}
-          className="w-full flex items-center justify-between p-4 rounded-3xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-200 transition-all shadow-md group text-left active:scale-[0.99] border border-black dark:border-white"
-          title="Resume from where you last left off"
+          className="w-full p-4 rounded-2xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-between shadow-sm hover:opacity-95 active:scale-[0.99] transition-all text-left"
+          title="Resume Qur'an reading from your last ayah"
         >
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 dark:bg-black/10 flex items-center justify-center shrink-0">
-              <BookOpen className="w-5 h-5 text-white dark:text-black stroke-[2.2]" />
+            <div className="w-10 h-10 rounded-xl bg-white/15 dark:bg-black/10 flex items-center justify-center shrink-0">
+              <BookOpen className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <span className="text-[10px] uppercase font-bold tracking-wider text-stone-300 dark:text-stone-700 block">
-                Continue Reading
-              </span>
-              <p className="text-[13px] font-bold truncate">
-                Surah {lastRead.surahName || 'Al-Fatihah'} : Ayah {lastRead.ayahNumber || 1}
+              <h2 className="text-sm font-bold font-cinzel tracking-tight leading-tight">
+                Continue Reading Qur’an
+              </h2>
+              <p className="text-xs opacity-80 truncate mt-0.5">
+                {lastRead.surahName || 'Al-Fatihah'} · Ayah {lastRead.ayahNumber || 1}
               </p>
             </div>
           </div>
-
-          <div className="flex items-center gap-1 font-bold text-xs shrink-0 text-white dark:text-black group-hover:translate-x-0.5 transition-transform">
-            <span>Resume</span>
-            <ChevronRight className="w-4 h-4 stroke-[2.5]" />
-          </div>
+          <ChevronRight className="w-5 h-5 shrink-0 opacity-80" />
         </button>
+
+        {/* Secondary Row: Recitation & Hadith Journey */}
+        <div className="grid grid-cols-2 gap-2.5">
+          <button
+            onClick={onStartRecitation}
+            className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
+            title="Immersive Quran audio recitation"
+          >
+            <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shrink-0">
+              <Headphones className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-xs font-bold text-black dark:text-white leading-tight">
+                Recitation
+              </h2>
+              <p className="text-[10px] text-stone-500 dark:text-stone-400 truncate mt-0.5">
+                World Qaris
+              </p>
+            </div>
+          </button>
+
+          <button
+            onClick={onStartHadithJourney}
+            className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
+            title="Explore authentic Hadiths across 10 thematic spheres"
+          >
+            <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shrink-0">
+              <Compass className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <h2 className="text-xs font-bold text-black dark:text-white leading-tight">
+                Hadith Journey
+              </h2>
+              <p className="text-[10px] text-stone-500 dark:text-stone-400 truncate mt-0.5">
+                200 Chapters
+              </p>
+            </div>
+          </button>
+        </div>
       </section>
 
-      {/* 4. Dual Core Pillars (Side-by-Side Clean Grid) */}
-      <section className="grid grid-cols-2 gap-2.5">
-        {/* Pillar 1: Quran Recitation */}
-        <button
-          onClick={onStartRecitation}
-          className="p-4 rounded-3xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left space-y-2 group active:scale-[0.98] shadow-2xs"
-          title="Immersive Quran audio recitation"
-        >
-          <div className="w-9 h-9 rounded-2xl bg-stone-200/80 dark:bg-stone-800 flex items-center justify-center text-black dark:text-white group-hover:scale-105 transition-transform">
-            <Headphones className="w-4 h-4 stroke-[2.2]" />
-          </div>
-          <div>
-            <h2 className="text-xs font-bold text-black dark:text-white font-cinzel">
-              Recitation
-            </h2>
-            <p className="text-[11px] text-stone-500 dark:text-stone-400 line-clamp-1 mt-0.5">
-              Immersive audio by world Qaris
-            </p>
-          </div>
-        </button>
-
-        {/* Pillar 2: Hadith’s Journey */}
-        <button
-          onClick={onStartHadithJourney}
-          className="p-4 rounded-3xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left space-y-2 group active:scale-[0.98] shadow-2xs"
-          title="Explore 10,000+ authentic Hadiths and questions"
-        >
-          <div className="w-9 h-9 rounded-2xl bg-stone-200/80 dark:bg-stone-800 flex items-center justify-center text-black dark:text-white group-hover:scale-105 transition-transform">
-            <Compass className="w-4 h-4 stroke-[2.2] text-black dark:text-white" />
-          </div>
-          <div>
-            <h2 className="text-xs font-bold text-black dark:text-white font-cinzel">
-              Hadith’s Journey
-            </h2>
-            <p className="text-[11px] text-stone-500 dark:text-stone-400 line-clamp-1 mt-0.5">
-              10 thematic spheres & 200 chapters
-            </p>
-          </div>
-        </button>
-      </section>
-
-      {/* 5. Essential Companion Tools (Minimalist 4-Tile Grid) */}
+      {/* 5. Spiritual Quick Tools */}
       <section className="space-y-2">
-        <div className="flex items-center justify-between text-xs px-1 font-bold text-stone-500">
-          <span>Spiritual Companion Tools</span>
+        <div className="flex items-center justify-between text-xs px-1">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+            Spiritual Tools
+          </span>
           {onOpenSacredHub && (
             <button
               onClick={onOpenSacredHub}
@@ -308,65 +300,79 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {/* Tool 1: Smart Tasbih */}
+        <div className="grid grid-cols-2 gap-2.5">
+          {/* Smart Tasbih */}
           {onOpenSmartTasbih && (
             <button
               onClick={onOpenSmartTasbih}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95"
+              className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
               title="Digital Tasbih & Dhikr Counter"
             >
-              <span className="text-lg mb-1">📿</span>
-              <div>
-                <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Tasbih</span>
-                <span className="text-[10px] text-stone-500">Sacred Dhikr</span>
+              <CircleDot className="w-4 h-4 text-black dark:text-white shrink-0" />
+              <div className="min-w-0">
+                <span className="text-xs font-bold text-black dark:text-white block leading-tight">
+                  Smart Tasbih
+                </span>
+                <span className="text-[10px] text-stone-500 dark:text-stone-400 block">
+                  Dhikr Counter
+                </span>
               </div>
             </button>
           )}
 
-          {/* Tool 2: Daily Inspiration */}
+          {/* Daily Inspiration */}
           {onOpenDailyInspiration && (
             <button
               onClick={onOpenDailyInspiration}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95"
+              className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
               title="Daily Ayah & Hadith Shareable Cards"
             >
-              <Sparkles className="w-4 h-4 text-black dark:text-white mb-1" />
-              <div>
-                <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Inspiration</span>
-                <span className="text-[10px] text-stone-500">Daily Verses</span>
+              <Sparkles className="w-4 h-4 text-black dark:text-white shrink-0" />
+              <div className="min-w-0">
+                <span className="text-xs font-bold text-black dark:text-white block leading-tight">
+                  Inspiration
+                </span>
+                <span className="text-[10px] text-stone-500 dark:text-stone-400 block">
+                  Daily Verses
+                </span>
               </div>
             </button>
           )}
 
-          {/* Tool 3: Khatmah Planner */}
+          {/* Khatmah Planner */}
           {onOpenKhatmahPlanner && (
             <button
               onClick={onOpenKhatmahPlanner}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95"
+              className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
               title="Personalized Quran Completion Habit"
             >
-              <BookOpen className="w-4 h-4 text-black dark:text-white mb-1" />
-              <div>
-                <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Khatmah</span>
-                <span className="text-[10px] text-stone-500">Habit Plan</span>
+              <BookOpen className="w-4 h-4 text-black dark:text-white shrink-0" />
+              <div className="min-w-0">
+                <span className="text-xs font-bold text-black dark:text-white block leading-tight">
+                  Khatmah
+                </span>
+                <span className="text-[10px] text-stone-500 dark:text-stone-400 block">
+                  Habit Plan
+                </span>
               </div>
             </button>
           )}
 
-          {/* Tool 4: Favorite Surahs */}
+          {/* Favorite Surahs */}
           <button
             onClick={() => {
               if (onOpenFavoritesTab) onOpenFavoritesTab();
               else if (onOpenFavoritesModal) onOpenFavoritesModal();
             }}
-            className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex flex-col justify-between active:scale-95 shadow-2xs"
+            className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
             title="Open Favourites Tab with Prophetic recommendations & saved Surahs"
           >
-            <Star className="w-4 h-4 text-black dark:text-white fill-black dark:fill-white mb-1" />
-            <div>
-              <span className="text-xs font-bold text-black dark:text-white block font-cinzel">Favorites</span>
-              <span className="text-[10px] text-stone-500">
+            <Star className="w-4 h-4 text-black dark:text-white fill-black dark:fill-white shrink-0" />
+            <div className="min-w-0">
+              <span className="text-xs font-bold text-black dark:text-white block leading-tight">
+                Favorites
+              </span>
+              <span className="text-[10px] text-stone-500 dark:text-stone-400 block">
                 {(profile.favoriteSurahs || []).length} Saved
               </span>
             </div>

@@ -199,12 +199,8 @@
     animation: introFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
   }
 
-  .animate-intro-hadith {
-    animation: introFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-  }
-
   .animate-intro-cta {
-    animation: introFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.78s both;
+    animation: introFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.58s both;
   }
 }
 

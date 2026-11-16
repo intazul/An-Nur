@@ -70,14 +70,14 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
       aria-label="An-Nur Calligraphic Salam Introduction"
     >
       {/* Illuminated Monochrome Frame Border & Corner Arabesque */}
-      <div className="relative flex-1 flex flex-col justify-between rounded-3xl border border-black/15 dark:border-white/20 px-4 py-4 sm:px-5 sm:py-5 overflow-hidden">
+      <div className="relative flex-1 flex flex-col justify-center gap-5 sm:gap-6 rounded-3xl border border-black/15 dark:border-white/20 px-4 py-6 sm:px-6 sm:py-8 overflow-hidden">
         <CornerOrnament className="absolute top-2 left-2" />
         <CornerOrnament className="absolute top-2 right-2 rotate-90" />
         <CornerOrnament className="absolute bottom-2 left-2 -rotate-90" />
         <CornerOrnament className="absolute bottom-2 right-2 rotate-180" />
 
         {/* 1. Centered Sacred Calligraphic Emblem */}
-        <div className="flex flex-col items-center text-center pt-1 shrink-0 animate-intro-emblem">
+        <div className="flex flex-col items-center text-center shrink-0 animate-intro-emblem">
           <div className="relative w-12 h-12 flex items-center justify-center">
             <span className="absolute inset-0 rounded-full border border-black/40 dark:border-white/40 animate-intro-halo pointer-events-none" />
             <svg
@@ -116,7 +116,7 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
         </div>
 
         {/* 2. Ornate Animated Full Salam Calligraphy */}
-        <div className="text-center space-y-2 shrink-0 animate-intro-salam">
+        <div className="text-center space-y-2.5 shrink-0 animate-intro-salam">
           <p
             dir="rtl"
             className="font-scheherazade text-[28px] sm:text-[31px] font-bold text-black dark:text-white leading-[1.65]"
@@ -136,49 +136,28 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
           </div>
         </div>
 
-        {/* 3. Illuminated Quran Ayah & Sahih Hadith Duo (No Scroll) */}
-        <div className="space-y-2.5 shrink-0">
-          {/* Quran Verse Calligraphy Block */}
-          <section className="px-3.5 py-3 rounded-2xl bg-stone-50/90 dark:bg-stone-950/90 border border-black/15 dark:border-white/20 text-center space-y-1.5 animate-intro-quran">
-            <div className="flex items-center justify-center gap-2 text-[10px] font-cinzel font-bold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-400">
-              <span>۞</span>
-              <span>Surah Ash-Sharh · 94:5–6</span>
-              <span>۞</span>
-            </div>
+        {/* 3. Illuminated Quran Ayah Block (No Scroll) */}
+        <section className="w-full px-4 py-3.5 sm:py-4 rounded-2xl bg-stone-50/90 dark:bg-stone-950/90 border border-black/15 dark:border-white/20 text-center space-y-2 shrink-0 animate-intro-quran">
+          <div className="flex items-center justify-center gap-2 text-[10px] font-cinzel font-bold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-400">
+            <span>۞</span>
+            <span>Surah Ash-Sharh · 94:5–6</span>
+            <span>۞</span>
+          </div>
 
-            <p
-              dir="rtl"
-              className="font-quran text-xl sm:text-[21px] font-bold text-black dark:text-white leading-[1.8]"
-            >
-              فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا
-            </p>
+          <p
+            dir="rtl"
+            className="font-quran text-xl sm:text-[22px] font-bold text-black dark:text-white leading-[1.8]"
+          >
+            فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا
+          </p>
 
-            <p className="font-book-serif text-xs text-stone-800 dark:text-stone-200 leading-snug">
-              “For indeed, with hardship comes ease. Indeed, with every hardship comes ease.”
-            </p>
-          </section>
-
-          {/* Motivating Sahih Hadith Block */}
-          <section className="px-4 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black text-center space-y-1.5 animate-intro-hadith">
-            <div className="flex items-center justify-between text-[10px] font-cinzel font-bold uppercase tracking-[0.14em] opacity-80">
-              <span>Sahih Muslim 2664</span>
-              <span dir="rtl" className="font-scheherazade text-sm normal-case tracking-normal">
-                قَالَ رَسُولُ اللَّهِ ﷺ
-              </span>
-            </div>
-
-            <p className="font-book-serif text-xs leading-snug">
-              “Strive steadfastly for what truly benefits you, seek help from Allah alone, and never surrender to helplessness.”
-            </p>
-
-            <p className="text-[10px] opacity-75 font-medium">
-              — Narrated by Abu Hurayrah (RA)
-            </p>
-          </section>
-        </div>
+          <p className="font-book-serif text-xs text-stone-800 dark:text-stone-200 leading-snug">
+            “For indeed, with hardship comes ease. Indeed, with every hardship comes ease.”
+          </p>
+        </section>
 
         {/* 4. Single Calligraphic Bismillah Button */}
-        <div className="pt-1 shrink-0 animate-intro-cta">
+        <div className="w-full pt-1 shrink-0 animate-intro-cta">
           <button
             onClick={onContinue}
             className="min-h-[50px] w-full px-5 py-2.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-bold flex items-center justify-center gap-3 active:scale-[0.985] transition-transform shadow-sm border border-black dark:border-white"

@@ -440,21 +440,25 @@ export async function getOfflineCacheStats(): Promise<{
 }
 
 /**
- * Downloads all 114 Surahs (Arabic text, English translation, Urdu translation, and precise verse Tafsir)
- * into offline storage so the entire Quran is readable and studyable 100% offline.
+ * Downloads/caches all 114 Surahs (Arabic, English, Urdu, Assamese text + complete English Tafsir Ibn Kathir,
+ * Assamese Al-Mukhtasar Tafsir & Urdu Tafsir Ibn Kathir) into local device storage for 100% offline access.
  */
 export async function downloadAllSurahsTextAndTafsir(
   onProgress?: (info: { current: number; total: number; currentSurahName: string }) => void
 ): Promise<void> {
   const { fetchSurahDetail } = await import('./quranApi');
+  const { preloadSurahTafsirs } = await import('./offlineTafsirStore');
   const { ALL_SURAHS } = await import('../data/surahList');
   const total = ALL_SURAHS.length;
 
   for (let i = 0; i < total; i++) {
     const meta = ALL_SURAHS[i];
-    onProgress?.({ current: i + 1, total, currentSurahName: meta.nameEnglish });
+    onProgress?.({ current: i + 1, total, currentSurahName: `${meta.nameEnglish} + Tafsir` });
     try {
-      const detail = await fetchSurahDetail(meta.number);
+      const [detail] = await Promise.all([
+        fetchSurahDetail(meta.number),
+        preloadSurahTafsirs(meta.number, { includeAssamese: true, includeUrdu: true }),
+      ]);
       const currentList = getDownloadedSurahsList();
       const prev = currentList.find((s) => s.surahNumber === meta.number);
       const list = currentList.filter((s) => s.surahNumber !== meta.number);
@@ -469,7 +473,7 @@ export async function downloadAllSurahsTextAndTafsir(
       });
       localStorage.setItem(DOWNLOADS_KEY, JSON.stringify(list));
     } catch (err) {
-      console.warn(`Failed downloading Surah ${meta.number} for offline:`, err);
+      console.warn(`Failed caching Surah ${meta.number} & Tafsir for offline:`, err);
     }
   }
 }

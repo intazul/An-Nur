@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   X,
   BookOpen,
@@ -10,10 +10,12 @@ import {
   Sparkles,
   CheckCircle2,
   Heart,
+  Loader2,
 } from 'lucide-react';
 import { Ayah, SurahDetail, UserProfileData } from '../types/quran';
 import { getPreciseVerseTafsir, PreciseTafsir } from '../utils/verseTafsir';
 import { getRelatedHadith } from '../utils/hadithDatabase';
+import { getCachedVerseTafsirSync, getVerseTafsirOffline } from '../utils/offlineTafsirStore';
 
 interface TafsirModalProps {
   isOpen: boolean;
@@ -35,14 +37,65 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
   onBookmarkAyah,
 }) => {
   const [copied, setCopied] = useState(false);
-
-  if (!isOpen || !ayah || !surah) return null;
+  const [ibnKathirEn, setIbnKathirEn] = useState<string | null>(null);
+  const [regionalDeepTafsir, setRegionalDeepTafsir] = useState<string | null>(null);
+  const [isLoadingDeepTafsir, setIsLoadingDeepTafsir] = useState(false);
 
   // Strict mutual exclusivity: show ONLY Assamese OR Urdu, never both
   const useAssamese = Boolean(profile?.showAssamese && !profile?.showUrdu);
   const useUrdu = Boolean(!useAssamese && (profile ? profile.showUrdu : true));
 
-  // Single, precise, particular Tafsir for this exact verse
+  useEffect(() => {
+    if (!isOpen || !ayah || !surah) return;
+
+    const surahNum = surah.number;
+    const ayahNum = ayah.numberInSurah;
+    const cachedEn = getCachedVerseTafsirSync(surahNum, ayahNum, 'en');
+    const cachedReg = useAssamese
+      ? getCachedVerseTafsirSync(surahNum, ayahNum, 'as')
+      : useUrdu
+      ? getCachedVerseTafsirSync(surahNum, ayahNum, 'ur')
+      : null;
+
+    setIbnKathirEn(cachedEn);
+    setRegionalDeepTafsir(cachedReg);
+
+    let cancelled = false;
+    if (!cachedEn || ((useAssamese || useUrdu) && !cachedReg)) {
+      setIsLoadingDeepTafsir(true);
+      Promise.all([
+        cachedEn ? Promise.resolve(cachedEn) : getVerseTafsirOffline(surahNum, ayahNum, 'en'),
+        useAssamese
+          ? cachedReg
+            ? Promise.resolve(cachedReg)
+            : getVerseTafsirOffline(surahNum, ayahNum, 'as')
+          : useUrdu
+          ? cachedReg
+            ? Promise.resolve(cachedReg)
+            : getVerseTafsirOffline(surahNum, ayahNum, 'ur')
+          : Promise.resolve(null),
+      ])
+        .then(([enText, regText]) => {
+          if (cancelled) return;
+          setIbnKathirEn(enText);
+          setRegionalDeepTafsir(regText);
+          setIsLoadingDeepTafsir(false);
+        })
+        .catch(() => {
+          if (!cancelled) setIsLoadingDeepTafsir(false);
+        });
+    } else {
+      setIsLoadingDeepTafsir(false);
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, surah?.number, ayah?.numberInSurah, useAssamese, useUrdu]);
+
+  if (!isOpen || !ayah || !surah) return null;
+
+  // Curated concise overview + offline fallback
   const tafsir: PreciseTafsir = getPreciseVerseTafsir(
     surah.number,
     ayah.numberInSurah,
@@ -63,11 +116,15 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
     } else if (useUrdu && ayah.textUrdu) {
       text += `Urdu: ${ayah.textUrdu}\n\n`;
     }
-    text += `Tafsir (Easy Explanation): ${tafsir.explanation}\n\n`;
-    if (useAssamese && tafsir.assameseExplanation) {
-      text += `Assamese Tafsir: ${tafsir.assameseExplanation}\n\n`;
-    } else if (useUrdu && tafsir.urduExplanation) {
-      text += `Urdu Tafsir: ${tafsir.urduExplanation}\n\n`;
+    if (ibnKathirEn) {
+      text += `Tafsir Ibn Kathir (English):\n${ibnKathirEn}\n\n`;
+    } else {
+      text += `Tafsir: ${tafsir.explanation}\n\n`;
+    }
+    if (useAssamese && (regionalDeepTafsir || tafsir.assameseExplanation)) {
+      text += `Assamese Tafsir:\n${regionalDeepTafsir || tafsir.assameseExplanation}\n\n`;
+    } else if (useUrdu && (regionalDeepTafsir || tafsir.urduExplanation)) {
+      text += `Urdu Tafsir Ibn Kathir:\n${regionalDeepTafsir || tafsir.urduExplanation}\n\n`;
     }
     text += `Key Takeaway: ${tafsir.keyLesson}\n\n`;
     if (hadith) {
@@ -97,16 +154,15 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-base font-bold text-black dark:text-white font-cinzel truncate">
-                Ayah {ayah.numberInSurah} Tafsir
+                Ayah {ayah.numberInSurah} · Tafsir Ibn Kathir
               </h3>
               <p className="text-xs text-stone-700 dark:text-stone-400 font-semibold truncate">
-                Surah {surah.nameEnglish} ({surah.nameArabic}) · Juz {ayah.juz || 1}
+                Surah {surah.nameEnglish} ({surah.nameArabic}) · 100% Offline
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Quick Copy */}
             <button
               onClick={handleCopyAll}
               className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
@@ -115,7 +171,6 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
               {copied ? <Check className="w-4 h-4 stroke-[3]" /> : <Copy className="w-4 h-4 stroke-[2.5]" />}
             </button>
 
-            {/* Close */}
             <button
               onClick={onClose}
               className="p-2 bg-black text-white dark:bg-white dark:text-black rounded-xl transition-transform active:scale-95"
@@ -126,7 +181,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
           </div>
         </div>
 
-        {/* Scrollable Single Tafsir View Body */}
+        {/* Scrollable Tafsir Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-stone-50 dark:bg-black">
           {/* 1. Sacred Arabic Verse Card */}
           <div className="p-4 rounded-2xl bg-white dark:bg-stone-950 border border-black/15 dark:border-white/15 shadow-xs space-y-3">
@@ -198,60 +253,63 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             </div>
           </div>
 
-          {/* 2. ONE PRECISE TAFSIR & PLAIN EXPLANATION (Particular to this verse) */}
+          {/* 2. COMPLETE OFFLINE TAFSIR IBN KATHIR & REGIONAL TAFSIR */}
           <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-stone-950 border-2 border-black/15 dark:border-white/20 shadow-sm space-y-3.5">
             <div className="flex items-center justify-between pb-2 border-b border-black/10 dark:border-white/15">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-black dark:text-white stroke-[2.5]" />
                 <h4 className="text-sm font-bold text-black dark:text-white font-cinzel tracking-tight">
-                  Precise Tafsir & Meaning
+                  Tafsir Ibn Kathir (Deep Offline)
                 </h4>
               </div>
               <span className="px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
-                Ayah {ayah.numberInSurah}
+                {surah.number}:{ayah.numberInSurah}
               </span>
             </div>
 
-            {/* Core Summary */}
+            {/* Quick Summary */}
             <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15">
               <span className="text-[10px] font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 block mb-0.5">
-                Core Meaning:
+                Core Summary:
               </span>
               <p className="text-xs sm:text-sm font-bold text-black dark:text-white leading-relaxed">
                 {tafsir.summary}
               </p>
             </div>
 
-            {/* Plain Detailed Explanation */}
-            <div className="space-y-1.5 text-sm sm:text-base text-stone-900 dark:text-stone-200 leading-relaxed font-book-serif">
-              <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 block">
-                Explanation:
-              </span>
-              <p className="font-normal">
-                {tafsir.explanation}
-              </p>
+            {/* Deep Classical Tafsir Ibn Kathir (English) */}
+            <div className="space-y-1.5 text-sm sm:text-[15px] text-stone-900 dark:text-stone-200 leading-relaxed font-book-serif">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">
+                  Classical Commentary (Imam Ibn Kathir):
+                </span>
+                {isLoadingDeepTafsir && <Loader2 className="w-3.5 h-3.5 animate-spin text-stone-500" />}
+              </div>
+              <div className="font-normal whitespace-pre-line select-text space-y-2.5">
+                {ibnKathirEn || tafsir.explanation}
+              </div>
             </div>
 
-            {/* Assamese Easy Tafseer Explanation (mutually exclusive with Urdu) */}
-            {useAssamese && tafsir.assameseExplanation && (
-              <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15 text-left" dir="ltr">
-                <span className="text-[10px] font-bold font-sans-ui text-stone-700 dark:text-stone-300 block mb-1">
-                  সহজ অসমীয়া তাফছীৰ (ব্যাখ্যা):
+            {/* Assamese Al-Mukhtasar Deep Tafsir (mutually exclusive with Urdu) */}
+            {useAssamese && (regionalDeepTafsir || tafsir.assameseExplanation) && (
+              <div className="p-3.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15 text-left space-y-1.5" dir="ltr">
+                <span className="text-[10px] font-bold font-sans-ui uppercase tracking-wider text-stone-700 dark:text-stone-300 block">
+                  অসমীয়া তাফছীৰ (আল-মুখতাছাৰ ফী তাফছীৰিল কোৰআন):
                 </span>
-                <p className="font-assamese text-sm text-black dark:text-white font-semibold leading-relaxed select-text">
-                  {tafsir.assameseExplanation}
+                <p className="font-assamese text-sm text-black dark:text-white font-semibold leading-relaxed whitespace-pre-line select-text">
+                  {regionalDeepTafsir || tafsir.assameseExplanation}
                 </p>
               </div>
             )}
 
-            {/* Urdu Easy Explanation (mutually exclusive with Assamese) */}
-            {useUrdu && tafsir.urduExplanation && (
-              <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15 text-right" dir="rtl">
-                <span className="text-[10px] font-bold font-sans-ui text-stone-700 dark:text-stone-300 block mb-1">
-                  آسان اردو تشریح:
+            {/* Urdu Tafsir Ibn Kathir (mutually exclusive with Assamese) */}
+            {useUrdu && (regionalDeepTafsir || tafsir.urduExplanation) && (
+              <div className="p-3.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15 text-right space-y-1.5" dir="rtl">
+                <span className="text-[10px] font-bold font-sans-ui text-stone-700 dark:text-stone-300 block">
+                  تفسیر ابنِ کثیر (اردو):
                 </span>
-                <p className="font-urdu text-sm sm:text-base text-black dark:text-white font-bold leading-relaxed select-text">
-                  {tafsir.urduExplanation}
+                <p className="font-urdu text-sm sm:text-base text-black dark:text-white font-bold leading-loose whitespace-pre-line select-text">
+                  {regionalDeepTafsir || tafsir.urduExplanation}
                 </p>
               </div>
             )}
@@ -268,7 +326,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
             </div>
           </div>
 
-          {/* 3. Related Prophetic Hadith (if directly relevant to this verse) */}
+          {/* 3. Related Prophetic Hadith (shown ONLY if a specific Hadith is present for this ayah) */}
           {hadith && (
             <div className="p-4 rounded-2xl bg-white dark:bg-stone-950 border border-black/15 dark:border-white/15 shadow-xs space-y-2.5">
               <div className="flex items-center justify-between text-xs">

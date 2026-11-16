@@ -537,14 +537,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   One-Tap Offline Packages
                 </div>
 
-                {/* 1. Download All 114 Surahs (Text, Translations & Tafsirs) */}
+                {/* 1. Download All 114 Surahs (Text, Translations & All Tafsirs) */}
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Download All 114 Surahs (Text + Assamese + Tafsir)
+                      Cache All 114 Surahs (Quran + Ibn Kathir & Assamese Tafsir)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Saves Arabic, English, Urdu & Assamese text + offline Assamese phonetic recitation for all 6,236 verses.
+                      Stores Arabic, English, Urdu & Assamese Quran plus complete Tafsir Ibn Kathir & Assamese Tafsir in offline device storage for all 6,236 verses.
                     </p>
                   </div>
                   <button
