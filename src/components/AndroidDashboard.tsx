@@ -12,6 +12,7 @@ import {
   Star,
   Clock,
   ChevronRight,
+  ScrollText,
 } from 'lucide-react';
 import { FluidCircle } from './FluidCircle';
 import { DailyPrayers, ImanDayRecord, LastReadPosition, UserProfileData } from '../types/quran';
@@ -39,6 +40,8 @@ interface AndroidDashboardProps {
   onOpenSmartTasbih?: () => void;
   onOpenDailyInspiration?: () => void;
   onOpenKhatmahPlanner?: () => void;
+  onOpenProphetsTimeline?: () => void;
+  onOpenSacredHub?: () => void;
 }
 
 export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
@@ -61,6 +64,8 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   onOpenSmartTasbih,
   onOpenDailyInspiration,
   onOpenKhatmahPlanner,
+  onOpenProphetsTimeline,
+  onOpenSacredHub,
 }) => {
   // Calculate completed prayers
   const prayersList: (keyof DailyPrayers)[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -93,6 +98,18 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
 
         {/* Top Header Utilities */}
         <div className="flex items-center gap-1.5">
+          {/* Prophets & Sirah Timeline Icon */}
+          {onOpenProphetsTimeline && (
+            <button
+              onClick={onOpenProphetsTimeline}
+              className="p-2 rounded-xl bg-black text-white dark:bg-white dark:text-black transition-all active:scale-95 shadow-2xs"
+              title="Prophets & Sirah Timeline (English Study)"
+              aria-label="Prophets & Sirah Timeline"
+            >
+              <ScrollText className="w-4 h-4" />
+            </button>
+          )}
+
           {/* Qibla Direction */}
           <button
             onClick={onOpenQibla}
@@ -279,6 +296,16 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
       <section className="space-y-2">
         <div className="flex items-center justify-between text-xs px-1 font-bold text-stone-500">
           <span>Spiritual Companion Tools</span>
+          {onOpenSacredHub && (
+            <button
+              onClick={onOpenSacredHub}
+              className="text-[11px] font-bold text-black dark:text-white hover:underline flex items-center gap-0.5 active:scale-95 transition-transform"
+              title="Open Adhkar, 99 Names, 40 Rabbana, Tajweed, Hifz Coach, Topics & Hijri Calendar"
+            >
+              <span>All Guides & Tools</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">

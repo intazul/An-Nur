@@ -30,6 +30,13 @@ export const ARABIC_RECITERS: Reciter[] = [
     language: 'ar',
   },
   {
+    id: 'husary_muallim',
+    name: 'Al-Husary (Muallim Clarity)',
+    style: 'Slow, Clear Teaching Pronunciation',
+    subfolder: 'Husary_Muallim_128kbps',
+    language: 'ar',
+  },
+  {
     id: 'minshawi',
     name: 'Muhammad Siddiq Al-Minshawi',
     style: 'Reverent & Soul-Stirring',
@@ -62,12 +69,21 @@ export const URDU_RECITERS: Reciter[] = [
   },
 ];
 
-export const RECITERS: Reciter[] = [...ARABIC_RECITERS, ...URDU_RECITERS];
+export const ENGLISH_RECITERS: Reciter[] = [
+  {
+    id: 'ibrahim_walk',
+    name: 'Ibrahim Walk (Sahih Intl)',
+    style: 'Clear English Quran Translation Audio',
+    subfolder: 'English/Sahih_Intnl_Ibrahim_Walk_192kbps',
+    language: 'en',
+  },
+];
+
+export const RECITERS: Reciter[] = [...ARABIC_RECITERS, ...URDU_RECITERS, ...ENGLISH_RECITERS];
 
 /**
  * Returns the direct verse audio URL from everyayah CDN
  * Format: {subfolder}/{3-digit surah}{3-digit ayah}.mp3
- * e.g., Alafasy_128kbps/001001.mp3 or translations/urdu_shamshad_ali_khan_46kbps/001001.mp3
  */
 export function getAyahAudioUrl(
   surahNumber: number,
@@ -88,5 +104,26 @@ export function getAyahAudioUrl(
     ARABIC_RECITERS.find((r) => r.id === reciterId) ||
     RECITERS.find((r) => r.id === reciterId) ||
     ARABIC_RECITERS[0];
+  return `https://everyayah.com/data/${reciter.subfolder}/${sStr}${aStr}.mp3`;
+}
+
+export function getAyahAudioUrlForLanguage(
+  surahNumber: number,
+  ayahNumber: number,
+  language: 'ar' | 'ur' | 'en',
+  reciterId: string = 'alafasy',
+  urduReciterId: string = 'shamshad'
+): string {
+  const sStr = String(surahNumber).padStart(3, '0');
+  const aStr = String(ayahNumber).padStart(3, '0');
+
+  if (language === 'en') {
+    return `https://everyayah.com/data/${ENGLISH_RECITERS[0].subfolder}/${sStr}${aStr}.mp3`;
+  }
+  if (language === 'ur') {
+    const urduReciter = URDU_RECITERS.find((r) => r.id === urduReciterId) || URDU_RECITERS[0];
+    return `https://everyayah.com/data/${urduReciter.subfolder}/${sStr}${aStr}.mp3`;
+  }
+  const reciter = ARABIC_RECITERS.find((r) => r.id === reciterId) || ARABIC_RECITERS[0];
   return `https://everyayah.com/data/${reciter.subfolder}/${sStr}${aStr}.mp3`;
 }

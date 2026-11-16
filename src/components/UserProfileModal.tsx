@@ -25,10 +25,10 @@ import {
   sendPushReminder,
 } from '../utils/notifications';
 import {
+  downloadAllQuranAudioOffline,
   downloadAllSurahsTextAndTafsir,
   downloadCoreAudioOffline,
   getOfflineCacheStats,
-  getDownloadedSurahsList,
 } from '../utils/offlineStorage';
 
 interface UserProfileModalProps {
@@ -71,6 +71,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   // Batch offline downloading state
   const [isDownloadingAllText, setIsDownloadingAllText] = useState(false);
   const [isDownloadingCoreAudio, setIsDownloadingCoreAudio] = useState(false);
+  const [isDownloadingAllAudio, setIsDownloadingAllAudio] = useState(false);
+  const downloadAbortRef = React.useRef<AbortController | null>(null);
   const [downloadProgress, setDownloadProgress] = useState<{
     current: number;
     total: number;
@@ -120,6 +122,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   };
 
   const handleDownloadCoreAudio = async () => {
+    const controller = new AbortController();
+    downloadAbortRef.current = controller;
     setIsDownloadingCoreAudio(true);
     setDownloadProgress({ current: 0, total: 10, label: 'Connecting to audio cache...', percent: 0 });
 
@@ -136,7 +140,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             label: `${info.step} (${info.current}/${info.total})`,
             percent: pct,
           });
-        }
+        },
+        controller.signal
       );
       playGentleChime();
       onRefreshDownloadedSurahs?.();
@@ -144,9 +149,47 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     } catch (err) {
       console.error('Audio download failed:', err);
     } finally {
+      downloadAbortRef.current = null;
       setIsDownloadingCoreAudio(false);
       setDownloadProgress(null);
     }
+  };
+
+  const handleDownloadAllAudio = async () => {
+    const controller = new AbortController();
+    downloadAbortRef.current = controller;
+    setIsDownloadingAllAudio(true);
+    setDownloadProgress({ current: 0, total: 114, label: 'Preparing Complete Quran Audio Pack...', percent: 0 });
+
+    try {
+      await downloadAllQuranAudioOffline(
+        profile.preferredReciter,
+        profile.preferredUrduReciter || 'shamshad',
+        (info) => {
+          const pct = Math.round((info.current / info.total) * 100);
+          setDownloadProgress({
+            current: info.current,
+            total: info.total,
+            label: info.step,
+            percent: pct,
+          });
+        },
+        controller.signal
+      );
+      playGentleChime();
+      onRefreshDownloadedSurahs?.();
+      refreshStats();
+    } catch (err) {
+      console.error('Complete Quran audio download failed:', err);
+    } finally {
+      downloadAbortRef.current = null;
+      setIsDownloadingAllAudio(false);
+      setDownloadProgress(null);
+    }
+  };
+
+  const handleStopDownload = () => {
+    downloadAbortRef.current?.abort();
   };
 
   if (!isOpen) return null;
@@ -474,8 +517,16 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       style={{ width: `${downloadProgress.percent}%` }}
                     />
                   </div>
-                  <div className="text-[10px] opacity-80 text-right">
-                    Do not close the application while downloading.
+                  <div className="flex items-center justify-between text-[10px] opacity-80">
+                    <span>Already cached verses are kept safely.</span>
+                    {downloadAbortRef.current && (
+                      <button
+                        onClick={handleStopDownload}
+                        className="underline font-bold"
+                      >
+                        Pause / Stop
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -490,15 +541,15 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Download All 114 Surahs (Text + Tafsir)
+                      Download All 114 Surahs (Text + Assamese + Tafsir)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Arabic text, English translation, Urdu translation, and single clear Tafsir for all 6,236 verses (~2 MB).
+                      Saves Arabic, English, Urdu & Assamese text + offline Assamese phonetic recitation for all 6,236 verses.
                     </p>
                   </div>
                   <button
                     onClick={handleDownloadAllText}
-                    disabled={isDownloadingAllText || isDownloadingCoreAudio}
+                    disabled={isDownloadingAllText || isDownloadingCoreAudio || isDownloadingAllAudio}
                     className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingAllText ? (
@@ -510,19 +561,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </button>
                 </div>
 
-                {/* 2. Download Core Recitations Audio (Arabic & Urdu MP3s) */}
+                {/* 2. Download Core Recitations Audio (Arabic, English & Urdu MP3s) */}
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Download Recitations Audio (Arabic + Urdu)
+                      Core & Favorites Audio (Arabic, English & Urdu)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Caches every ayah audio for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last 10 Surahs & Favorites.
+                      Caches every ayah MP3 for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last 10 Surahs & Favorites.
                     </p>
                   </div>
                   <button
                     onClick={handleDownloadCoreAudio}
-                    disabled={isDownloadingAllText || isDownloadingCoreAudio}
+                    disabled={isDownloadingAllText || isDownloadingCoreAudio || isDownloadingAllAudio}
                     className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingCoreAudio ? (
@@ -530,7 +581,31 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     ) : (
                       <Volume2 className="w-3.5 h-3.5" />
                     )}
-                    <span>{isDownloadingCoreAudio ? 'Caching...' : 'Download Audio'}</span>
+                    <span>{isDownloadingCoreAudio ? 'Caching...' : 'Core Audio'}</span>
+                  </button>
+                </div>
+
+                {/* 3. Download Complete Quran Audio (All 114 Surahs: Arabic, English & Urdu) */}
+                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-black dark:text-white">
+                      Complete Quran Audio (All 114 Surahs)
+                    </div>
+                    <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
+                      Full offline Arabic, English & Urdu recitations for every Surah. Resumable anytime if paused.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleDownloadAllAudio}
+                    disabled={isDownloadingAllText || isDownloadingCoreAudio || isDownloadingAllAudio}
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                  >
+                    {isDownloadingAllAudio ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Download className="w-3.5 h-3.5" />
+                    )}
+                    <span>{isDownloadingAllAudio ? 'Caching...' : 'All 114 Audio'}</span>
                   </button>
                 </div>
               </div>

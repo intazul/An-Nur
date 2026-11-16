@@ -121,18 +121,30 @@ export interface UserProfileData {
     isha: string;
     eveningReflection: string;
   };
-  recitationLanguageMode?: 'arabic' | 'urdu' | 'both'; // 'arabic' = Arabic only, 'urdu' = Urdu only, 'both' = Arabic then Urdu sequential
+  recitationLanguageMode?: RecitationLanguageMode;
+  recitationLyricsLanguage?: RecitationLyricsLanguage;
   preferredUrduReciter?: string; // 'shamshad' | 'farhat'
+  vocalClarityEnhancer?: boolean;
 }
 
-export type RecitationLanguageMode = 'arabic' | 'urdu' | 'both';
+export type RecitationLanguageMode =
+  | 'arabic'
+  | 'english'
+  | 'urdu'
+  | 'assamese'
+  | 'both'
+  | 'arabic_english'
+  | 'arabic_urdu'
+  | 'arabic_assamese';
+
+export type RecitationLyricsLanguage = 'arabic' | 'english' | 'urdu' | 'assamese';
 
 export interface Reciter {
   id: string;
   name: string;
   style: string;
   subfolder: string;
-  language?: 'ar' | 'ur';
+  language?: 'ar' | 'ur' | 'en' | 'as';
 }
 
 export interface DownloadedSurahInfo {

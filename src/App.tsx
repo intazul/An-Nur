@@ -19,6 +19,9 @@ import { KhatmahPlannerView } from './components/KhatmahPlannerView';
 import { ImanAnalysisView } from './components/ImanAnalysisView';
 import { FavoriteSurahsView } from './components/FavoriteSurahsView';
 import { PrayerTimesModal } from './components/PrayerTimesModal';
+import { ProphetsTimelineView } from './components/ProphetsTimelineView';
+import { WelcomeSalamIntro } from './components/WelcomeSalamIntro';
+import { SacredCompanionsView } from './components/SacredCompanionsView';
 import { ALL_SURAHS } from './data/surahList';
 import {
   AudioBookmark,
@@ -40,6 +43,7 @@ import {
   loadAudioBookmarks,
   loadImanRecord,
   loadUserProfile,
+  prefetchAyahAudioBatch,
   saveAudioBookmark,
   saveImanRecord,
   saveSurahOffline,
@@ -47,7 +51,9 @@ import {
 } from './utils/offlineStorage';
 import { fetchSurahDetail } from './utils/quranApi';
 import { getDailyPrayerTimes, PrayerStatus } from './utils/prayerTimes';
-import { getAyahAudioUrl } from './data/reciters';
+import { getAyahAudioUrlForLanguage } from './data/reciters';
+import { assameseSpeech } from './utils/assameseTts';
+import { audioClarity } from './utils/audioClarity';
 import { playGentleChime } from './utils/notifications';
 import { useOnlineStatus } from './hooks/usePWA';
 
@@ -64,13 +70,20 @@ type ActiveView =
   | 'inspiration'
   | 'khatmah'
   | 'iman'
-  | 'favorites';
+  | 'favorites'
+  | 'timeline'
+  | 'sacred_hub';
 
 export default function App() {
   // Active Screen
   const [activeView, setActiveView] = useState<ActiveView>('dashboard');
   const [startInFullScreen, setStartInFullScreen] = useState<boolean>(true);
   const [isFavoriteReading, setIsFavoriteReading] = useState<boolean>(false);
+  const [targetAyahOverride, setTargetAyahOverride] = useState<number | null>(null);
+  const [initialHifzMaskOverride, setInitialHifzMaskOverride] = useState<boolean>(false);
+  const [timelineJumpActive, setTimelineJumpActive] = useState<boolean>(false);
+  const [hubJumpActive, setHubJumpActive] = useState<boolean>(false);
+  const [showIntro, setShowIntro] = useState<boolean>(true);
   const previousViewRef = useRef<ActiveView>('dashboard');
 
   const handleOpenSettings = () => {
@@ -124,8 +137,19 @@ export default function App() {
   const [duration, setDuration] = useState<number>(0);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [repeatVerse, setRepeatVerse] = useState<boolean>(false);
-  const [currentAudioPhase, setCurrentAudioPhase] = useState<'arabic' | 'urdu'>('arabic');
+  const [ayahLoopRange, setAyahLoopRange] = useState<{ enabled: boolean; fromAyah: number; toAyah: number }>({
+    enabled: false,
+    fromAyah: 1,
+    toAyah: 5,
+  });
+  const [currentAudioPhase, setCurrentAudioPhase] = useState<'arabic' | 'urdu' | 'english' | 'assamese'>('arabic');
+  const [surahAudioDownloadProgress, setSurahAudioDownloadProgress] = useState<{ current: number; total: number } | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isAssamesePausedRef = useRef<boolean>(false);
+  const isPlayingAudioRef = useRef<boolean>(false);
+  const activeObjectUrlRef = useRef<string | null>(null);
+  const handleAudioEndedRef = useRef<() => void>(() => {});
+  isPlayingAudioRef.current = isPlayingAudio;
 
   // Modals & Sheets
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -170,6 +194,7 @@ export default function App() {
   useEffect(() => {
     let isCancelled = false;
     setIsLoadingSurah(true);
+    setAyahLoopRange((prev) => ({ ...prev, enabled: false, fromAyah: 1, toAyah: 5 }));
 
     fetchSurahDetail(currentSurahNumber)
       .then((detail) => {
@@ -193,31 +218,144 @@ export default function App() {
   // Online / Offline tracking
   const isOnline = useOnlineStatus();
 
-  // Sync Audio Element source with Cache-first offline resolution
+  // Determine effective active audio phase for current recitation mode
+  const getActiveAudioPhase = useCallback((): 'arabic' | 'urdu' | 'english' | 'assamese' => {
+    const recMode = profile.recitationLanguageMode || 'arabic';
+    if (recMode === 'english') return 'english';
+    if (recMode === 'urdu') return 'urdu';
+    if (recMode === 'assamese') return 'assamese';
+    if (recMode === 'arabic') return 'arabic';
+    if (recMode === 'arabic_english') return currentAudioPhase === 'english' ? 'english' : 'arabic';
+    if (recMode === 'arabic_assamese') return currentAudioPhase === 'assamese' ? 'assamese' : 'arabic';
+    return currentAudioPhase === 'urdu' ? 'urdu' : 'arabic';
+  }, [profile.recitationLanguageMode, currentAudioPhase]);
+
+  const getSecondaryPhaseForDualMode = (recMode: string): 'urdu' | 'english' | 'assamese' | null => {
+    if (recMode === 'both' || recMode === 'arabic_urdu') return 'urdu';
+    if (recMode === 'arabic_english') return 'english';
+    if (recMode === 'arabic_assamese') return 'assamese';
+    return null;
+  };
+
+  // Reset phase when switching recitation audio mode and ensure clean TTS shutdown on unmount
+  useEffect(() => {
+    setCurrentAudioPhase('arabic');
+  }, [profile.recitationLanguageMode]);
+
+  useEffect(() => {
+    return () => {
+      assameseSpeech.stop();
+    };
+  }, []);
+
+  // Sync clarity EQ preference
+  useEffect(() => {
+    audioClarity.setEnabled(profile.vocalClarityEnhancer !== false);
+  }, [profile.vocalClarityEnhancer]);
+
+  // Sync Audio Element / Assamese Speech Engine with Cache-first offline resolution
   useEffect(() => {
     if (!currentSurah) return;
     let isCancelled = false;
-    const recMode = profile.recitationLanguageMode || 'arabic';
-    const isUrduPhase = recMode === 'urdu' || (recMode === 'both' && currentAudioPhase === 'urdu');
-    const rawUrl = getAyahAudioUrl(
+    const activePhase = getActiveAudioPhase();
+    assameseSpeech.stop();
+    isAssamesePausedRef.current = false;
+
+    if (activePhase === 'assamese') {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      const ayahObj =
+        currentSurah.ayahs.find((a) => a.numberInSurah === activeAyahNumber) || currentSurah.ayahs[0];
+      const text = ayahObj?.textAssamese || ayahObj?.textEnglish || '';
+      const estDur = Math.max(2.8, text.length / 9.5) / (playbackSpeed || 1);
+      setCurrentTime(0);
+      setDuration(estDur);
+
+      if (isPlayingAudioRef.current) {
+        assameseSpeech.start(text, playbackSpeed, {
+          onProgress: (cur, dur) => {
+            setCurrentTime(cur);
+            setDuration(dur);
+          },
+          onEnded: () => {
+            handleAudioEndedRef.current();
+          },
+        });
+      }
+      return () => {
+        isCancelled = true;
+      };
+    }
+
+    const langCode: 'ar' | 'ur' | 'en' =
+      activePhase === 'urdu' ? 'ur' : activePhase === 'english' ? 'en' : 'ar';
+
+    const rawUrl = getAyahAudioUrlForLanguage(
       currentSurah.number,
       activeAyahNumber,
+      langCode,
       profile.preferredReciter,
-      isUrduPhase,
       profile.preferredUrduReciter || 'shamshad'
     );
 
     // Resolve via Cache API for guaranteed 100% offline audio playback
     getCachedAudioUrl(rawUrl).then((resolvedUrl) => {
-      if (isCancelled || !audioRef.current) return;
-      const wasPlaying = isPlayingAudio;
+      if (isCancelled || !audioRef.current) {
+        if (resolvedUrl.startsWith('blob:')) URL.revokeObjectURL(resolvedUrl);
+        return;
+      }
+
+      if (activeObjectUrlRef.current && activeObjectUrlRef.current !== resolvedUrl) {
+        URL.revokeObjectURL(activeObjectUrlRef.current);
+      }
+      activeObjectUrlRef.current = resolvedUrl.startsWith('blob:') ? resolvedUrl : null;
+
+      audioClarity.applyPitchPreservation(audioRef.current);
+      audioClarity.setEnabled(profile.vocalClarityEnhancer !== false);
+
       audioRef.current.src = resolvedUrl;
       audioRef.current.playbackRate = playbackSpeed;
       audioRef.current.load();
-      if (wasPlaying) {
+      if (isPlayingAudioRef.current) {
+        audioClarity.attach(audioRef.current);
         audioRef.current.play().catch(() => setIsPlayingAudio(false));
       }
     });
+
+    // Silently prefetch next 2 ayahs (and dual translation track if applicable) for continuous offline caching
+    const recMode = profile.recitationLanguageMode || 'arabic';
+    const secondary = getSecondaryPhaseForDualMode(recMode);
+    const prefetchUrls: string[] = [];
+    if (secondary && secondary !== 'assamese') {
+      const secLang = secondary === 'urdu' ? 'ur' : 'en';
+      prefetchUrls.push(
+        getAyahAudioUrlForLanguage(
+          currentSurah.number,
+          activeAyahNumber,
+          secLang,
+          profile.preferredReciter,
+          profile.preferredUrduReciter || 'shamshad'
+        )
+      );
+    }
+    for (let offset = 1; offset <= 2; offset++) {
+      const nextAyah = activeAyahNumber + offset;
+      if (nextAyah <= currentSurah.ayahs.length) {
+        prefetchUrls.push(
+          getAyahAudioUrlForLanguage(
+            currentSurah.number,
+            nextAyah,
+            langCode,
+            profile.preferredReciter,
+            profile.preferredUrduReciter || 'shamshad'
+          )
+        );
+      }
+    }
+    if (prefetchUrls.length > 0) {
+      prefetchAyahAudioBatch(prefetchUrls).catch(() => {});
+    }
 
     return () => {
       isCancelled = true;
@@ -237,18 +375,50 @@ export default function App() {
       const updated = { ...prev, ...updates };
       if ('showAssamese' in updates && updates.showAssamese) {
         updated.showUrdu = false;
-        if (updated.recitationLanguageMode === 'urdu' || updated.recitationLanguageMode === 'both') {
+        if (
+          updated.recitationLanguageMode === 'urdu' ||
+          updated.recitationLanguageMode === 'both' ||
+          updated.recitationLanguageMode === 'arabic_urdu'
+        ) {
           updated.recitationLanguageMode = 'arabic';
+        }
+        if (updated.recitationLyricsLanguage === 'urdu') {
+          updated.recitationLyricsLanguage = 'assamese';
         }
       } else if ('showUrdu' in updates && updates.showUrdu) {
         updated.showAssamese = false;
-      } else if (
-        'recitationLanguageMode' in updates &&
-        (updates.recitationLanguageMode === 'urdu' || updates.recitationLanguageMode === 'both')
-      ) {
-        updated.showUrdu = true;
-        updated.showAssamese = false;
+        if (updated.recitationLyricsLanguage === 'assamese') {
+          updated.recitationLyricsLanguage = 'urdu';
+        }
       }
+
+      if ('recitationLanguageMode' in updates && updates.recitationLanguageMode) {
+        const m = updates.recitationLanguageMode;
+        if (m === 'urdu' || m === 'both' || m === 'arabic_urdu') {
+          updated.showUrdu = true;
+          updated.showAssamese = false;
+          if (updated.recitationLyricsLanguage === 'assamese') {
+            updated.recitationLyricsLanguage = 'urdu';
+          }
+        } else if (m === 'assamese' || m === 'arabic_assamese') {
+          updated.showAssamese = true;
+          updated.showUrdu = false;
+          if (updated.recitationLyricsLanguage === 'urdu') {
+            updated.recitationLyricsLanguage = 'assamese';
+          }
+        }
+      }
+
+      if ('recitationLyricsLanguage' in updates && updates.recitationLyricsLanguage) {
+        if (updates.recitationLyricsLanguage === 'urdu') {
+          updated.showUrdu = true;
+          updated.showAssamese = false;
+        } else if (updates.recitationLyricsLanguage === 'assamese') {
+          updated.showAssamese = true;
+          updated.showUrdu = false;
+        }
+      }
+
       // Guarantee both are never active at the same time
       if (updated.showUrdu && updated.showAssamese) {
         updated.showUrdu = false;
@@ -286,32 +456,52 @@ export default function App() {
   // Audio Events
   const handleAudioEnded = () => {
     const recMode = profile.recitationLanguageMode || 'arabic';
+    const secondary = getSecondaryPhaseForDualMode(recMode);
+    const activePhase = getActiveAudioPhase();
 
     if (repeatVerse) {
-      if (recMode === 'both') {
-        if (currentAudioPhase === 'arabic') {
-          setCurrentAudioPhase('urdu');
+      if (secondary) {
+        if (activePhase === 'arabic') {
+          setCurrentAudioPhase(secondary);
         } else {
           setCurrentAudioPhase('arabic');
         }
-      } else {
-        if (audioRef.current) {
-          audioRef.current.currentTime = 0;
-          audioRef.current.play().catch(() => {});
-        }
+      } else if (activePhase === 'assamese' && currentSurah) {
+        const ayahObj =
+          currentSurah.ayahs.find((a) => a.numberInSurah === activeAyahNumber) || currentSurah.ayahs[0];
+        assameseSpeech.start(ayahObj?.textAssamese || ayahObj?.textEnglish || '', playbackSpeed, {
+          onProgress: (cur, dur) => {
+            setCurrentTime(cur);
+            setDuration(dur);
+          },
+          onEnded: () => handleAudioEndedRef.current(),
+        });
+      } else if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play().catch(() => {});
       }
       return;
     }
 
-    // In 'both' mode: if we just finished Arabic, immediately recite Urdu for this SAME ayah
-    if (recMode === 'both' && currentAudioPhase === 'arabic') {
-      setCurrentAudioPhase('urdu');
+    // In dual mode (Arabic + Urdu / Arabic + English / Arabic + Assamese): play secondary translation for SAME ayah
+    if (secondary && activePhase === 'arabic') {
+      setCurrentAudioPhase(secondary);
       return;
     }
 
-    // If we just finished Urdu in 'both' mode, reset phase to Arabic for the next ayah
-    if (recMode === 'both' && currentAudioPhase === 'urdu') {
+    // If we just finished secondary phase in dual mode, reset to Arabic for next ayah
+    if (secondary && activePhase === secondary) {
       setCurrentAudioPhase('arabic');
+    }
+
+    if (currentSurah && ayahLoopRange.enabled) {
+      const loopStart = Math.max(1, Math.min(ayahLoopRange.fromAyah, ayahLoopRange.toAyah, currentSurah.ayahs.length));
+      const loopEnd = Math.max(loopStart, Math.min(ayahLoopRange.toAyah, currentSurah.ayahs.length));
+      if (activeAyahNumber >= loopEnd || activeAyahNumber < loopStart) {
+        setActiveAyahNumber(loopStart);
+        handleVerseRead();
+        return;
+      }
     }
 
     if (currentSurah && activeAyahNumber < currentSurah.ayahs.length) {
@@ -329,12 +519,54 @@ export default function App() {
     }
   };
 
+  handleAudioEndedRef.current = handleAudioEnded;
+
+  const handleBackupRestored = useCallback(() => {
+    setProfile(loadUserProfile());
+    setImanRecord(loadImanRecord());
+    setStreakInfo(calculateStreak());
+    setBookmarks(loadAudioBookmarks());
+    setDownloadedSurahs(getDownloadedSurahsList());
+  }, []);
+
   const handleTogglePlayPause = () => {
+    const activePhase = getActiveAudioPhase();
+
+    if (activePhase === 'assamese') {
+      if (isPlayingAudio) {
+        assameseSpeech.pause();
+        isAssamesePausedRef.current = true;
+        setIsPlayingAudio(false);
+      } else {
+        if (isAssamesePausedRef.current) {
+          assameseSpeech.resume();
+          isAssamesePausedRef.current = false;
+          setIsPlayingAudio(true);
+        } else if (currentSurah) {
+          const ayahObj =
+            currentSurah.ayahs.find((a) => a.numberInSurah === activeAyahNumber) || currentSurah.ayahs[0];
+          const text = ayahObj?.textAssamese || ayahObj?.textEnglish || '';
+          setIsPlayingAudio(true);
+          handleVerseRead();
+          assameseSpeech.start(text, playbackSpeed, {
+            onProgress: (cur, dur) => {
+              setCurrentTime(cur);
+              setDuration(dur);
+            },
+            onEnded: () => handleAudioEndedRef.current(),
+          });
+        }
+      }
+      return;
+    }
+
     if (!audioRef.current) return;
     if (isPlayingAudio) {
       audioRef.current.pause();
       setIsPlayingAudio(false);
     } else {
+      audioClarity.attach(audioRef.current);
+      audioClarity.setEnabled(profile.vocalClarityEnhancer !== false);
       audioRef.current.play().then(() => {
         setIsPlayingAudio(true);
         handleVerseRead();
@@ -347,39 +579,38 @@ export default function App() {
 
   const handlePlayAyahInReciter = (ayahNum: number) => {
     const recMode = profile.recitationLanguageMode || 'arabic';
-    const targetPhase = recMode === 'urdu' ? 'urdu' : 'arabic';
-    const isUrduPhase = targetPhase === 'urdu';
+    const targetPhase: 'arabic' | 'urdu' | 'english' | 'assamese' =
+      recMode === 'urdu'
+        ? 'urdu'
+        : recMode === 'english'
+        ? 'english'
+        : recMode === 'assamese'
+        ? 'assamese'
+        : 'arabic';
 
-    if (activeAyahNumber === ayahNum && isPlayingAudio) {
-      audioRef.current?.pause();
-      setIsPlayingAudio(false);
-    } else {
-      setActiveAyahNumber(ayahNum);
-      setCurrentAudioPhase(targetPhase);
-      const url = getAyahAudioUrl(
-        currentSurahNumber,
-        ayahNum,
-        profile.preferredReciter,
-        isUrduPhase,
-        profile.preferredUrduReciter || 'shamshad'
-      );
-      if (audioRef.current) {
-        audioRef.current.src = url;
-        audioRef.current.playbackRate = playbackSpeed;
-        audioRef.current.play().then(() => {
-          setIsPlayingAudio(true);
-          handleVerseRead();
-        }).catch(() => setIsPlayingAudio(false));
-      }
+    if (activeAyahNumber === ayahNum && getActiveAudioPhase() === targetPhase) {
+      handleTogglePlayPause();
+      return;
     }
+
+    assameseSpeech.stop();
+    isAssamesePausedRef.current = false;
+    isPlayingAudioRef.current = true;
+    setIsPlayingAudio(true);
+    setActiveAyahNumber(ayahNum);
+    setCurrentAudioPhase(targetPhase);
+    handleVerseRead();
   };
 
   const handleNextAyah = () => {
     if (!currentSurah) return;
     if (activeAyahNumber < currentSurah.ayahs.length) {
       const next = activeAyahNumber + 1;
+      const recMode = profile.recitationLanguageMode || 'arabic';
       setActiveAyahNumber(next);
-      setCurrentAudioPhase(profile.recitationLanguageMode === 'urdu' ? 'urdu' : 'arabic');
+      setCurrentAudioPhase(
+        recMode === 'urdu' ? 'urdu' : recMode === 'english' ? 'english' : recMode === 'assamese' ? 'assamese' : 'arabic'
+      );
       handleUpdateLastRead({
         surahNumber: currentSurah.number,
         ayahNumber: next,
@@ -392,8 +623,11 @@ export default function App() {
   const handlePrevAyah = () => {
     if (activeAyahNumber > 1) {
       const prev = activeAyahNumber - 1;
+      const recMode = profile.recitationLanguageMode || 'arabic';
       setActiveAyahNumber(prev);
-      setCurrentAudioPhase(profile.recitationLanguageMode === 'urdu' ? 'urdu' : 'arabic');
+      setCurrentAudioPhase(
+        recMode === 'urdu' ? 'urdu' : recMode === 'english' ? 'english' : recMode === 'assamese' ? 'assamese' : 'arabic'
+      );
       if (currentSurah) {
         handleUpdateLastRead({
           surahNumber: currentSurah.number,
@@ -402,6 +636,15 @@ export default function App() {
           updatedAt: new Date().toISOString(),
         });
       }
+    }
+  };
+
+  const handleSeekAudio = (seconds: number) => {
+    const activePhase = getActiveAudioPhase();
+    if (activePhase === 'assamese') return;
+    if (audioRef.current && isFinite(seconds)) {
+      audioRef.current.currentTime = seconds;
+      setCurrentTime(seconds);
     }
   };
 
@@ -494,17 +737,24 @@ export default function App() {
     }
   };
 
-  // Download Surah Offline (both Arabic and Urdu audio caching)
-  const handleDownloadSurah = async (surahNum: number) => {
-    if (!currentSurah) return;
-    await saveSurahOffline(
-      currentSurah,
-      true,
-      profile.preferredReciter,
-      profile.preferredUrduReciter || 'shamshad'
-    );
-    setDownloadedSurahs(getDownloadedSurahsList());
-    playGentleChime();
+  // Download Surah Offline (Arabic, English & Urdu audio + full Assamese/Urdu/English text)
+  const handleDownloadSurah = async (_surahNum: number) => {
+    if (!currentSurah || surahAudioDownloadProgress) return;
+    const total = currentSurah.ayahs.length * 3;
+    setSurahAudioDownloadProgress({ current: 0, total });
+    try {
+      await saveSurahOffline(
+        currentSurah,
+        true,
+        profile.preferredReciter,
+        profile.preferredUrduReciter || 'shamshad',
+        (current, tot) => setSurahAudioDownloadProgress({ current, total: tot })
+      );
+      setDownloadedSurahs(getDownloadedSurahsList());
+      playGentleChime();
+    } finally {
+      setSurahAudioDownloadProgress(null);
+    }
   };
 
   // Delete Downloaded Surah
@@ -520,6 +770,9 @@ export default function App() {
   };
 
   const isCurrentSurahOffline = isSurahOffline(currentSurahNumber);
+  const isCurrentSurahAudioOffline = downloadedSurahs.some(
+    (s) => s.surahNumber === currentSurahNumber && s.hasAudio
+  );
   const isFavorite = (profile.favoriteSurahs || []).includes(currentSurahNumber);
 
   return (
@@ -540,6 +793,7 @@ export default function App() {
         {/* Hidden Audio Reciter Element */}
         <audio
           ref={audioRef}
+          crossOrigin="anonymous"
           onTimeUpdate={() => {
             if (audioRef.current) {
               setCurrentTime(audioRef.current.currentTime);
@@ -549,6 +803,9 @@ export default function App() {
           onEnded={handleAudioEnded}
           onError={() => setIsPlayingAudio(false)}
         />
+
+        {/* 0. Animated Full Salam App Introduction (Zero vertical scroll) */}
+        {showIntro && <WelcomeSalamIntro onContinue={() => setShowIntro(false)} />}
 
         {/* 1. Android Dashboard (No notification bar, fluid Iman circle, favorites in dedicated tab, always start from last read) */}
         {activeView === 'dashboard' && (
@@ -561,6 +818,10 @@ export default function App() {
             onStartReading={() => {
               // Directly resume sequential Quran journey without favorite mode
               setIsFavoriteReading(false);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setTargetAyahOverride(null);
               if (profile.lastRead?.surahNumber) {
                 setCurrentSurahNumber(profile.lastRead.surahNumber);
                 setActiveAyahNumber(profile.lastRead.ayahNumber || 1);
@@ -573,6 +834,10 @@ export default function App() {
             onStartRecitation={() => {
               // Always start recitation from last read
               setIsFavoriteReading(false);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setTargetAyahOverride(null);
               setCurrentSurahNumber(profile.lastRead?.surahNumber || 1);
               setActiveAyahNumber(profile.lastRead?.ayahNumber || 1);
               setActiveView('recitation');
@@ -585,6 +850,10 @@ export default function App() {
             onOpenFavoritesTab={() => setActiveView('favorites')}
             onSelectFavoriteSurah={(sNum) => {
               setIsFavoriteReading(true);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setTargetAyahOverride(null);
               setCurrentSurahNumber(sNum);
               setActiveAyahNumber(1);
               setStartInFullScreen(true);
@@ -596,6 +865,8 @@ export default function App() {
             onOpenSmartTasbih={() => setActiveView('tasbih')}
             onOpenDailyInspiration={() => setActiveView('inspiration')}
             onOpenKhatmahPlanner={() => setActiveView('khatmah')}
+            onOpenProphetsTimeline={() => setActiveView('timeline')}
+            onOpenSacredHub={() => setActiveView('sacred_hub')}
           />
         )}
 
@@ -629,7 +900,17 @@ export default function App() {
             currentSurah={currentSurah}
             isLoading={isLoadingSurah}
             onBackToDashboard={() => {
-              if (isFavoriteReading) {
+              setTargetAyahOverride(null);
+              setInitialHifzMaskOverride(false);
+              if (hubJumpActive) {
+                setHubJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('sacred_hub');
+              } else if (timelineJumpActive) {
+                setTimelineJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('timeline');
+              } else if (isFavoriteReading) {
                 setActiveView('favorites');
               } else {
                 setActiveView('surah_list');
@@ -664,8 +945,9 @@ export default function App() {
             isFavoriteSurah={isFavorite}
             isFavoriteReading={isFavoriteReading}
             onUpdateLastRead={handleUpdateLastRead}
-            initialTargetAyah={isFavoriteReading ? 1 : profile.lastRead?.ayahNumber}
+            initialTargetAyah={targetAyahOverride ?? (isFavoriteReading ? 1 : profile.lastRead?.ayahNumber)}
             initialFullScreen={startInFullScreen}
+            initialHifzMask={initialHifzMaskOverride}
           />
         )}
 
@@ -679,7 +961,19 @@ export default function App() {
             duration={duration}
             playbackSpeed={playbackSpeed}
             repeatVerse={repeatVerse}
-            onBackToDashboard={() => setActiveView(isFavoriteReading ? 'favorites' : 'dashboard')}
+            onBackToDashboard={() => {
+              if (hubJumpActive) {
+                setHubJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('sacred_hub');
+              } else if (timelineJumpActive) {
+                setTimelineJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('timeline');
+              } else {
+                setActiveView(isFavoriteReading ? 'favorites' : 'dashboard');
+              }
+            }}
             onTogglePlayPause={handleTogglePlayPause}
             onNextAyah={handleNextAyah}
             onPrevAyah={handlePrevAyah}
@@ -687,12 +981,21 @@ export default function App() {
             onChangeSpeed={(spd) => {
               setPlaybackSpeed(spd);
               if (audioRef.current) audioRef.current.playbackRate = spd;
+              if (getActiveAudioPhase() === 'assamese' && isPlayingAudio) {
+                assameseSpeech.setSpeed(spd);
+              }
             }}
+            onSeekTime={handleSeekAudio}
             onSelectSurah={(num) => {
+              assameseSpeech.stop();
               setCurrentSurahNumber(num);
               setActiveAyahNumber(1);
             }}
-            onSelectAyah={(num) => setActiveAyahNumber(num)}
+            onSelectAyah={(num) => {
+              assameseSpeech.stop();
+              setActiveAyahNumber(num);
+            }}
+            onPlayAyah={(num) => handlePlayAyahInReciter(num)}
             onAddBookmark={handleInitiateBookmark}
             profile={profile}
             onOpenSettings={handleOpenSettings}
@@ -700,7 +1003,12 @@ export default function App() {
             onToggleFavoriteSurah={handleToggleFavoriteSurah}
             isFavoriteSurah={isFavorite}
             onUpdateProfile={handleUpdateProfile}
-            currentAudioPhase={currentAudioPhase}
+            currentAudioPhase={getActiveAudioPhase()}
+            isCurrentSurahAudioOffline={isCurrentSurahAudioOffline}
+            surahAudioDownloadProgress={surahAudioDownloadProgress}
+            onDownloadCurrentSurahOffline={() => handleDownloadSurah(currentSurahNumber)}
+            ayahLoopRange={ayahLoopRange}
+            onUpdateAyahLoopRange={setAyahLoopRange}
           />
         )}
 
@@ -726,6 +1034,7 @@ export default function App() {
               setProfileInitialTab('offline');
               setIsProfileOpen(true);
             }}
+            onBackupRestored={handleBackupRestored}
           />
         )}
 
@@ -822,6 +1131,62 @@ export default function App() {
             profile={profile}
           />
         )}
+
+        {/* 13. Offline Prophets & Sirah Vertical Timeline Study View */}
+        {activeView === 'timeline' && (
+          <ProphetsTimelineView
+            profile={profile}
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onOpenSettings={handleOpenSettings}
+            onOpenAyahInReader={(surahNum, ayahNum) => {
+              setTimelineJumpActive(true);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveAyahNumber(ayahNum);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+            onPlayAyahInReciter={(surahNum, ayahNum) => {
+              setTimelineJumpActive(true);
+              setHubJumpActive(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveView('recitation');
+              handlePlayAyahInReciter(ayahNum);
+            }}
+          />
+        )}
+
+        {/* 14. Dedicated Companions & Study Hub (Adhkar, 40 Rabbana, 99 Names, Tajweed, Topics, Hifz, Jumuah & Hijri) */}
+        {activeView === 'sacred_hub' && (
+          <SacredCompanionsView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onOpenAyahInReader={(surahNum, ayahNum, opts) => {
+              setHubJumpActive(true);
+              setTimelineJumpActive(false);
+              setInitialHifzMaskOverride(Boolean(opts?.enableHifzMask));
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveAyahNumber(ayahNum);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+            onPlayAyahInReciter={(surahNum, ayahNum) => {
+              setHubJumpActive(true);
+              setTimelineJumpActive(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveView('recitation');
+              handlePlayAyahInReciter(ayahNum);
+            }}
+          />
+        )}
       </div>
 
       {/* Fallback Settings Sheet if triggered via legacy modal state */}
@@ -841,6 +1206,7 @@ export default function App() {
             setProfileInitialTab('offline');
             setIsProfileOpen(true);
           }}
+          onBackupRestored={handleBackupRestored}
         />
       )}
 

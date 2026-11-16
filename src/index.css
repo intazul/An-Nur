@@ -133,6 +133,79 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Animated Full Salam Introduction Keyframes */
+  @keyframes introEmblemIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.76) translateY(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes introHaloPulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.28;
+    }
+    50% {
+      transform: scale(1.16);
+      opacity: 0.08;
+    }
+  }
+
+  @keyframes introFadeUp {
+    0% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes introLineExpand {
+    0% {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+  }
+
+  .animate-intro-emblem {
+    animation: introEmblemIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animate-intro-halo {
+    animation: introHaloPulse 2.8s ease-in-out infinite;
+  }
+
+  .animate-intro-salam {
+    animation: introFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+
+  .animate-intro-line {
+    animation: introLineExpand 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+
+  .animate-intro-quran {
+    animation: introFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
+  }
+
+  .animate-intro-hadith {
+    animation: introFadeUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  }
+
+  .animate-intro-cta {
+    animation: introFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.78s both;
+  }
 }
 
 /* Custom scrollbars for clean dashboard */

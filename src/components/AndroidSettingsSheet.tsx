@@ -15,10 +15,12 @@ import {
   Wifi,
   WifiOff,
   HardDrive,
+  Upload,
 } from 'lucide-react';
 import { UserProfileData } from '../types/quran';
 import { ARABIC_RECITERS, URDU_RECITERS, RECITERS } from '../data/reciters';
 import { useOnlineStatus, usePWAInstall } from '../hooks/usePWA';
+import { exportOfflineBackupJson, importOfflineBackupJson } from '../utils/backupAndHifz';
 
 interface AndroidSettingsSheetProps {
   isOpen: boolean;
@@ -29,6 +31,7 @@ interface AndroidSettingsSheetProps {
   onToggleDarkMode: () => void;
   onOpenBookmarks: () => void;
   onOpenOfflineManager: () => void;
+  onBackupRestored?: () => void;
 }
 
 export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
@@ -40,11 +43,53 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
   onToggleDarkMode,
   onOpenBookmarks,
   onOpenOfflineManager,
+  onBackupRestored,
 }) => {
   const isOnline = useOnlineStatus();
   const { isInstallable, isInstalled, install } = usePWAInstall();
+  const fileInputRef = React.useRef<HTMLInputElement | null>(null);
+  const [backupNotice, setBackupNotice] = React.useState<{ type: 'ok' | 'err'; text: string } | null>(null);
 
   if (!isOpen) return null;
+
+  const handleExportBackup = () => {
+    try {
+      const { keyCount, fileName } = exportOfflineBackupJson();
+      setBackupNotice({
+        type: 'ok',
+        text: `Saved ${keyCount} offline records to ${fileName}`,
+      });
+    } catch {
+      setBackupNotice({
+        type: 'err',
+        text: 'Could not generate backup file on this device.',
+      });
+    }
+  };
+
+  const handleImportFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const result = importOfflineBackupJson(String(reader.result || ''));
+        setBackupNotice({
+          type: 'ok',
+          text: `Restored ${result.restoredKeys} items (${result.exportedAt ? new Date(result.exportedAt).toLocaleDateString() : 'backup'}).`,
+        });
+        onBackupRestored?.();
+      } catch (err) {
+        setBackupNotice({
+          type: 'err',
+          text: err instanceof Error ? err.message : 'Invalid backup file.',
+        });
+      } finally {
+        e.target.value = '';
+      }
+    };
+    reader.readAsText(file);
+  };
 
   return (
     <div className="fixed inset-0 z-50 max-w-md w-full mx-auto bg-white dark:bg-black flex flex-col h-full animate-in fade-in duration-200 select-none">
@@ -527,69 +572,68 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           </div>
         </div>
 
-        {/* SECTION 6: Recitation Mode & Audio Voices (Urdu & Arabic) */}
+        {/* SECTION 6: Recitation Mode & Audio Voices (Arabic, English, Urdu, Assamese) */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
             <Volume2 className="w-3.5 h-3.5" />
             <span>Recitation Audio Mode</span>
           </div>
 
-          {/* 3-Way Mode Switcher: Arabic, Urdu, Both */}
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => onUpdateProfile({ recitationLanguageMode: 'arabic' })}
-              className={`p-3 rounded-2xl border-2 text-left transition-all ${
-                (profile.recitationLanguageMode || 'arabic') === 'arabic'
-                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-semibold hover:border-black/50'
-              }`}
-            >
-              <div className="text-xs font-bold mb-0.5">📖 Arabic Only</div>
-              <div className="text-[10px] opacity-80 leading-tight">عربی تلاوت</div>
-            </button>
-
-            <button
-              onClick={() =>
-                onUpdateProfile({
-                  recitationLanguageMode: 'urdu',
-                  showUrdu: true,
-                  showAssamese: false,
-                })
-              }
-              className={`p-3 rounded-2xl border-2 text-left transition-all ${
-                profile.recitationLanguageMode === 'urdu'
-                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-semibold hover:border-black/50'
-              }`}
-            >
-              <div className="text-xs font-bold mb-0.5">🇵🇰 Urdu Only</div>
-              <div className="text-[10px] opacity-80 leading-tight">اردو تلاوت و ترجمہ</div>
-            </button>
-
-            <button
-              onClick={() =>
-                onUpdateProfile({
-                  recitationLanguageMode: 'both',
-                  showUrdu: true,
-                  showAssamese: false,
-                })
-              }
-              className={`p-3 rounded-2xl border-2 text-left transition-all ${
-                profile.recitationLanguageMode === 'both'
-                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-semibold hover:border-black/50'
-              }`}
-            >
-              <div className="text-xs font-bold mb-0.5">🔄 Arabic + Urdu</div>
-              <div className="text-[10px] opacity-80 leading-tight">پہلے عربی پھر اردو</div>
-            </button>
+          <div className="grid grid-cols-2 gap-2">
+            {(
+              [
+                { id: 'arabic', title: 'Arabic Only', sub: 'عربي تلاوت' },
+                { id: 'english', title: 'English Audio', sub: 'Ibrahim Walk' },
+                { id: 'urdu', title: 'Urdu Audio', sub: 'اردو ترجمہ (No Assamese)' },
+                { id: 'assamese', title: 'Assamese Audio', sub: 'অসমীয়া (No Urdu)' },
+                { id: 'arabic_english', title: 'Arabic + English', sub: 'Sequential pair' },
+                { id: 'arabic_urdu', title: 'Arabic + Urdu', sub: 'پہلے عربی پھر اردو' },
+                { id: 'arabic_assamese', title: 'Arabic + Assamese', sub: 'আৰবী + অসমীয়া' },
+              ] as const
+            ).map((opt) => {
+              const active =
+                (profile.recitationLanguageMode || 'arabic') === opt.id ||
+                (opt.id === 'arabic_urdu' && profile.recitationLanguageMode === 'both');
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => {
+                    if (opt.id === 'urdu' || opt.id === 'arabic_urdu') {
+                      onUpdateProfile({
+                        recitationLanguageMode: opt.id,
+                        showUrdu: true,
+                        showAssamese: false,
+                      });
+                    } else if (opt.id === 'assamese' || opt.id === 'arabic_assamese') {
+                      onUpdateProfile({
+                        recitationLanguageMode: opt.id,
+                        showAssamese: true,
+                        showUrdu: false,
+                      });
+                    } else {
+                      onUpdateProfile({ recitationLanguageMode: opt.id });
+                    }
+                  }}
+                  className={`p-3 rounded-2xl border-2 text-left transition-all ${
+                    active
+                      ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                      : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-semibold hover:border-black/50'
+                  }`}
+                >
+                  <div className="text-xs font-bold mb-0.5">{opt.title}</div>
+                  <div className="text-[10px] opacity-80 leading-tight">{opt.sub}</div>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Urdu Voice Selection (Visible when Urdu or Both is active) */}
-          {profile.recitationLanguageMode !== 'arabic' && (
+          {/* Urdu Voice Selection (Visible when Urdu or Arabic + Urdu is active) */}
+          {(profile.recitationLanguageMode === 'urdu' ||
+            profile.recitationLanguageMode === 'both' ||
+            profile.recitationLanguageMode === 'arabic_urdu') && (
             <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2">
               <div className="text-xs font-bold text-black dark:text-white flex items-center justify-between">
-                <span>🇵🇰 Urdu Translation Voice (اردو قاری)</span>
+                <span>Urdu Translation Voice (اردو قاری)</span>
                 <span className="text-[10px] font-mono font-semibold text-stone-700 dark:text-stone-300">
                   EveryAyah CDN
                 </span>
@@ -626,11 +670,16 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             </div>
           )}
 
-          {/* Arabic Qari Selection (Visible when Arabic or Both is active) */}
-          {profile.recitationLanguageMode !== 'urdu' && (
+          {/* Arabic Qari Selection (Visible when any Arabic recitation mode is active) */}
+          {(profile.recitationLanguageMode === 'arabic' ||
+            profile.recitationLanguageMode === 'both' ||
+            profile.recitationLanguageMode === 'arabic_english' ||
+            profile.recitationLanguageMode === 'arabic_urdu' ||
+            profile.recitationLanguageMode === 'arabic_assamese' ||
+            !profile.recitationLanguageMode) && (
             <div className="space-y-2">
               <div className="text-xs font-bold text-black dark:text-white">
-                📖 Arabic Qari Reciter (عربی قاری)
+                Arabic Qari Reciter (عربی قاری)
               </div>
               <div className="space-y-1.5">
                 {ARABIC_RECITERS.map((r) => {
@@ -662,6 +711,30 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               </div>
             </div>
           )}
+
+          {/* Clear Pronunciation & Studio Vocal EQ Toggle */}
+          <button
+            onClick={() =>
+              onUpdateProfile({
+                vocalClarityEnhancer: profile.vocalClarityEnhancer === false ? true : false,
+              })
+            }
+            className={`w-full p-3.5 rounded-2xl border-2 text-left flex items-center justify-between gap-2 transition-all ${
+              profile.vocalClarityEnhancer !== false
+                ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
+                : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+            }`}
+          >
+            <div className="min-w-0">
+              <div className="text-xs font-bold">Clear Pronunciation & Vocal Clarity EQ</div>
+              <div className="text-[10px] opacity-80 leading-tight">
+                Enhances Arabic Tajweed, English & Urdu diction + Assamese phonetic clarity
+              </div>
+            </div>
+            <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-white/20 dark:bg-black/20 shrink-0">
+              {profile.vocalClarityEnhancer !== false ? 'ON' : 'OFF'}
+            </span>
+          </button>
         </div>
 
         {/* SECTION 7: Offline Capabilities & PWA Installation */}
@@ -719,6 +792,55 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               <span>Installed as Standalone Native PWA</span>
             </div>
           )}
+
+          {/* One-Tap Backup & Restore (.json) */}
+          <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2.5">
+            <div>
+              <div className="text-xs font-bold text-black dark:text-white">
+                Portable Backup & Restore (.json)
+              </div>
+              <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                Export or restore your Hifz, Iman records, bookmarks & Khatmah 100% offline
+              </div>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,application/json"
+              onChange={handleImportFileChange}
+              className="hidden"
+            />
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleExportBackup}
+                className="p-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-[11px] font-bold flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Export Backup</span>
+              </button>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2.5 rounded-xl border border-black/25 dark:border-white/25 bg-white dark:bg-black text-black dark:text-white text-[11px] font-bold flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                <span>Restore .json</span>
+              </button>
+            </div>
+
+            {backupNotice && (
+              <div
+                className={`p-2 rounded-xl text-[10.5px] font-bold border ${
+                  backupNotice.type === 'ok'
+                    ? 'bg-stone-100 dark:bg-stone-800 border-black/20 dark:border-white/25 text-black dark:text-white'
+                    : 'bg-stone-200 dark:bg-stone-900 border-black dark:border-white text-black dark:text-white'
+                }`}
+              >
+                {backupNotice.text}
+              </div>
+            )}
+          </div>
 
           {/* Quick Shortcuts */}
           <div className="grid grid-cols-2 gap-2 pt-1 pb-2">

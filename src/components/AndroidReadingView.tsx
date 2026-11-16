@@ -17,6 +17,8 @@ import {
   Quote,
   Maximize2,
   Minimize2,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { ALL_SURAHS } from '../data/surahList';
 import { Ayah, LastReadPosition, SurahDetail, UserProfileData, WaqfSignInfo } from '../types/quran';
@@ -55,6 +57,7 @@ interface AndroidReadingViewProps {
   onUpdateLastRead: (position: LastReadPosition) => void;
   initialTargetAyah?: number;
   initialFullScreen?: boolean;
+  initialHifzMask?: boolean;
 }
 
 export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
@@ -81,11 +84,29 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   onUpdateLastRead,
   initialTargetAyah,
   initialFullScreen = true,
+  initialHifzMask = false,
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [expandedHadithAyah, setExpandedHadithAyah] = useState<number | null>(null);
   const [selectedWaqfSign, setSelectedWaqfSign] = useState<WaqfSignInfo | null>(null);
   const [selectedParagraphAyah, setSelectedParagraphAyah] = useState<number | null>(null);
+  const [isHifzMaskEnabled, setIsHifzMaskEnabled] = useState<boolean>(initialHifzMask);
+  const [revealedAyahs, setRevealedAyahs] = useState<Record<number, boolean>>({});
+
+  // Sync mask toggle reset when initialHifzMask changes explicitly
+  useEffect(() => {
+    setIsHifzMaskEnabled(initialHifzMask);
+    setRevealedAyahs({});
+  }, [initialHifzMask, currentSurah?.number]);
+
+  const toggleHifzMask = () => {
+    setIsHifzMaskEnabled((prev) => !prev);
+    setRevealedAyahs({});
+  };
+
+  const revealAyahForHifz = (ayahNum: number) => {
+    setRevealedAyahs((prev) => ({ ...prev, [ayahNum]: !prev[ayahNum] }));
+  };
 
   // 1. Thematic Paragraph Study Mode (Topic Names, Reflective Questions & Small Noticeable Letters)
   const [currentParagraphIndex, setCurrentParagraphIndex] = useState<number>(0);
@@ -413,6 +434,20 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Hifz Memory Mask Toggle */}
+            <button
+              onClick={toggleHifzMask}
+              className={`p-1.5 rounded-xl transition-colors ${
+                isHifzMaskEnabled
+                  ? 'bg-black text-white dark:bg-white dark:text-black'
+                  : 'text-black dark:text-white hover:bg-stone-100 dark:hover:bg-stone-800'
+              }`}
+              title={isHifzMaskEnabled ? 'Hifz Memory Mask ON (tap verse to peek)' : 'Enable Hifz Memory Masking'}
+              aria-label="Toggle Hifz Memory Mask"
+            >
+              {isHifzMaskEnabled ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+
             {/* Fullscreen Distraction-Free Toggle */}
             <button
               onClick={() => setIsFullScreenMode(true)}
@@ -460,7 +495,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <span className="text-[11px] font-semibold text-stone-600 dark:text-stone-400">
               {isThematicMode
                 ? `Page ${currentParagraphIndex + 1} of ${thematicSlidePages.length}`
@@ -468,6 +503,17 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 ? `Page ${currentPageIndex + 1} of ${mushafPages.length}`
                 : `Ayah ${currentCardIndex + 1} of ${currentSurah?.numberOfAyahs || 1}`}
             </span>
+            <button
+              onClick={toggleHifzMask}
+              className={`p-1 rounded-lg transition-colors ${
+                isHifzMaskEnabled
+                  ? 'bg-black text-white dark:bg-white dark:text-black'
+                  : 'bg-stone-100 dark:bg-stone-800 text-black dark:text-white'
+              }`}
+              title={isHifzMaskEnabled ? 'Hifz Memory Mask ON' : 'Hifz Memory Mask'}
+            >
+              {isHifzMaskEnabled ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+            </button>
             <button
               onClick={() => setIsFullScreenMode(false)}
               className="p-1 rounded-lg bg-stone-100 dark:bg-stone-800 text-black dark:text-white transition-colors"
@@ -645,23 +691,30 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     {paragraph.ayahs.map((ayah) => {
                       const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
                       const waqfSigns = getVerseWaqfSigns(currentSurah.number, ayah.numberInSurah, ayah.textArabic);
+                      const isMasked = isHifzMaskEnabled && !revealedAyahs[ayah.numberInSurah];
 
                       return (
                         <span
                           key={ayah.numberInSurah}
                           onClick={() => {
+                            if (isMasked) {
+                              revealAyahForHifz(ayah.numberInSurah);
+                              return;
+                            }
                             handleAyahVisible(ayah.numberInSurah);
                             onOpenTafsir(ayah);
                           }}
                           className={`inline cursor-pointer transition-all rounded px-1 ${
                             isPlayingThis ? 'bg-stone-200 dark:bg-stone-800 ring-2 ring-black dark:ring-white rounded-md' : 'hover:bg-stone-100 dark:hover:bg-stone-800'
                           }`}
-                          title={`Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
+                          title={isMasked ? `Tap to reveal Ayah ${ayah.numberInSurah}` : `Ayah ${ayah.numberInSurah} (Tap for Tafsir)`}
                         >
                           <span
                             className={`${
                               profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                            } text-stone-950 dark:text-stone-50 font-bold font-arabic-clean ${getGlowClass()}`}
+                            } text-stone-950 dark:text-stone-50 font-bold font-arabic-clean ${getGlowClass()} ${
+                              isMasked ? 'blur-[6px] opacity-35 select-none transition-all duration-200' : 'transition-all duration-200'
+                            }`}
                             style={{
                               fontSize: `${Math.max(22, profile.arabicFontSize)}px`,
                               lineHeight: '2.3',
@@ -903,11 +956,16 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   const isPlayingThis = isPlayingAudio && activePlayingAyah === ayah.numberInSurah;
                   const isSelected = selectedParagraphAyah === ayah.numberInSurah;
                   const waqfSigns = getVerseWaqfSigns(currentSurah.number, ayah.numberInSurah, ayah.textArabic);
+                  const isMasked = isHifzMaskEnabled && !revealedAyahs[ayah.numberInSurah];
 
                   return (
                     <span
                       key={ayah.numberInSurah}
                       onClick={() => {
+                        if (isMasked) {
+                          revealAyahForHifz(ayah.numberInSurah);
+                          return;
+                        }
                         setSelectedParagraphAyah(ayah.numberInSurah);
                         handleAyahVisible(ayah.numberInSurah);
                         onOpenTafsir(ayah);
@@ -923,7 +981,9 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                       <span
                         className={`${
                           profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                        } text-stone-950 dark:text-stone-100 font-arabic-clean ${getGlowClass()}`}
+                        } text-stone-950 dark:text-stone-100 font-arabic-clean ${getGlowClass()} ${
+                          isMasked ? 'blur-[6px] opacity-35 select-none transition-all duration-200' : 'transition-all duration-200'
+                        }`}
                         style={{
                           fontSize: `${mushafFontSize}px`,
                           lineHeight: '2.3',
@@ -1117,9 +1177,16 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               {/* Arabic Calligraphy - Prioritized, Noticeably Bigger with Clean Contrast */}
               <div className="text-right" dir="rtl">
                 <p
+                  onClick={() => {
+                    if (isHifzMaskEnabled) revealAyahForHifz(activeVerseAyah.numberInSurah);
+                  }}
                   className={`${
                     profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                  } text-black dark:text-white leading-[2.3] select-text font-bold font-arabic-clean ${getGlowClass()}`}
+                  } text-black dark:text-white leading-[2.3] font-bold font-arabic-clean ${getGlowClass()} ${
+                    isHifzMaskEnabled && !revealedAyahs[activeVerseAyah.numberInSurah]
+                      ? 'blur-[7px] opacity-35 select-none cursor-pointer transition-all duration-200'
+                      : 'select-text transition-all duration-200'
+                  }`}
                   style={{ fontSize: `${Math.max(26, profile.arabicFontSize)}px` }}
                 >
                   {activeVerseAyah.textArabic}
@@ -1127,6 +1194,14 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     ۝ {activeVerseAyah.numberInSurah}
                   </span>
                 </p>
+                {isHifzMaskEnabled && (
+                  <button
+                    onClick={() => revealAyahForHifz(activeVerseAyah.numberInSurah)}
+                    className="mt-1 text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-stone-100 dark:bg-stone-800 text-black dark:text-white font-bold"
+                  >
+                    {revealedAyahs[activeVerseAyah.numberInSurah] ? 'Hide Verse Again' : 'Tap to Reveal Masked Verse'}
+                  </button>
+                )}
               </div>
 
               {/* English Translation - Refined Book Serif Typography */}
@@ -1279,14 +1354,37 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             <div className="min-w-0">
               <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 truncate">
                 <span>Reciting Ayah {activePlayingAyah}</span>
-                {profile.recitationLanguageMode === 'urdu' && (
+                {(profile.recitationLanguageMode === 'urdu' || profile.recitationLanguageMode === 'arabic_urdu') && (
                   <span className="text-[9px] px-1.5 py-0.2 bg-black text-white dark:bg-white dark:text-black rounded font-bold">
                     اردو
                   </span>
                 )}
+                {(profile.recitationLanguageMode === 'assamese' || profile.recitationLanguageMode === 'arabic_assamese') && (
+                  <span className="text-[9px] px-1.5 py-0.2 bg-black text-white dark:bg-white dark:text-black rounded font-bold">
+                    অসমীয়া
+                  </span>
+                )}
+                {(profile.recitationLanguageMode === 'english' || profile.recitationLanguageMode === 'arabic_english') && (
+                  <span className="text-[9px] px-1.5 py-0.2 bg-black text-white dark:bg-white dark:text-black rounded font-bold">
+                    EN
+                  </span>
+                )}
               </div>
               <span className="text-[10px] text-stone-600 dark:text-stone-400 truncate block font-medium">
-                {currentSurah?.nameEnglish} • {profile.recitationLanguageMode === 'urdu' ? 'Urdu Voice' : profile.recitationLanguageMode === 'both' ? 'Arabic + Urdu' : 'Arabic Qari'}
+                {currentSurah?.nameEnglish} •{' '}
+                {profile.recitationLanguageMode === 'urdu'
+                  ? 'Urdu Voice'
+                  : profile.recitationLanguageMode === 'english'
+                  ? 'English Voice'
+                  : profile.recitationLanguageMode === 'assamese'
+                  ? 'Assamese Voice'
+                  : profile.recitationLanguageMode === 'both' || profile.recitationLanguageMode === 'arabic_urdu'
+                  ? 'Arabic + Urdu'
+                  : profile.recitationLanguageMode === 'arabic_english'
+                  ? 'Arabic + English'
+                  : profile.recitationLanguageMode === 'arabic_assamese'
+                  ? 'Arabic + Assamese'
+                  : 'Arabic Qari'}
               </span>
             </div>
           </div>
