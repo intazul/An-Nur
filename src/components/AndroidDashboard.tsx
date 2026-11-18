@@ -17,6 +17,7 @@ import {
 import { FluidCircle } from './FluidCircle';
 import { DailyPrayers, ImanDayRecord, LastReadPosition, UserProfileData } from '../types/quran';
 import { PrayerStatus } from '../utils/prayerTimes';
+import { calculateImanBreakdown } from '../utils/imanScore';
 
 interface AndroidDashboardProps {
   imanRecord: ImanDayRecord;
@@ -65,14 +66,10 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   onOpenProphetsTimeline,
   onOpenSacredHub,
 }) => {
-  // Calculate completed prayers
-  const prayersList: (keyof DailyPrayers)[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
-  const completedCount = prayersList.filter((k) => imanRecord.prayers[k]).length;
-
-  // Calculate Iman % (prayers 70% + verses read 30%)
-  const prayerScore = (completedCount / 5) * 70;
-  const verseScore = Math.min(30, (imanRecord.versesRead / (profile.dailyVerseGoal || 10)) * 30);
-  const totalImanPercent = Math.min(100, Math.round(prayerScore + verseScore));
+  // Unified Iman Breakdown (Prayers + Quran Ayahs + Dhikr + Hadiths Studied)
+  const imanBreakdown = calculateImanBreakdown(imanRecord, profile);
+  const completedCount = imanBreakdown.completedFard;
+  const totalImanPercent = imanBreakdown.totalPercent;
 
   return (
     <div className="flex-1 flex flex-col max-w-md sm:max-w-lg w-full mx-auto px-4 sm:px-5 py-4 select-none bg-white dark:bg-black overflow-y-auto space-y-4 pb-8">
@@ -109,11 +106,11 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {/* Qibla Direction */}
           <button
             onClick={onOpenQibla}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold transition-all active:scale-95 shadow-2xs"
+            className="p-2 rounded-xl bg-black text-white dark:bg-white dark:text-black transition-all active:scale-95 shadow-2xs"
             title="Qibla Compass Direction Finder"
+            aria-label="Qibla Compass Direction Finder"
           >
-            <Compass className="w-3.5 h-3.5" />
-            <span>Qibla</span>
+            <Compass className="w-4 h-4" />
           </button>
 
           {/* Spiritual Streak Badge */}
@@ -145,7 +142,9 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           size={220}
           completedPrayers={completedCount}
           totalPrayers={5}
-          versesRead={imanRecord.versesRead}
+          versesRead={imanBreakdown.versesRead}
+          dhikrCount={imanBreakdown.dhikrCount}
+          hadithsStudied={imanBreakdown.hadithsStudied}
           onTap={onOpenImanTracker}
         />
 
@@ -167,12 +166,12 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           {onOpenPrayerTimes && (
             <button
               onClick={onOpenPrayerTimes}
-              className="flex items-center gap-1 text-[11px] font-bold text-stone-700 dark:text-stone-300 hover:text-black dark:hover:text-white hover:underline"
-              title="View full prayer times table"
+              className="flex items-center gap-1 text-[11px] font-bold text-stone-700 dark:text-stone-300 hover:text-black dark:hover:text-white hover:underline truncate max-w-[60%]"
+              title="Change city or view seasonal prayer times"
             >
-              <Clock className="w-3 h-3" />
-              <span>
-                {prayerStatus.nextPrayer?.name} in {prayerStatus.timeUntilNext}
+              <Clock className="w-3 h-3 shrink-0" />
+              <span className="truncate">
+                {prayerStatus.locationName.split(',')[0]} · {prayerStatus.nextPrayer?.name} in {prayerStatus.timeUntilNext}
               </span>
             </button>
           )}
@@ -265,7 +264,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
           <button
             onClick={onStartHadithJourney}
             className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all text-left flex items-center gap-2.5 active:scale-[0.98] shadow-2xs"
-            title="Explore authentic Hadiths across 10 thematic spheres"
+            title="Learn Sahih Hadiths by Topic, Chapter & Easy Memory Lessons"
           >
             <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shrink-0">
               <Compass className="w-4 h-4" />
@@ -275,7 +274,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
                 Hadith Journey
               </h2>
               <p className="text-[10px] text-stone-500 dark:text-stone-400 truncate mt-0.5">
-                200 Chapters
+                8 Topics · Lessons
               </p>
             </div>
           </button>

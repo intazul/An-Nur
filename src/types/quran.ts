@@ -76,6 +76,7 @@ export interface ImanDayRecord {
   prayers: DailyPrayers;
   versesRead: number;
   dhikrCount: number;
+  hadithsStudied: number;
   reflection: string;
   heartState?: 'peaceful' | 'seeking_forgiveness' | 'grateful' | 'reflective' | 'struggling';
   fasting?: boolean;
@@ -96,6 +97,8 @@ export interface WaqfSignInfo {
 export interface UserProfileData {
   name: string;
   dailyVerseGoal: number;
+  dailyDhikrGoal?: number;
+  dailyHadithGoal?: number;
   preferredReciter: string;
   arabicFontSize: number;
   translationFontSize: number;
@@ -131,11 +134,9 @@ export type RecitationLanguageMode =
   | 'arabic'
   | 'english'
   | 'urdu'
-  | 'assamese'
   | 'both'
   | 'arabic_english'
-  | 'arabic_urdu'
-  | 'arabic_assamese';
+  | 'arabic_urdu';
 
 export type RecitationLyricsLanguage = 'arabic' | 'english' | 'urdu' | 'assamese';
 
@@ -144,7 +145,7 @@ export interface Reciter {
   name: string;
   style: string;
   subfolder: string;
-  language?: 'ar' | 'ur' | 'en' | 'as';
+  language?: 'ar' | 'ur' | 'en';
 }
 
 export interface DownloadedSurahInfo {

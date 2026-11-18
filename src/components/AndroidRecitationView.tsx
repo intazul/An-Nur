@@ -55,7 +55,7 @@ interface AndroidRecitationViewProps {
   onToggleFavoriteSurah: (surahNum: number) => void;
   isFavoriteSurah: boolean;
   onUpdateProfile?: (updates: Partial<UserProfileData>) => void;
-  currentAudioPhase?: 'arabic' | 'urdu' | 'english' | 'assamese';
+  currentAudioPhase?: 'arabic' | 'urdu' | 'english';
   isCurrentSurahAudioOffline?: boolean;
   surahAudioDownloadProgress?: { current: number; total: number } | null;
   onDownloadCurrentSurahOffline?: () => void;
@@ -121,7 +121,6 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
     URDU_RECITERS[0];
 
   const activeVoiceLabel = useMemo(() => {
-    if (currentAudioPhase === 'assamese') return 'Assamese Translation (অসমীয়া)';
     if (currentAudioPhase === 'english') return ENGLISH_RECITERS[0].name;
     if (currentAudioPhase === 'urdu') return currentUrduReciter.name;
     return currentArabicReciter.name;
@@ -133,15 +132,11 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
         return 'English';
       case 'urdu':
         return 'Urdu';
-      case 'assamese':
-        return 'Assamese';
       case 'arabic_english':
         return 'Arabic + English';
       case 'arabic_urdu':
       case 'both':
         return 'Arabic + Urdu';
-      case 'arabic_assamese':
-        return 'Arabic + Assamese';
       default:
         return 'Arabic';
     }
@@ -214,12 +209,6 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
         recitationLanguageMode: mode,
         showUrdu: true,
         showAssamese: false,
-      });
-    } else if (mode === 'assamese' || mode === 'arabic_assamese') {
-      onUpdateProfile?.({
-        recitationLanguageMode: mode,
-        showAssamese: true,
-        showUrdu: false,
       });
     } else {
       onUpdateProfile?.({ recitationLanguageMode: mode });
@@ -506,7 +495,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             <Volume2 className="w-4 h-4 shrink-0" />
             <span className="truncate">
               {modeBadgeLabel}
-              {(isCurrentSurahAudioOffline || currentAudioPhase === 'assamese') && ' · Offline'}
+              {(isCurrentSurahAudioOffline ||
+                currentAudioPhase === 'english' ||
+                currentAudioPhase === 'urdu') &&
+                ' · Offline'}
             </span>
           </button>
 
@@ -663,7 +655,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                 </div>
               </div>
 
-              {/* C. Recitation Audio Mode (Arabic, English, Urdu, Assamese, Dual) */}
+              {/* C. Recitation Audio Mode (Arabic, 100% Offline English & Urdu) */}
               <div className="space-y-2">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-black/60 dark:text-white/60 block">
                   Recitation Audio Mode
@@ -672,12 +664,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                   {(
                     [
                       { id: 'arabic', title: 'Arabic Qari', desc: 'Original recitation' },
-                      { id: 'english', title: 'English Audio', desc: 'Ibrahim Walk' },
-                      { id: 'urdu', title: 'Urdu Audio', desc: 'Disables Assamese' },
-                      { id: 'assamese', title: 'Assamese Audio', desc: 'অসমীয়া · Disables Urdu' },
-                      { id: 'arabic_english', title: 'Arabic + English', desc: 'Sequential verse pair' },
-                      { id: 'arabic_urdu', title: 'Arabic + Urdu', desc: 'Sequential · No Assamese' },
-                      { id: 'arabic_assamese', title: 'Arabic + Assamese', desc: 'Sequential · No Urdu' },
+                      { id: 'english', title: 'English Audio', desc: '100% Offline Voice' },
+                      { id: 'urdu', title: 'Urdu Audio', desc: '100% Offline · اردو' },
+                      { id: 'arabic_english', title: 'Arabic + English', desc: 'Sequential · Offline En' },
+                      { id: 'arabic_urdu', title: 'Arabic + Urdu', desc: 'Sequential · Offline Ur' },
                     ] as const
                   ).map((modeItem) => {
                     const isSelected =
@@ -713,8 +703,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                 {(recitationMode === 'arabic' ||
                   recitationMode === 'both' ||
                   recitationMode === 'arabic_english' ||
-                  recitationMode === 'arabic_urdu' ||
-                  recitationMode === 'arabic_assamese') && (
+                  recitationMode === 'arabic_urdu') && (
                   <div>
                     <label className="text-xs font-bold text-black dark:text-white block mb-1">
                       Arabic Qari
@@ -778,7 +767,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                     <div className="min-w-0">
                       <div className="text-xs font-bold truncate">Clear Pronunciation & Vocal EQ</div>
                       <div className="text-[10px] opacity-75 truncate">
-                        Sharpens Arabic, English & Urdu + Assamese Phonetics
+                        Sharpens Arabic, English & Urdu Vocal Clarity
                       </div>
                     </div>
                   </div>
@@ -810,11 +799,11 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                           {surahAudioDownloadProgress
                             ? `Saving ${currentSurah.nameEnglish} (${surahAudioDownloadProgress.current}/${surahAudioDownloadProgress.total})`
                             : isCurrentSurahAudioOffline
-                            ? `${currentSurah.nameEnglish} Audio Saved Offline`
-                            : `Save ${currentSurah.nameEnglish} Audio Offline`}
+                            ? `${currentSurah.nameEnglish} Arabic Audio Saved Offline`
+                            : `Save ${currentSurah.nameEnglish} Arabic Audio Offline`}
                         </div>
                         <div className="text-[10px] opacity-75 truncate">
-                          Caches Arabic, English & Urdu · Assamese is 100% built-in offline
+                          Caches Arabic Qari MP3s · English & Urdu are 100% built-in offline
                         </div>
                       </div>
                     </div>

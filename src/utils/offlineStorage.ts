@@ -10,6 +10,8 @@ export const AUDIO_CACHE_NAME = 'annur-quran-audio-v1';
 export const DEFAULT_PROFILE: UserProfileData = {
   name: 'Believer',
   dailyVerseGoal: 10,
+  dailyDhikrGoal: 33,
+  dailyHadithGoal: 5,
   preferredReciter: 'alafasy',
   arabicFontSize: 34,
   translationFontSize: 16,
@@ -48,7 +50,14 @@ export const DEFAULT_PROFILE: UserProfileData = {
 
 function enforceSingleRegionalLanguage(profile: UserProfileData): UserProfileData {
   const normalized = { ...profile };
-  // Strict mutual exclusivity: Urdu and Assamese can NEVER both be active simultaneously
+  // Migrate removed Assamese audio modes gracefully back to Arabic while keeping Assamese translation/Tafsir intact
+  if (
+    (normalized.recitationLanguageMode as string) === 'assamese' ||
+    (normalized.recitationLanguageMode as string) === 'arabic_assamese'
+  ) {
+    normalized.recitationLanguageMode = 'arabic';
+  }
+  // Strict mutual exclusivity: Urdu and Assamese text/Tafsir can NEVER both be active simultaneously
   if (normalized.showAssamese && normalized.showUrdu) {
     normalized.showUrdu = false;
   }
@@ -130,7 +139,29 @@ export function getTodayKey(): string {
 export function loadImanRecord(dateKey: string = getTodayKey()): ImanDayRecord {
   try {
     const raw = localStorage.getItem(`${IMAN_KEY_PREFIX}${dateKey}`);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        date: parsed.date || dateKey,
+        prayers: {
+          fajr: Boolean(parsed.prayers?.fajr),
+          dhuhr: Boolean(parsed.prayers?.dhuhr),
+          asr: Boolean(parsed.prayers?.asr),
+          maghrib: Boolean(parsed.prayers?.maghrib),
+          isha: Boolean(parsed.prayers?.isha),
+          tahajjud: Boolean(parsed.prayers?.tahajjud),
+          duha: Boolean(parsed.prayers?.duha),
+        },
+        versesRead: Number(parsed.versesRead || 0),
+        dhikrCount: Number(parsed.dhikrCount || 0),
+        hadithsStudied: Number(parsed.hadithsStudied || 0),
+        reflection: parsed.reflection || '',
+        heartState: parsed.heartState,
+        fasting: parsed.fasting,
+        charityDone: parsed.charityDone,
+        salawatCount: parsed.salawatCount,
+      };
+    }
   } catch (err) {
     console.error('Failed to read Iman record:', err);
   }
@@ -147,6 +178,7 @@ export function loadImanRecord(dateKey: string = getTodayKey()): ImanDayRecord {
     },
     versesRead: 0,
     dhikrCount: 0,
+    hadithsStudied: 0,
     reflection: '',
   };
 }
@@ -180,7 +212,8 @@ export function calculateStreak(): { currentStreak: number; bestStreak: number }
       rec.prayers.maghrib ||
       rec.prayers.isha ||
       rec.versesRead > 0 ||
-      rec.dhikrCount > 0;
+      rec.dhikrCount > 0 ||
+      (rec.hadithsStudied || 0) > 0;
 
     if (active) {
       if (i === 0 || streak === i) {
@@ -215,6 +248,32 @@ export function getPastDaysImanRecords(daysCount = 14): ImanDayRecord[] {
     records.push(loadImanRecord(key));
   }
   return records;
+}
+
+/**
+ * Records unique Ayahs read today (e.g. "2:255") and returns how many NEW unique Ayahs were added.
+ */
+export function markAyahsReadToday(surahNumber: number, ayahNumbers: number[]): number {
+  if (!ayahNumbers.length) return 0;
+  try {
+    const key = `annur_read_ayahs_${getTodayKey()}`;
+    const raw = localStorage.getItem(key);
+    const seen = new Set<string>(raw ? JSON.parse(raw) : []);
+    let added = 0;
+    for (const num of ayahNumbers) {
+      const token = `${surahNumber}:${num}`;
+      if (!seen.has(token)) {
+        seen.add(token);
+        added += 1;
+      }
+    }
+    if (added > 0) {
+      localStorage.setItem(key, JSON.stringify(Array.from(seen)));
+    }
+    return added;
+  } catch {
+    return ayahNumbers.length;
+  }
 }
 
 // OFFLINE SURAH & AUDIO CACHING
@@ -283,6 +342,24 @@ export async function prefetchAyahAudioBatch(urls: string[]): Promise<void> {
 }
 
 /**
+ * Checks ONLY local CacheStorage for an already-cached MP3 without triggering any network fetch.
+ */
+export async function getLocalOnlyCachedAudioUrl(url: string): Promise<string | null> {
+  if (typeof window === 'undefined' || !('caches' in window)) return null;
+  try {
+    const cache = await caches.open(AUDIO_CACHE_NAME);
+    const match = await cache.match(url);
+    if (match) {
+      const blob = await match.blob();
+      return URL.createObjectURL(blob);
+    }
+  } catch {
+    // ignore
+  }
+  return null;
+}
+
+/**
  * Resolves an audio URL to a local cached Blob Object URL if stored in Cache API,
  * ensuring 100% offline playback even when disconnected.
  * Automatically caches uncached remote URLs in the background when online.
@@ -308,8 +385,8 @@ export async function getCachedAudioUrl(url: string): Promise<string> {
 
 /**
  * Saves a Surah's text, translations (English, Urdu & Assamese), and precise Tafsir offline,
- * and caches Arabic, English, and Urdu recitation audio into Cache Storage.
- * (Assamese recitation uses our built-in 100% offline phonetic voice engine.)
+ * and caches Arabic Qari recitation audio into Cache Storage.
+ * (All English & Urdu recitations work 100% built-in offline for all 114 Surahs.)
  */
 export async function saveSurahOffline(
   detail: SurahDetail,
@@ -328,31 +405,15 @@ export async function saveSurahOffline(
     if (downloadAudio && 'caches' in window) {
       try {
         const { getAyahAudioUrlForLanguage } = await import('../data/reciters');
-        const total = detail.ayahs.length * 3; // Arabic + English + Urdu
+        const total = detail.ayahs.length; // Arabic Qari MP3s (English & Urdu recitations are 100% built-in offline)
         let done = 0;
 
         for (const ayah of detail.ayahs) {
           if (signal?.aborted) break;
 
-          // 1. Arabic Audio
+          // Arabic Qari Audio
           const arUrl = getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'ar', reciterId, urduReciterId);
           if (await cacheAudioUrl(arUrl)) totalSizeKb += 45;
-          done++;
-          onProgress?.(done, total);
-
-          if (signal?.aborted) break;
-
-          // 2. English Translation Audio (Ibrahim Walk)
-          const enUrl = getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'en', reciterId, urduReciterId);
-          if (await cacheAudioUrl(enUrl)) totalSizeKb += 55;
-          done++;
-          onProgress?.(done, total);
-
-          if (signal?.aborted) break;
-
-          // 3. Urdu Translation Audio
-          const urUrl = getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'ur', reciterId, urduReciterId);
-          if (await cacheAudioUrl(urUrl)) totalSizeKb += 35;
           done++;
           onProgress?.(done, total);
         }
@@ -479,9 +540,10 @@ export async function downloadAllSurahsTextAndTafsir(
 }
 
 /**
- * Downloads recitation audio (Arabic, English & Urdu) for core & beloved Surahs:
+ * Downloads Arabic Qari recitation audio for core & beloved Surahs:
  * Al-Fatihah (1), Yasin (36), Ar-Rahman (55), Al-Waqi'ah (56), Al-Mulk (67),
  * Al-Ikhlas (112), Al-Falaq (113), An-Nas (114), and any additional favorited Surahs.
+ * (English & Urdu recitations are already 100% built-in offline for all 114 Surahs.)
  */
 export async function downloadCoreAudioOffline(
   favoriteSurahs: number[] = [],
@@ -503,7 +565,7 @@ export async function downloadCoreAudioOffline(
         current: idx + 1,
         total: totalSurahs,
         surahName: detail.nameEnglish,
-        step: `Caching Arabic, English & Urdu for ${detail.nameEnglish}`,
+        step: `Caching Arabic Qari MP3s for ${detail.nameEnglish}`,
       });
       await saveSurahOffline(detail, true, reciterId, urduReciterId, undefined, signal);
     } catch (err) {
@@ -513,8 +575,8 @@ export async function downloadCoreAudioOffline(
 }
 
 /**
- * Downloads complete Quran audio (all 114 Surahs: Arabic, English & Urdu MP3s)
- * and all Assamese/Urdu/English texts locally. Resumable: already-cached ayahs are skipped automatically.
+ * Downloads complete Arabic Qari audio (all 114 Surahs) locally.
+ * English & Urdu recitations are already 100% built-in offline across all 114 Surahs.
  */
 export async function downloadAllQuranAudioOffline(
   reciterId: string = 'alafasy',

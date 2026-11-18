@@ -37,10 +37,12 @@ const REGION_FILTERS = [
   'Middle East',
   'South Asia',
   'Southeast Asia',
-  'Europe',
-  'North America',
-  'Africa',
+  'East Asia',
   'Central Asia',
+  'Europe',
+  'Africa',
+  'North America',
+  'South America',
   'Oceania',
 ] as const;
 

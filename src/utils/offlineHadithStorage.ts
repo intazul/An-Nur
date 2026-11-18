@@ -1,8 +1,11 @@
-import { SahihHadithItem, HadithBook } from '../types/hadith';
-import { SAHIH_BOOKS, ALL_SAHIH_HADITHS } from '../data/sahihHadiths';
+import { SahihHadithItem } from '../types/hadith';
+import { ALL_SAHIH_HADITHS } from '../data/sahihHadiths';
+import { getTodayKey } from './offlineStorage';
 
 const HADITHS_STORAGE_KEY = 'annur_offline_hadiths_v2';
 const HADITH_BOOKMARKS_KEY = 'annur_offline_hadith_bookmarks';
+const HADITH_LEARNED_KEY = 'annur_hadith_learned_v1';
+const HADITH_LAST_LESSON_KEY = 'annur_hadith_last_lesson_v1';
 
 /**
  * Initialize and verify offline storage for all Hadiths.
@@ -92,6 +95,89 @@ export function isHadithBookmarked(hadithId: string): boolean {
     return bookmarks.includes(hadithId);
   } catch {
     return false;
+  }
+}
+
+/**
+ * Get all Hadith IDs marked as learned/remembered permanently
+ */
+export function getLearnedHadithIds(): string[] {
+  try {
+    const raw = localStorage.getItem(HADITH_LEARNED_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Mark a Hadith as learned permanently, AND record whether it is newly studied today
+ * so today's Iman Level gets credited accurately without inflating from repeated taps.
+ */
+export function markHadithLearned(hadithId: string): {
+  learnedIds: string[];
+  isNewToday: boolean;
+} {
+  let learnedIds = getLearnedHadithIds();
+  if (!learnedIds.includes(hadithId)) {
+    learnedIds = [...learnedIds, hadithId];
+    try {
+      localStorage.setItem(HADITH_LEARNED_KEY, JSON.stringify(learnedIds));
+    } catch {
+      // ignore storage quota errors
+    }
+  }
+
+  let isNewToday = false;
+  try {
+    const todayKey = `annur_hadith_studied_today_${getTodayKey()}`;
+    const rawToday = localStorage.getItem(todayKey);
+    const studiedToday: string[] = rawToday ? JSON.parse(rawToday) : [];
+    if (!studiedToday.includes(hadithId)) {
+      studiedToday.push(hadithId);
+      localStorage.setItem(todayKey, JSON.stringify(studiedToday));
+      isNewToday = true;
+    }
+  } catch {
+    isNewToday = true;
+  }
+
+  return { learnedIds, isNewToday };
+}
+
+/**
+ * Unmark a Hadith from permanent learned state (if learner wants to review again)
+ */
+export function unmarkHadithLearned(hadithId: string): string[] {
+  const learnedIds = getLearnedHadithIds().filter((id) => id !== hadithId);
+  try {
+    localStorage.setItem(HADITH_LEARNED_KEY, JSON.stringify(learnedIds));
+  } catch {
+    // ignore
+  }
+  return learnedIds;
+}
+
+export interface LastHadithLessonPosition {
+  topicId: string;
+  lessonIndex: number;
+}
+
+export function loadLastHadithLesson(): LastHadithLessonPosition | null {
+  try {
+    const raw = localStorage.getItem(HADITH_LAST_LESSON_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveLastHadithLesson(pos: LastHadithLessonPosition): void {
+  try {
+    localStorage.setItem(HADITH_LAST_LESSON_KEY, JSON.stringify(pos));
+  } catch {
+    // ignore
   }
 }
 

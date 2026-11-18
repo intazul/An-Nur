@@ -23,7 +23,8 @@ import {
 } from 'lucide-react';
 import { DailyPrayers, ImanDayRecord, UserProfileData } from '../types/quran';
 import { playGentleChime } from '../utils/notifications';
-import { getPastDaysImanRecords, loadImanRecord, saveImanRecord } from '../utils/offlineStorage';
+import { getPastDaysImanRecords, saveImanRecord } from '../utils/offlineStorage';
+import { calculateImanBreakdown } from '../utils/imanScore';
 
 interface ImanAnalysisViewProps {
   imanRecord: ImanDayRecord;
@@ -34,6 +35,7 @@ interface ImanAnalysisViewProps {
   onBackToDashboard: () => void;
   onStartReading?: () => void;
   onOpenSmartTasbih?: () => void;
+  onOpenHadithJourney?: () => void;
 }
 
 type TabMode = 'overview' | 'analytics' | 'muhasabah' | 'guidance';
@@ -99,6 +101,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
   onBackToDashboard,
   onStartReading,
   onOpenSmartTasbih,
+  onOpenHadithJourney,
 }) => {
   const [activeTab, setActiveTab] = useState<TabMode>('overview');
   const [reflectionText, setReflectionText] = useState(imanRecord.reflection || '');
@@ -116,32 +119,20 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
     setReflectionText(imanRecord.reflection || '');
   }, [imanRecord.reflection]);
 
-  // Calculations for Today's Score
-  const completedFard = useMemo(() => {
-    return OBLIGATORY_PRAYERS.filter((p) => imanRecord.prayers[p.id]).length;
-  }, [imanRecord.prayers]);
+  // Unified Iman Breakdown (40% Salah + 20% Ayahs + 20% Dhikr + 20% Hadiths + Nawafil/Heart bonus)
+  const breakdown = useMemo(() => {
+    return calculateImanBreakdown(imanRecord, profile);
+  }, [imanRecord, profile]);
 
-  const completedNawafil = useMemo(() => {
-    return NAWAFIL_PRAYERS.filter((p) => imanRecord.prayers[p.id]).length;
-  }, [imanRecord.prayers]);
-
-  const prayerPercent = (completedFard / 5) * 100;
-  const verseGoal = profile.dailyVerseGoal || 10;
-  const versePercent = Math.min(100, Math.round((imanRecord.versesRead / verseGoal) * 100));
-  const dhikrPercent = Math.min(100, Math.round((imanRecord.dhikrCount / 100) * 100));
-
-  // Balanced Comprehensive Iman Index:
-  // Prayers: 60%
-  // Quran Verses: 25%
-  // Dhikr: 10%
-  // Heart State / Extra Sunnah: 5%
-  const extraScore = (completedNawafil > 0 ? 3 : 0) + (imanRecord.heartState ? 2 : 0);
-  const totalImanScore = useMemo(() => {
-    const pWeight = (completedFard / 5) * 60;
-    const vWeight = (Math.min(verseGoal, imanRecord.versesRead) / verseGoal) * 25;
-    const dWeight = (Math.min(100, imanRecord.dhikrCount) / 100) * 10;
-    return Math.min(100, Math.round(pWeight + vWeight + dWeight + extraScore));
-  }, [completedFard, imanRecord.versesRead, verseGoal, imanRecord.dhikrCount, extraScore]);
+  const completedFard = breakdown.completedFard;
+  const prayerPercent = breakdown.prayersPercent;
+  const verseGoal = breakdown.verseGoal;
+  const dhikrGoal = breakdown.dhikrGoal;
+  const hadithGoal = breakdown.hadithGoal;
+  const versePercent = breakdown.versesPercent;
+  const dhikrPercent = breakdown.dhikrPercent;
+  const hadithsPercent = breakdown.hadithsPercent;
+  const totalImanScore = breakdown.totalPercent;
 
   // Animated ring stroke calculations (SVG circle r=88, circumference ~ 552.92)
   const circleRadius = 84;
@@ -190,23 +181,21 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
     };
   }, [totalImanScore]);
 
-  // Weekly analytics aggregates
+  // Weekly analytics aggregates using unified Iman breakdown
   const weeklyAnalytics = useMemo(() => {
     let totalScoreSum = 0;
     let totalPrayersDone = 0;
     let totalVerses = 0;
     let totalDhikr = 0;
+    let totalHadiths = 0;
 
     pastRecords.forEach((rec) => {
-      const pCount = OBLIGATORY_PRAYERS.filter((p) => rec.prayers[p.id]).length;
-      totalPrayersDone += pCount;
-      totalVerses += rec.versesRead || 0;
-      totalDhikr += rec.dhikrCount || 0;
-
-      const pW = (pCount / 5) * 60;
-      const vW = (Math.min(verseGoal, rec.versesRead || 0) / verseGoal) * 25;
-      const dW = (Math.min(100, rec.dhikrCount || 0) / 100) * 10;
-      totalScoreSum += Math.min(100, Math.round(pW + vW + dW));
+      const b = calculateImanBreakdown(rec, profile);
+      totalPrayersDone += b.completedFard;
+      totalVerses += b.versesRead;
+      totalDhikr += b.dhikrCount;
+      totalHadiths += b.hadithsStudied;
+      totalScoreSum += b.totalPercent;
     });
 
     const avgScore = pastRecords.length > 0 ? Math.round(totalScoreSum / pastRecords.length) : totalImanScore;
@@ -217,9 +206,10 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
       totalPrayersDone,
       totalVerses,
       totalDhikr,
+      totalHadiths,
       prayerRate,
     };
-  }, [pastRecords, totalImanScore, verseGoal]);
+  }, [pastRecords, totalImanScore, profile]);
 
   const handleSaveReflection = () => {
     const updated: ImanDayRecord = {
@@ -466,25 +456,29 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                 <p className="text-xs text-stone-600 dark:text-stone-400 font-medium">
                   {levelInfo.desc}
                 </p>
-                <div className="mt-2.5 flex items-center justify-center gap-3 text-[11px] font-bold">
+                <div className="mt-2.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-bold">
                   <span className="flex items-center gap-1 text-black dark:text-white">
                     <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
                     Salah {completedFard}/5
                   </span>
                   <span className="flex items-center gap-1 text-black dark:text-white">
                     <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
-                    Quran {imanRecord.versesRead}v
+                    Quran {breakdown.versesRead}v
                   </span>
                   <span className="flex items-center gap-1 text-black dark:text-white">
                     <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
-                    Dhikr {imanRecord.dhikrCount}
+                    Dhikr {breakdown.dhikrCount}
+                  </span>
+                  <span className="flex items-center gap-1 text-black dark:text-white">
+                    <span className="w-2 h-2 rounded-full bg-black dark:bg-white" />
+                    Hadiths {breakdown.hadithsStudied}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Quick Interactive Pillars Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {/* Quick Interactive Pillars Grid (All 4 Pillars Count in Iman Score) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {/* 1. Daily Prayers Card */}
               <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 flex flex-col justify-between">
                 <div>
@@ -574,7 +568,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                       Sacred Dhikr
                     </span>
                     <span className="text-xs font-bold text-black dark:text-white">
-                      {imanRecord.dhikrCount} Tally
+                      {breakdown.dhikrCount}/{dhikrGoal}
                     </span>
                   </div>
                   <div className="w-full bg-stone-200 dark:bg-stone-800 h-2 rounded-full overflow-hidden mb-3">
@@ -584,7 +578,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     />
                   </div>
                   <p className="text-[11px] text-stone-600 dark:text-stone-400">
-                    Remembering Allah brings ease and removes spiritual rust.
+                    Remembering Allah brings ease and removes spiritual rust. (+20% Iman weight)
                   </p>
                 </div>
                 <div className="mt-3 flex items-center gap-1.5">
@@ -605,6 +599,40 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     </button>
                   )}
                 </div>
+              </div>
+
+              {/* 4. Sahih Hadith Lessons Card */}
+              <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">
+                      Hadith Study
+                    </span>
+                    <span className="text-xs font-bold text-black dark:text-white">
+                      {breakdown.hadithsStudied}/{hadithGoal} h
+                    </span>
+                  </div>
+                  <div className="w-full bg-stone-200 dark:bg-stone-800 h-2 rounded-full overflow-hidden mb-3">
+                    <div
+                      className="bg-black dark:bg-white h-full rounded-full transition-all duration-500"
+                      style={{ width: `${hadithsPercent}%` }}
+                    />
+                  </div>
+                  <p className="text-[11px] text-stone-600 dark:text-stone-400">
+                    {breakdown.hadithsStudied >= hadithGoal
+                      ? 'Daily Sahih Hadith lesson goal fulfilled!'
+                      : `${Math.max(0, hadithGoal - breakdown.hadithsStudied)} Hadith lessons until daily goal.`}
+                  </p>
+                </div>
+                {onOpenHadithJourney && (
+                  <button
+                    onClick={onOpenHadithJourney}
+                    className="mt-3 w-full py-1.5 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs hover:opacity-90 transition-all flex items-center justify-center gap-1.5"
+                  >
+                    <Compass className="w-3.5 h-3.5" />
+                    <span>Study Hadith Lessons ↗</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -812,15 +840,15 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-center">
-                  <span className="text-[10px] text-stone-500 uppercase font-bold">Verses Recited</span>
-                  <p className="text-xl font-bold font-cinzel text-black dark:text-white mt-0.5">
-                    {weeklyAnalytics.totalVerses}
+                  <span className="text-[10px] text-stone-500 uppercase font-bold">Ayahs & Dhikr</span>
+                  <p className="text-lg font-bold font-cinzel text-black dark:text-white mt-0.5 tabular-nums">
+                    {weeklyAnalytics.totalVerses}v · {weeklyAnalytics.totalDhikr}d
                   </p>
                 </div>
                 <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-center">
-                  <span className="text-[10px] text-stone-500 uppercase font-bold">Active Streak</span>
-                  <p className="text-xl font-bold font-cinzel text-black dark:text-white mt-0.5">
-                    {streak} Days
+                  <span className="text-[10px] text-stone-500 uppercase font-bold">Hadiths · Streak</span>
+                  <p className="text-lg font-bold font-cinzel text-black dark:text-white mt-0.5 tabular-nums">
+                    {weeklyAnalytics.totalHadiths}h · {streak}d
                   </p>
                 </div>
               </div>
@@ -829,11 +857,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
               <div className="pt-3">
                 <div className="flex items-end justify-between gap-2 h-44 px-2 pt-4 border-b border-stone-200 dark:border-stone-800">
                   {pastRecords.map((record, idx) => {
-                    const pDone = OBLIGATORY_PRAYERS.filter((p) => record.prayers[p.id]).length;
-                    const vW = (Math.min(verseGoal, record.versesRead || 0) / verseGoal) * 25;
-                    const pW = (pDone / 5) * 60;
-                    const dW = (Math.min(100, record.dhikrCount || 0) / 100) * 10;
-                    const dayPercent = Math.min(100, Math.round(pW + vW + dW));
+                    const dayPercent = calculateImanBreakdown(record, profile).totalPercent;
 
                     const dateObj = new Date(record.date);
                     const dayLabel = dateObj.toLocaleDateString('en-US', { weekday: 'narrow' });
@@ -904,7 +928,7 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                       Dismiss
                     </button>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                     <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/60">
                       <span className="text-stone-500 block text-[10px]">Prayers</span>
                       <strong className="text-black dark:text-white">
@@ -914,13 +938,19 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                     <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/60">
                       <span className="text-stone-500 block text-[10px]">Verses</span>
                       <strong className="text-black dark:text-white">
-                        {activeDayInspect.versesRead || 0} Verses
+                        {activeDayInspect.versesRead || 0} Ayahs
                       </strong>
                     </div>
                     <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/60">
                       <span className="text-stone-500 block text-[10px]">Dhikr</span>
                       <strong className="text-black dark:text-white">
                         {activeDayInspect.dhikrCount || 0} Recited
+                      </strong>
+                    </div>
+                    <div className="p-2 rounded-xl bg-stone-100 dark:bg-stone-800/60">
+                      <span className="text-stone-500 block text-[10px]">Hadiths</span>
+                      <strong className="text-black dark:text-white">
+                        {activeDayInspect.hadithsStudied || 0} Studied
                       </strong>
                     </div>
                   </div>

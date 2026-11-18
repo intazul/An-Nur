@@ -55,15 +55,15 @@ export const ARABIC_RECITERS: Reciter[] = [
 export const URDU_RECITERS: Reciter[] = [
   {
     id: 'shamshad',
-    name: 'Shamshad Ali Khan (شمشاد علی خان)',
-    style: 'Fateh Muhammad Jalandhri Urdu Translation',
+    name: 'Shamshad Ali Khan · Offline (شمشاد علی خان)',
+    style: 'Fateh Muhammad Jalandhri · 100% Offline Urdu Recitation',
     subfolder: 'translations/urdu_shamshad_ali_khan_46kbps',
     language: 'ur',
   },
   {
     id: 'farhat',
-    name: 'Dr. Farhat Hashmi (ڈاکٹر فرحت ہاشمی)',
-    style: 'Urdu Translation & Word-by-Word Exegesis',
+    name: 'Dr. Farhat Hashmi · Offline (ڈاکٹر فرحت ہاشمی)',
+    style: 'Expressive Urdu Translation · 100% Offline Recitation',
     subfolder: 'translations/urdu_farhat_hashmi',
     language: 'ur',
   },
@@ -72,8 +72,8 @@ export const URDU_RECITERS: Reciter[] = [
 export const ENGLISH_RECITERS: Reciter[] = [
   {
     id: 'ibrahim_walk',
-    name: 'Ibrahim Walk (Sahih Intl)',
-    style: 'Clear English Quran Translation Audio',
+    name: 'Clear English Voice (Saheeh Intl)',
+    style: '100% Offline English Quran Recitation (All 114 Surahs)',
     subfolder: 'English/Sahih_Intnl_Ibrahim_Walk_192kbps',
     language: 'en',
   },

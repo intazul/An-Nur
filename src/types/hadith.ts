@@ -48,6 +48,10 @@ export interface SahihHadithItem {
   category: string;
   categoryLabel: string;
   keyLesson: string; // Practical everyday takeaway
+  lessonTitle?: string;
+  corePhraseArabic?: string;
+  corePhraseEnglish?: string;
+  memoryHook?: string;
 }
 
 export type HadithViewLayout = 'cards' | 'grid' | 'list';

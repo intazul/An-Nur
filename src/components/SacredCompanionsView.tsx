@@ -45,6 +45,7 @@ interface SacredCompanionsViewProps {
   onBackToDashboard: () => void;
   onOpenAyahInReader: (surahNumber: number, ayahNumber: number, options?: { enableHifzMask?: boolean }) => void;
   onPlayAyahInReciter: (surahNumber: number, ayahNumber: number) => void;
+  onDhikrIncrement?: (delta?: number) => void;
 }
 
 const HUB_TABS: { id: SacredHubTab; label: string }[] = [
@@ -77,6 +78,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
   onBackToDashboard,
   onOpenAyahInReader,
   onPlayAyahInReciter,
+  onDhikrIncrement,
 }) => {
   const [activeTab, setActiveTab] = useState<SacredHubTab>('adhkar');
 
@@ -183,6 +185,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
       const next = cur >= currentDhikr.targetCount ? currentDhikr.targetCount : cur + 1;
       return { ...prev, [currentDhikr.id]: next };
     });
+    onDhikrIncrement?.(1);
   };
 
   const handleResetDhikr = (id: string) => {
@@ -207,6 +210,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
     const next = salawatCount + 1;
     setSalawatCount(next);
     saveFridaySalawatCount(next);
+    onDhikrIncrement?.(1);
   };
 
   const handleResetSalawat = () => {

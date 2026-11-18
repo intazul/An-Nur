@@ -37,7 +37,7 @@ interface ProphetsTimelineViewProps {
 
 type TimelineTab = 'sirah' | 'prophets' | 'wars';
 type CategoryFilter = 'all' | SirahEventCategory;
-type ProphetFilter = 'all' | 'with_hadith' | 'with_wars';
+type ProphetFilter = 'all' | 'hadith_only' | 'with_hadith' | 'with_wars';
 
 interface UnifiedWarItem {
   id: string;
@@ -175,9 +175,13 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
   const filteredProphets = useMemo(() => {
     return PROPHETS_CHRONOLOGY.filter((p) => {
+      if (prophetFilter === 'hadith_only' && !p.isHadithOnlyProphet) {
+        return false;
+      }
       if (
         prophetFilter === 'with_hadith' &&
         p.sahihHadiths.length === 0 &&
+        !(p.hadithExclusiveFacts && p.hadithExclusiveFacts.length > 0) &&
         !p.lifeStages.some((s) => Boolean(s.sahihHadith))
       ) {
         return false;
@@ -193,7 +197,11 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
         p.eraAndLocation,
         p.peopleAndRegion,
         p.scriptureOrMiracle,
+        p.physicalAppearance || '',
         p.keyTrials,
+        ...(p.hadithExclusiveFacts || []).map(
+          (f) => `${f.title} ${f.topicTag} ${f.detail} ${f.source} ${f.narrator}`
+        ),
         ...p.lifeStages.map(
           (s) =>
             `${s.phaseTitle} ${s.where} ${s.whatHappened} ${s.howItUnfolded} ${s.sahihHadith?.textEnglish || ''}`
@@ -473,7 +481,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 : 'text-stone-700 dark:text-stone-300'
             }`}
           >
-            25 Prophets
+            Prophets ({PROPHETS_CHRONOLOGY.length})
           </button>
           <button
             onClick={() => setActiveTab('wars')}
@@ -534,7 +542,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
             {(
               [
-                { id: 'all', label: 'All 25 Prophets' },
+                { id: 'all', label: `All (${PROPHETS_CHRONOLOGY.length})` },
+                { id: 'hadith_only', label: 'Beyond Quran (Hadith)' },
                 { id: 'with_hadith', label: 'With Sahih Hadiths' },
                 { id: 'with_wars', label: 'With Major Wars' },
               ] as const
@@ -666,28 +675,29 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 }}
                 className="min-h-[44px] px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold"
               >
-                Show All 25 Prophets
+                Show All Prophets
               </button>
             </div>
           ) : (
             <section className="space-y-4">
               <div className="p-3.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black space-y-1">
                 <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider opacity-80">
-                  <span>Chronological Lineage</span>
-                  <span>{filteredProphets.length} Prophets</span>
+                  <span>Chronological &amp; Sahih Hadith Study</span>
+                  <span>{filteredProphets.length} Entries</span>
                 </div>
                 <h2 className="font-cinzel font-bold text-sm">
-                  Every Prophet · Birth to Passing (Sahih Hadith Verified)
+                  Every Prophet · Quran &amp; Beyond-Quran Sahih Hadiths
                 </h2>
                 <p className="text-[11px] opacity-85 leading-relaxed">
-                  Tap any Prophet to study every chronological stage of their life, lineage, miracles, wars, Quranic revelations, and verified Sahih Hadiths.
+                  Includes all 25 Quranic Prophets plus Prophets &amp; miracles documented exclusively in Sahih Hadiths (Yusha‘ ibn Nun, Al-Khidr &amp; the 124,000 Messengers), with verified physical descriptions and non-Quranic Hadith narratives.
                 </p>
               </div>
 
               <div className="relative ml-3.5 pl-6 border-l-2 border-stone-300 dark:border-stone-700 space-y-4">
                 {filteredProphets.map((p) => {
                   const stageHadithCount = p.lifeStages.filter((s) => Boolean(s.sahihHadith)).length;
-                  const totalHadiths = Math.max(stageHadithCount, p.sahihHadiths.length);
+                  const extraFactsCount = p.hadithExclusiveFacts?.length || 0;
+                  const totalHadiths = Math.max(stageHadithCount, p.sahihHadiths.length) + extraFactsCount;
                   return (
                     <div key={p.id} className="relative">
                       <div className="absolute -left-[35px] top-4 w-7 h-7 rounded-full bg-black text-white dark:bg-white dark:text-black border-2 border-white dark:border-black flex items-center justify-center text-[11px] font-bold shadow-xs">
@@ -699,9 +709,16 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                         className="w-full text-left p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
                       >
                         <div>
-                          <h3 className="font-bold text-sm text-black dark:text-white leading-tight">
-                            {p.nameEnglish}
-                          </h3>
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="font-bold text-sm text-black dark:text-white leading-tight">
+                              {p.nameEnglish}
+                            </h3>
+                            {p.isHadithOnlyProphet && (
+                              <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[9px] font-bold uppercase tracking-wider shrink-0">
+                                Hadith Exclusive
+                              </span>
+                            )}
+                          </div>
                           <p className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 mt-0.5">
                             {p.title}
                           </p>
@@ -713,13 +730,18 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                         </p>
 
                         <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed line-clamp-3">
-                          {p.lifeStages[0]?.whatHappened || p.keyTrials}
+                          {p.hadithExclusiveFacts?.[0]?.detail || p.lifeStages[0]?.whatHappened || p.keyTrials}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-1.5 pt-1">
                           <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
                             {p.lifeStages.length} Life Stage{p.lifeStages.length > 1 ? 's' : ''}
                           </span>
+                          {extraFactsCount > 0 && (
+                            <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
+                              {extraFactsCount} Beyond-Quran Fact{extraFactsCount > 1 ? 's' : ''}
+                            </span>
+                          )}
                           {p.lifeStages.some((s) => Boolean(s.warOrConfrontation)) && (
                             <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
                               War History
@@ -733,7 +755,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                         </div>
 
                         <div className="pt-1 flex items-center justify-between text-[11px] font-bold text-black dark:text-white">
-                          <span>Open Complete Life-Stage Timeline</span>
+                          <span>Open Sahih Hadith Facts &amp; Full Timeline</span>
                           <ChevronRight className="w-4 h-4" />
                         </div>
                       </button>
@@ -931,11 +953,11 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               className="min-h-[44px] px-3 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-transform"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>All 25</span>
+              <span>All ({PROPHETS_CHRONOLOGY.length})</span>
             </button>
 
             <span className="text-[11px] font-mono font-bold text-stone-600 dark:text-stone-400">
-              Prophet {selectedProphet.order} / 25
+              Entry {selectedProphet.order} / {PROPHETS_CHRONOLOGY.length}
             </span>
 
             <button
@@ -949,6 +971,11 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
             <div>
+              {selectedProphet.isHadithOnlyProphet && (
+                <span className="inline-block mb-1.5 px-2.5 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold uppercase tracking-wider">
+                  Documented via Sahih Hadith (Beyond 25 Quran Names)
+                </span>
+              )}
               <h2 className="font-cinzel font-bold text-xl text-black dark:text-white">
                 {selectedProphet.nameEnglish}
               </h2>
@@ -986,6 +1013,17 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </p>
               </div>
 
+              {selectedProphet.physicalAppearance && (
+                <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-300 dark:border-stone-700">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+                    Physical Description (Sahih Hadith Testimony)
+                  </span>
+                  <p className="text-xs font-medium mt-0.5 leading-relaxed">
+                    {selectedProphet.physicalAppearance}
+                  </p>
+                </div>
+              )}
+
               <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
                   Mission Span, Passing &amp; Heritage
@@ -995,6 +1033,51 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </p>
               </div>
             </div>
+
+            {/* Exclusive Knowledge & Narrations from Sahih Hadiths (Beyond the Quran) */}
+            {selectedProphet.hadithExclusiveFacts && selectedProphet.hadithExclusiveFacts.length > 0 && (
+              <section className="space-y-2.5">
+                <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-black dark:text-white">
+                  <span className="flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5" />
+                    <span>From Sahih Hadiths (Beyond Quran)</span>
+                  </span>
+                  <span className="font-mono text-[10px] text-stone-500 dark:text-stone-400">
+                    {selectedProphet.hadithExclusiveFacts.length} Facts
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {selectedProphet.hadithExclusiveFacts.map((fact, idx) => (
+                    <div
+                      key={`${fact.title}-${idx}`}
+                      className="p-3.5 rounded-2xl border-2 border-black dark:border-white bg-white dark:bg-stone-950 space-y-2"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-1.5">
+                        <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[9.5px] font-bold uppercase tracking-wider">
+                          {fact.topicTag}
+                        </span>
+                        <span className="text-[10px] font-mono font-bold text-stone-600 dark:text-stone-400">
+                          {fact.source}
+                        </span>
+                      </div>
+
+                      <h3 className="text-xs sm:text-sm font-bold text-black dark:text-white leading-snug">
+                        {fact.title}
+                      </h3>
+
+                      <p className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
+                        {fact.detail}
+                      </p>
+
+                      <p className="text-[10px] text-stone-500 dark:text-stone-400 font-medium">
+                        — Narrated by {fact.narrator}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {/* Stage-by-Stage Vertical Life Timeline */}
             <section className="space-y-3">

@@ -33,6 +33,7 @@ import {
 import { TajweedSignHelpDialog } from './TajweedSignHelpDialog';
 import { getPreciseVerseTafsir } from '../utils/verseTafsir';
 import { getCachedVerseTafsirSync, preloadSurahTafsirs } from '../utils/offlineTafsirStore';
+import { markAyahsReadToday } from '../utils/offlineStorage';
 
 interface AndroidReadingViewProps {
   currentSurah: SurahDetail | null;
@@ -47,7 +48,7 @@ interface AndroidReadingViewProps {
   onAddBookmark: (ayahNumber: number, timestampSeconds: number) => void;
   onDownloadSurah: (surahNum: number) => Promise<void>;
   isDownloaded: boolean;
-  onVerseRead: () => void;
+  onVerseRead: (count?: number) => void;
   onPlayAyahInReciter: (ayahNumber: number) => void;
   activePlayingAyah: number | null;
   isPlayingAudio: boolean;
@@ -402,6 +403,35 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
     ? (activeVerseAyah.relatedHadith || getRelatedHadith(currentSurah.number, activeVerseAyah.numberInSurah))
     : null;
 
+  // Credit every unique Ayah viewed/read today in Thematic, Mushaf, or Cards mode toward the main Iman level
+  useEffect(() => {
+    if (isLoading || !currentSurah) return;
+    let visibleAyahNums: number[] = [];
+    if (isThematicMode && currentThematicPage) {
+      visibleAyahNums = currentThematicPage.allAyahs.map((a) => a.numberInSurah);
+    } else if (isParagraphMode && currentPageAyahs.length > 0) {
+      visibleAyahNums = currentPageAyahs.map((a) => a.numberInSurah);
+    } else if (isCardsMode && activeVerseAyah) {
+      visibleAyahNums = [activeVerseAyah.numberInSurah];
+    }
+
+    if (visibleAyahNums.length > 0) {
+      const newlyRead = markAyahsReadToday(currentSurah.number, visibleAyahNums);
+      if (newlyRead > 0) {
+        onVerseRead(newlyRead);
+      }
+    }
+  }, [
+    isLoading,
+    currentSurah?.number,
+    isThematicMode,
+    isParagraphMode,
+    isCardsMode,
+    currentParagraphIndex,
+    currentPageIndex,
+    currentCardIndex,
+  ]);
+
   return (
     <div
       className="flex-1 flex flex-col max-w-md w-full mx-auto bg-stone-50 dark:bg-stone-950 h-full max-h-screen overflow-hidden select-none pb-1"
@@ -639,7 +669,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 <button
                   onClick={() => {
                     onPlayAyahInReciter(currentThematicPage.fromAyah);
-                    onVerseRead();
+                    const newlyRead = markAyahsReadToday(currentSurah.number, [currentThematicPage.fromAyah]);
+                    if (newlyRead > 0) onVerseRead(newlyRead);
                   }}
                   className="p-1 rounded-lg text-black dark:text-white hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
                   title="Play recitation for this page"
@@ -1163,7 +1194,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 <button
                   onClick={() => {
                     onPlayAyahInReciter(activeVerseAyah.numberInSurah);
-                    onVerseRead();
+                    const newlyRead = markAyahsReadToday(currentSurah.number, [activeVerseAyah.numberInSurah]);
+                    if (newlyRead > 0) onVerseRead(newlyRead);
                   }}
                   className="p-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg transition-transform active:scale-95"
                   title="Play recitation"
@@ -1394,11 +1426,6 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     اردو
                   </span>
                 )}
-                {(profile.recitationLanguageMode === 'assamese' || profile.recitationLanguageMode === 'arabic_assamese') && (
-                  <span className="text-[9px] px-1.5 py-0.2 bg-black text-white dark:bg-white dark:text-black rounded font-bold">
-                    অসমীয়া
-                  </span>
-                )}
                 {(profile.recitationLanguageMode === 'english' || profile.recitationLanguageMode === 'arabic_english') && (
                   <span className="text-[9px] px-1.5 py-0.2 bg-black text-white dark:bg-white dark:text-black rounded font-bold">
                     EN
@@ -1408,17 +1435,13 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
               <span className="text-[10px] text-stone-600 dark:text-stone-400 truncate block font-medium">
                 {currentSurah?.nameEnglish} •{' '}
                 {profile.recitationLanguageMode === 'urdu'
-                  ? 'Urdu Voice'
+                  ? 'Urdu Voice (Offline)'
                   : profile.recitationLanguageMode === 'english'
-                  ? 'English Voice'
-                  : profile.recitationLanguageMode === 'assamese'
-                  ? 'Assamese Voice'
+                  ? 'English Voice (Offline)'
                   : profile.recitationLanguageMode === 'both' || profile.recitationLanguageMode === 'arabic_urdu'
                   ? 'Arabic + Urdu'
                   : profile.recitationLanguageMode === 'arabic_english'
                   ? 'Arabic + English'
-                  : profile.recitationLanguageMode === 'arabic_assamese'
-                  ? 'Arabic + Assamese'
                   : 'Arabic Qari'}
               </span>
             </div>

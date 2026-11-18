@@ -19,15 +19,23 @@ import {
 import { SAHIH_BOOKS, ALL_SAHIH_HADITHS } from '../data/sahihHadiths';
 import { HadithBook, SahihHadithItem } from '../types/hadith';
 import { HadithReferenceModal } from './HadithReferenceModal';
+import {
+  getLearnedHadithIds,
+  markHadithLearned,
+  unmarkHadithLearned,
+} from '../utils/offlineHadithStorage';
+import { playGentleChime } from '../utils/notifications';
 
 interface HadithLibraryViewProps {
   onBackToDashboard: () => void;
   onStartJourney: () => void;
+  onHadithStudied?: (hadithId: string) => void;
 }
 
 export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
   onBackToDashboard,
   onStartJourney,
+  onHadithStudied,
 }) => {
   // Active Book state
   const [activeBookId, setActiveBookId] = useState<string>('bukhari');
@@ -37,6 +45,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
   const [showBookCoverModal, setShowBookCoverModal] = useState<boolean>(false);
   const [activeReferenceHadith, setActiveReferenceHadith] = useState<SahihHadithItem | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
+  const [learnedIds, setLearnedIds] = useState<string[]>(() => getLearnedHadithIds());
 
   const touchStartXRef = useRef<number | null>(null);
   const touchStartYRef = useRef<number | null>(null);
@@ -120,6 +129,23 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const isCurrentLearned = currentHadith ? learnedIds.includes(currentHadith.id) : false;
+
+  const handleToggleStudied = () => {
+    if (!currentHadith) return;
+    if (isCurrentLearned) {
+      const updated = unmarkHadithLearned(currentHadith.id);
+      setLearnedIds(updated);
+    } else {
+      const { learnedIds: updated, isNewToday } = markHadithLearned(currentHadith.id);
+      setLearnedIds(updated);
+      playGentleChime();
+      if (isNewToday && onHadithStudied) {
+        onHadithStudied(currentHadith.id);
+      }
+    }
   };
 
   return (
@@ -271,6 +297,18 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
 
 
+              {/* Core Lesson Takeaway */}
+              {currentHadith.keyLesson && (
+                <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-0.5">
+                    Key Lesson to Remember
+                  </span>
+                  <p className="text-stone-900 dark:text-stone-100 font-medium leading-snug">
+                    {currentHadith.keyLesson}
+                  </p>
+                </div>
+              )}
+
               {/* Clickable Reference Citation */}
               <div className="pt-1 text-center">
                 <button
@@ -299,20 +337,33 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             </div>
           </div>
 
-          {/* Horizontal Slide Navigation Buttons (High-contrast Tactile Black/White) */}
+          {/* Horizontal Slide Navigation Buttons + Studied Toggle */}
           <div className="mt-2 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={goToPrevSlide}
-              className="flex-1 py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
+              className="py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Previous Hadith Slide (or swipe right)"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-              <span>{slideIndex === 0 ? 'Prev Book' : 'Previous'}</span>
+              <span className="hidden sm:inline">{slideIndex === 0 ? 'Prev Book' : 'Prev'}</span>
+            </button>
+
+            <button
+              onClick={handleToggleStudied}
+              className={`flex-1 py-2.5 px-3 rounded-2xl font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5 border ${
+                isCurrentLearned
+                  ? 'bg-stone-200 dark:bg-stone-800 text-black dark:text-white border-black dark:border-white'
+                  : 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+              }`}
+              title="Mark Hadith studied to count toward your daily Iman level"
+            >
+              <Check className="w-4 h-4 stroke-[2.5]" />
+              <span>{isCurrentLearned ? 'Studied ✓' : 'Mark Studied (+Iman)'}</span>
             </button>
 
             <button
               onClick={handleCopy}
-              className="p-2.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-bold transition-all active:scale-95 shadow-md"
+              className="p-2.5 rounded-2xl bg-stone-200 dark:bg-stone-800 text-black dark:text-white font-bold transition-all active:scale-95 shadow-2xs"
               title="Copy Hadith"
             >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -320,10 +371,10 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
             <button
               onClick={goToNextSlide}
-              className="flex-1 py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
+              className="py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Next Hadith Slide (or swipe left)"
             >
-              <span>{slideIndex === bookHadiths.length - 1 ? 'Next Book' : 'Next Hadith'}</span>
+              <span className="hidden sm:inline">{slideIndex === bookHadiths.length - 1 ? 'Next Book' : 'Next'}</span>
               <ChevronRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>

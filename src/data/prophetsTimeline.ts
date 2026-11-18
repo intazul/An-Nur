@@ -877,7 +877,42 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Decreed lifespan of 1,000 years (of which he gifted 40 to Prophet Dawud AS per Tirmidhi 3076 Sahih; ~930–960 earthly years)',
     scriptureOrMiracle: 'Taught the names of all things; honored by the prostration of angels; direct speech with Allah',
     passingAndBurialTradition: 'Angels washed, shrouded, and prayed over him upon his passing to teach his children burial rites.',
+    physicalAppearance: 'Height of sixty cubits (~90 feet), luminous perfected human form; believers entering Paradise will be restored to Adam’s exact sixty-cubit stature (Sahih al-Bukhari 3326).',
     keyTrials: 'Envy and deception of Iblis, test of the forbidden tree, grief over the murder of Habil by Qabil.',
+    hadithExclusiveFacts: [
+      {
+        title: 'First Sneeze & Words ("Alhamdulillah")',
+        topicTag: 'Beyond Quran · Creation',
+        detail:
+          'When Allah breathed the soul into Adam and it reached his head, Adam sneezed. The angels prompted him to say "Alhamdulillah," and upon praising Allah his Lord responded: "YarhamukAllah (May your Lord have mercy upon you)!"—establishing the Sunnah of responding to a sneeze.',
+        source: 'Jami‘ at-Tirmidhi 3368 & Sahih Ibn Hibban 6165 (Sahih)',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Iblis Circling Adam’s Hollow Clay Body',
+        topicTag: 'Beyond Quran · Unseen',
+        detail:
+          'Before life was breathed into Adam’s dried clay form, Iblis kept circling and inspecting it. Seeing that Adam’s abdomen was hollow (ajwaf), Iblis recognized a creation that would experience hunger and desires, saying he would seek to overpower him.',
+        source: 'Sahih Muslim 2611',
+        narrator: 'Anas ibn Malik (RA)',
+      },
+      {
+        title: 'Gifting 40 Years of His Life to Dawud (AS)',
+        topicTag: 'Beyond Quran · Covenant',
+        detail:
+          'Shown the luminous souls of his descendants, Adam admired one radiant prophet—Dawud (AS)—and learned his allotted span was 60 years. Adam asked Allah to transfer 40 years from his own 1,000-year lifespan so Dawud’s life became 100.',
+        source: 'Jami‘ at-Tirmidhi 3076 & Al-Mustadrak (Sahih)',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Humble Refusal at the Grand Intercession',
+        topicTag: 'Judgment Day',
+        detail:
+          'At the Gathering on Judgment Day, humanity runs first to Adam recalling how Allah fashioned him with His Own Hands and made angels bow. Humble in awe of his past slip, Adam says "Myself, myself!" and directs mankind onward to Nuh (AS).',
+        source: 'Sahih al-Bukhari 4712 & Sahih Muslim 194',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -984,7 +1019,18 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Raised to an exalted high station (Fourth Heaven per Sahih al-Bukhari)',
     scriptureOrMiracle: 'Elevated directly by Allah to a "Makan Aliyy" (Exalted Place)',
     passingAndBurialTradition: 'Allah elevated him to an honored lofty status (Quran 19:57; stationed in the Fourth Heaven in Sahih al-Bukhari 3207).',
+    physicalAppearance: 'Exalted luminous appearance greeting Muhammad ﷺ warmly as "righteous brother and righteous Prophet" in the Fourth Heaven.',
     keyTrials: 'Calling early human settlements back from negligence toward steadfast truthfulness.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Confirmed Residence in the Fourth Heaven',
+        topicTag: 'Beyond Quran · Mi‘raj',
+        detail:
+          'While Q 19:57 simply mentions Allah elevated Idris to a "High Place (Makan Aliyy)," Sahih Hadith specifies that Prophet Muhammad ﷺ met him personally stationed in the Fourth Heaven during Al-Isra wal-Mi‘raj.',
+        source: 'Sahih al-Bukhari 3207 & Sahih Muslim 162',
+        narrator: 'Malik ibn Sa‘sa‘ah & Anas (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1044,7 +1090,34 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: '950 years of preaching before the Flood (Quran 29:14)',
     scriptureOrMiracle: 'Constructing the Great Ark (Al-Fulk) and surviving the Universal Flood',
     passingAndBurialTradition: 'Passed after leaving his unforgettable monotheistic final testament to his son.',
+    physicalAppearance: 'Elder patriarch among the Messengers; greeted Muhammad ﷺ in the Second/lower prophetic assemblies of the Mi‘raj (recorded warmly welcoming him as "righteous brother").',
     keyTrials: '950 years of mockery; rejection by his own wife and one son who drowned in denial.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Ten Generations of Pure Islam Before Any Idolatry Existed',
+        topicTag: 'Beyond Quran · History',
+        detail:
+          'Ibn Abbas (RA) narrated authentically that for ten full centuries between Adam and Nuh, all people upon earth followed a single religion of pure Tawhid—shirk began only after venerating statues carved to remember five righteous elders: Wadd, Suwa‘, Yaghuth, Ya‘uq, and Nasr.',
+        source: 'Sahih al-Bukhari 4920 & Sahih Ibn Hibban (Ibn Abbas)',
+        narrator: 'Abdullah ibn Abbas (RA)',
+      },
+      {
+        title: 'Deathbed Testament of Two Commands & Two Prohibitions',
+        topicTag: 'Beyond Quran · Final Will',
+        detail:
+          'Not recorded in the Quran: on his deathbed Nuh commanded his son with La ilaha illallah (which outweighs all seven heavens and earths on the Scale) and SubhanAllahi wa bihamdihi (the prayer sustaining all creation), and strictly forbade shirk and pride (kibr).',
+        source: 'Musnad Ahmad 6583 & Al-Adab al-Mufrad 548 (Sahih)',
+        narrator: 'Abdullah ibn Amr (RA)',
+      },
+      {
+        title: 'Calling Muhammad’s ﷺ Ummah as His Witness on Judgment Day',
+        topicTag: 'Beyond Quran · Judgment Day',
+        detail:
+          'Allah asks Nuh on Judgment Day if he conveyed His message; Nuh says yes, yet his people deny ever receiving a warner! Allah asks who testifies for Nuh, and Nuh responds: "Muhammad and his Ummah"—who step forward testifying based on revelation that Nuh fulfilled his trust completely.',
+        source: 'Sahih al-Bukhari 4487 & 7349',
+        narrator: 'Abu Sa‘id al-Khudri (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1137,6 +1210,24 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Spared with the few believers from the roaring seven-night, eight-day gale wind (Dabur)',
     passingAndBurialTradition: 'Departed peacefully with the saved believers in Yemen/Hadramawt or Makkah; exact burial site not pinned by Sahih Hadith.',
     keyTrials: 'Facing arrogant warriors boasting "Who is mightier than us in strength?" and accusing him of madness.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Why Dark Rain Clouds Made Prophet Muhammad ﷺ Restless',
+        topicTag: 'Beyond Quran · Sunnah Reflection',
+        detail:
+          'Aishah (RA) observed whenever dark clouds or brisk winds appeared, the Prophet’s ﷺ expression changed until rain fell, explaining: "I fear lest it be a punishment as came upon the people of Hud when they saw the cloud advancing toward their valleys saying, It is a rain cloud for us!"',
+        source: 'Sahih al-Bukhari 3206 & Sahih Muslim 899',
+        narrator: 'Aishah (RA)',
+      },
+      {
+        title: 'Contrast Between the West Gale (Dabur) & East Breeze (Saba)',
+        topicTag: 'Beyond Quran · Military Miracle',
+        detail:
+          'Allah destroyed Hud’s arrogant tribe ‘Ad with Ad-Dabur (the westerly gale), whereas millennia later Allah aided Prophet Muhammad ﷺ at the Battle of the Trench with As-Saba (the easterly wind).',
+        source: 'Sahih al-Bukhari 3344 & Sahih Muslim 2274',
+        narrator: 'Ibn Abbas (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1203,6 +1294,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'A massive living she-camel brought forth from solid mountain stone with alternating water rights',
     passingAndBurialTradition: 'Moved away with the believers prior to the cosmic blast; passing details beyond that are not specified in Sahih Hadith.',
     keyTrials: 'Nine conspirators plotted to assassinate Salih and his family by night after slaying the miracle she-camel.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Throwing Away Bread Dough Mixed With Thamud’s Well Water',
+        topicTag: 'Beyond Quran · Tabuk Event',
+        detail:
+          'When the Tabuk army camped at Al-Hijr (Thamud’s ruins) in 9 AH, some companions drew well water and kneaded dough. The Prophet ﷺ ordered them to spill the water, feed the dough to camels, and draw solely from the blessed well used by Salih’s She-Camel.',
+        source: 'Sahih al-Bukhari 3378–3381 & Sahih Muslim 2980',
+        narrator: 'Abdullah ibn Umar (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1268,7 +1369,42 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Passed at advanced old age after fulfilling all commands (Quran 2:124); performed Khitan at age 80 (Bukhari 3356)',
     scriptureOrMiracle: 'Scrolls of Ibrahim; Fire turned cool & safe; raising the Ka‘bah; Zamzam heritage',
     passingAndBurialTradition: 'Completed his covenant cleanly and rests near the Seventh Heaven leaning against Al-Bayt al-Ma‘mur (Bukhari 3207).',
+    physicalAppearance: 'Prophet Muhammad ﷺ testified: "I saw Ibrahim during the Night Journey—no man alive resembles him more closely than I myself do!" (Sahih al-Bukhari 3355, Sahih Muslim 165).',
     keyTrials: 'Thrown into blazing fire by his own father’s community, exile, waiting decades for children, test of sacrifice.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Circumcised Himself at Age 80 With an Adze (Qaddum)',
+        topicTag: 'Beyond Quran · Devotion',
+        detail:
+          'Completely unmentioned in the Quran: Sahih al-Bukhari confirms Prophet Ibrahim (AS) obeyed the command of Khitan immediately at age eighty at a place called Qaddum (or using a carpenter’s adze).',
+        source: 'Sahih al-Bukhari 3356 & 6298',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Guardian Beneath the Tree of Believers’ Children in Paradise',
+        topicTag: 'Beyond Quran · Unseen Paradise',
+        detail:
+          'In the long dream narration of Sahih al-Bukhari, angels showed the Prophet ﷺ a towering patriarch seated beneath a massive tree inside a lush garden surrounded by young children—explaining it is Ibrahim tending all children who passed away upon the pure Fitrah.',
+        source: 'Sahih al-Bukhari 7047',
+        narrator: 'Samurah ibn Jundub (RA)',
+      },
+      {
+        title: 'First Human Clothed on the Day of Resurrection',
+        topicTag: 'Beyond Quran · Hereafter',
+        detail:
+          'While all mankind rises barefoot, naked, and uncircumcised, Prophet Ibrahim (AS) will be the very first person clothed with heavenly garments on Judgment Day.',
+        source: 'Sahih al-Bukhari 3349 & 6526',
+        narrator: 'Ibn Abbas (RA)',
+      },
+      {
+        title: 'Advising the Ummah How to Plant Gardens in Paradise',
+        topicTag: 'Beyond Quran · Mi‘raj',
+        detail:
+          'Leaning against Al-Bayt al-Ma‘mur in the Seventh Heaven, Ibrahim sent personal greetings to this Ummah and told Muhammad ﷺ: Paradise has sweet water and fertile plains whose trees are planted with SubhanAllah, Alhamdulillah, La ilaha illallah, and Allahu Akbar.',
+        source: 'Jami‘ at-Tirmidhi 3462 (Sahih)',
+        narrator: 'Ibn Mas‘ud (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1376,6 +1512,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Angelic rescue before dawn while the towns were lifted and overturned',
     passingAndBurialTradition: 'Guided away safely with his believing daughters before sunrise; later years unrecorded in Sahih Hadith.',
     keyTrials: 'Complete isolation in a depraved city; even his own wife sided with wicked townspeople.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Why Every Prophet After Lut Came From Protective Noble Kin',
+        topicTag: 'Beyond Quran · Prophetic Pattern',
+        detail:
+          'Reflecting on Lut’s lonely cry at Sodom ("Would that I had strength or refuge in a strong support!"), Prophet Muhammad ﷺ observed tenderly that Lut actually relied on the Strongest Support (Allah), and from that day onward Allah sent no prophet except inside a strong protective clan.',
+        source: 'Sahih al-Bukhari 3372 & Sahih Muslim 151',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1442,6 +1588,24 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Zamzam spring bursting under Jibril’s wing; willing consent in sacrifice; co-builder of the Ka‘bah',
     passingAndBurialTradition: 'Taught his family prayer and zakah throughout life (Q 19:55), remaining honored in Makkah.',
     keyTrials: 'Near-death thirst as an infant in a desolate valley; supreme test of sacrifice in youth.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Master Bow-Archer & Ancestor of Quraysh',
+        topicTag: 'Beyond Quran · Lineage & Skill',
+        detail:
+          'Passing a group of young companions practicing archery in Madinah, the Prophet ﷺ urged them: "Shoot, O sons of Isma‘il, for your father was a skilled archer!" And in Sahih Muslim 2276 he confirmed Allah handpicked Isma‘il, Kinanah, Quraysh, and Banu Hashim.',
+        source: 'Sahih al-Bukhari 3373 & Sahih Muslim 2276',
+        narrator: 'Salamah ibn al-Akwa‘ & Wathilah (RA)',
+      },
+      {
+        title: 'Why Zamzam & Meat Alone Sustain Health in Makkah',
+        topicTag: 'Beyond Quran · Makkah Founding',
+        detail:
+          'In Sahih al-Bukhari 3364, when Isma‘il’s grateful second wife welcomed traveler Ibrahim with only meat and water (no grain grew in Makkah yet), Ibrahim blessed both their meat and water so living upon Zamzam and meat brought flourishing health instead of illness.',
+        source: 'Sahih al-Bukhari 3364',
+        narrator: 'Ibn Abbas (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1508,6 +1672,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Announced directly by angels visiting Ibrahim; father of twins Ya‘qub and Al-‘Is',
     passingAndBurialTradition: 'Guided communities in righteousness and wisdom until passing peacefully in Canaan.',
     keyTrials: 'Upholding Ibrahim’s pure monotheistic covenant across idolatrous Canaanite towns.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Praised in the "Four-Generation Noble Prophet" Narration',
+        topicTag: 'Beyond Quran · Honor',
+        detail:
+          'When companions asked who was the noblest of mankind, the Prophet ﷺ specifically honored the four-generation link of Yusuf ibn Ya‘qub ibn Ishaq ibn Ibrahim (AS), affirming their unbroken prophetic sanctity.',
+        source: 'Sahih al-Bukhari 3382 & 4688',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1559,6 +1733,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Vision restored miraculously when Yusuf’s shirt was placed over his face',
     passingAndBurialTradition: 'On his deathbed gathered all sons asking: "What will you worship after me?" securing their covenant to Islam alone (Q 2:133).',
     keyTrials: 'Decades of blinding grief over losing Yusuf and later Binyamin without once accusing Allah.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Modeled Directly by Aishah (RA) During Her Hardest Trial',
+        topicTag: 'Beyond Quran · Sirah Example',
+        detail:
+          'Facing agonizing false rumors in Madinah until Allah revealed her innocence, Mother of the Believers Aishah (RA) could not even recall Ya‘qub’s name through her tears—invoking only his title "the father of Yusuf" and anchoring her heart in his words: Sabrun Jamil.',
+        source: 'Sahih al-Bukhari 4141 & 4750',
+        narrator: 'Aishah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1624,7 +1808,26 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Passed in Egypt crying out: "Cause me to die as a Muslim and join me with the righteous"',
     scriptureOrMiracle: 'Half of all beauty granted (Sahih Muslim 162); infallible interpretation of dreams; seven-year famine rescue',
     passingAndBurialTradition: 'Passed in Egypt having fulfilled family unity, national salvation, and complete forgiveness.',
+    physicalAppearance: 'Witnessed in the Third Heaven having been granted half of all human beauty (Sahih Muslim 162).',
     keyTrials: 'Thrown into a dark well by brothers, sold as slave, seduction temptation, years forgotten in prison, weight of power.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Bestowed Half of All Beauty Among Creation',
+        topicTag: 'Beyond Quran · Physical Trait',
+        detail:
+          'Ascending to the Third Heaven during Al-Isra wal-Mi‘raj, Prophet Muhammad ﷺ beheld Yusuf (AS) radiant in beauty and stated clearly: "Indeed he had been given half of all beauty!"',
+        source: 'Sahih Muslim 162',
+        narrator: 'Anas ibn Malik (RA)',
+      },
+      {
+        title: 'Astonishing Self-Control Staying in Prison Until Exonerated',
+        topicTag: 'Beyond Quran · Character',
+        detail:
+          'The Prophet ﷺ admired Yusuf’s poise in sending the King’s messenger back to investigate the noblewomen first—saying modestly: "Had I lingered in prison as long as Yusuf did and the royal summoner came, I would have walked right out!"',
+        source: 'Sahih al-Bukhari 3372 & 4700',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1700,6 +1903,24 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Cool healing spring struck by stamping his foot; golden locusts showered upon recovery',
     passingAndBurialTradition: 'Granted doubled household and blessing as "an excellent servant; indeed he repeatedly turned to Allah."',
     keyTrials: 'Loss of children, extensive wealth, health, and social companionship for years—yet never uttering a word of bitterness.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Duration of His Affliction (18 Years)',
+        topicTag: 'Beyond Quran · Biography',
+        detail:
+          'Authentic Hadith collections clarify that Ayyub’s trial lasted eighteen full years during which friends and relatives drifted away except two faithful brothers who comforted him morning and evening—even when slandered behind his back, he never stopped worshipping Allah gratefully.',
+        source: 'Sahih Ibn Hibban 2898 & Musnad Abu Ya‘la (Sahih)',
+        narrator: 'Anas ibn Malik (RA)',
+      },
+      {
+        title: 'Shower of Golden Locusts While Bathing',
+        topicTag: 'Beyond Quran · Miracle',
+        detail:
+          'Right after healing in the miraculous spring, pure golden locusts rained over Ayyub and he gathered them eagerly into his robe—answering Allah’s gentle question with timeless gratitude: "I can never have enough of Your blessing!"',
+        source: 'Sahih al-Bukhari 279 & 3391',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1760,6 +1981,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Eloquence confronting economic cheating; spared from the Day of the Canopy & Earthquake',
     passingAndBurialTradition: 'Saved with his believers before Madyan’s ruin; his grave location is not established in Sahih Hadith.',
     keyTrials: 'Merchants threatening to stone or expel him simply for linking worship of Allah with honest weights and measures.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Prophetic Tradition of Honorable Shepherding',
+        topicTag: 'Contextual Sahih Verification',
+        detail:
+          'While Shu‘ayb’s eloquence is preserved fully inside the Quran, Sahih al-Bukhari 2262 underscores how Allah trained every single prophet in shepherding flocks (just as in Madyan) to cultivate humility, alertness, and patience before leading nations.',
+        source: 'Sahih al-Bukhari 2262',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1804,7 +2035,42 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: '10 years in Madyan + decades leading the Exodus & wilderness generation until age ~120',
     scriptureOrMiracle: 'The Torah (Tawrah); Staff-serpent, radiant hand, nine plagues, parting the Red Sea, water from rock',
     passingAndBurialTradition: 'Passed at Kathib al-Ahmar ("a stone’s throw from the Sacred Land") after striking the Angel of Death—grave pointed out by Muhammad ﷺ in Sahih al-Bukhari 1339.',
+    physicalAppearance: 'Tall, dark-wheat complexion (Adam), compact curly hair, sturdy athletic build resembling the vigorous men of the Tribe of Shanu’ah; seen chanting Talbiyah at Wadi al-Azraq (Sahih al-Bukhari 3239 & Sahih Muslim 165–166).',
     keyTrials: 'Pharaoh’s tyranny, Exodus sea chase, Golden Calf betrayal, chronic ingratitude of his people.',
+    hadithExclusiveFacts: [
+      {
+        title: 'The Fleeing Stone Miracle Vindicating His Modesty',
+        topicTag: 'Beyond Quran · Miracle',
+        detail:
+          'Unlike Bani Isra’il who bathed publicly naked, Musa (AS) always bathed privately in extreme modesty—causing gossipers to claim he hid a bodily defect. One day when Musa left his garment on a rock to bathe, Allah caused the boulder to bolt away with his clothes! Chasing it barefoot crying "My garment, O stone!" past their assembly proved Allah had created him completely free of blemish (explaining Q 33:69).',
+        source: 'Sahih al-Bukhari 278 & 3404',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Slapping the Angel of Death & Choosing Proximity to Al-Quds',
+        topicTag: 'Beyond Quran · Passing',
+        detail:
+          'When the Angel of Death approached Musa disguised as a man, Musa struck him in fierce self-defense knocking out his eye. Returning by Allah’s leave, the Angel offered years equal to every hair under Musa’s palm on a bull’s back—yet Musa chose immediate death so long as it was "within a stone’s throw of the Sacred Land" at Kathib al-Ahmar.',
+        source: 'Sahih al-Bukhari 1339 & 3407',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Standing in Prayer Inside His Grave & Pilgrimage Along Al-Azraq',
+        topicTag: 'Beyond Quran · Barzakh',
+        detail:
+          'During Al-Isra, Prophet Muhammad ﷺ passed beside the Red Sandhill (Al-Kathib al-Ahmar) and glimpsed Musa (AS) standing upright praying in his grave—and also beheld him riding toward Makkah reciting "Labbayk Allahumma Labbayk" through Wadi al-Azraq.',
+        source: 'Sahih Muslim 166 & 2375',
+        narrator: 'Anas ibn Malik & Ibn Abbas (RA)',
+      },
+      {
+        title: 'Weeping Out of Noble Love in the Sixth Heaven & Reducing Prayers to 5',
+        topicTag: 'Beyond Quran · Mi‘raj',
+        detail:
+          'Musa wept openly after greeting Muhammad ﷺ in the Sixth Heaven—not from jealousy, but grief that a prophet sent after him would lead more followers into Paradise than his own stubborn nation—yet proved the Ummah’s greatest friend by urging Muhammad ﷺ repeatedly to ask Allah for mercy down from 50 daily prayers to 5!',
+        source: 'Sahih al-Bukhari 3207, 3398 & 3887',
+        narrator: 'Anas & Malik ibn Sa‘sa‘ah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1920,7 +2186,18 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Passed in the wilderness shortly before Musa (AS)',
     scriptureOrMiracle: 'Appointed prophet directly in response to his younger brother Musa’s prayer',
     passingAndBurialTradition: 'Stationed in the Fifth Heaven where Prophet Muhammad ﷺ met and greeted him during Mi‘raj (Bukhari 3207).',
+    physicalAppearance: 'Distinguished elder witnessed in the Fifth Heaven surrounded by Israelites, wearing a beard half jet-black and half silver-white, striking and handsome (Sahih al-Bukhari 3207).',
     keyTrials: 'Preventing civil slaughter among 600,000 Israelites during the Golden Calf crisis while waiting 40 days for Musa.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Standard Model of Prophetic Deputyship & Appearance in Fifth Heaven',
+        topicTag: 'Beyond Quran · Mi‘raj & Sirah',
+        detail:
+          'Unmentioned in the Quran’s physical detail: Harun (AS) welcomed Muhammad ﷺ from the Fifth Heaven flanked by believers of his people, and Prophet Muhammad ﷺ explicitly honored Harun’s trusted deputyship to establish Ali ibn Abi Talib’s (RA) role guarding Madinah at Tabuk.',
+        source: 'Sahih al-Bukhari 3207 & 4416',
+        narrator: 'Anas & Sa‘d ibn Abi Waqqas (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -1972,6 +2249,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Quranic testimony to extraordinary patience, truthfulness, and inclusion among "The Best" (Al-Akhyar)',
     passingAndBurialTradition: 'Details of passing rest with Allah; no fabricated or weak tales are included.',
     keyTrials: 'Remaining unfailingly patient and gentle despite relentless demands upon his justice.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Strict Adherence to Verified Sources Over Unverified Legends',
+        topicTag: 'Hadith Authentication Discipline',
+        detail:
+          'Prophet Muhammad ﷺ advised caution regarding unverified Israelite lore ("neither affirm nor deny what is unverified"). Because no specific Sahih Hadith chain elaborates beyond Q 21:85 & 38:48 regarding Dhul-Kifl, Islamic scholarship honors his title strictly upon Quranic certainty.',
+        source: 'Sahih al-Bukhari 4485 & 7362 (Authentication Principle)',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2011,6 +2298,32 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'The Zabur; iron molded like soft wax in his bare hands; mountains & birds singing Tasbih with him',
     passingAndBurialTradition: 'Completed worship and craftsmanship cleanly after appointing Sulayman (AS) heir.',
     keyTrials: 'Defeating giant Jalut in youth; judging thorny legal disputes swiftly; weeping repentance in private worship.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Finishing the Entire Zabur While His Horse Was Being Saddled',
+        topicTag: 'Beyond Quran · Miracle',
+        detail:
+          'Not recorded in the Quran: reciting the Zabur was made so effortlessly swift and melodious for Dawud (AS) that he would order his mount saddled and finish chanting the scripture completely before the straps were fastened.',
+        source: 'Sahih al-Bukhari 3417 & 4713',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Exact Night Worship & Alternate-Day Fasting Schedule',
+        topicTag: 'Beyond Quran · Devotion',
+        detail:
+          'Prophet Muhammad ﷺ declared the worship most beloved to Allah is Dawud’s exact rhythm: fasting every alternate day without breaking, and sleeping half the night, standing in prayer a third of the night, then sleeping the remaining sixth before Fajr.',
+        source: 'Sahih al-Bukhari 1131 & 3420',
+        narrator: 'Abdullah ibn Amr (RA)',
+      },
+      {
+        title: 'Eating Strictly From Iron Armor Woven by His Own Hands',
+        topicTag: 'Beyond Quran · Integrity',
+        detail:
+          'Though king over a wealthy realm, Dawud (AS) refused to eat anything bought from state revenue—earning all his household’s bread by weaving and selling iron chainmail with his own hands.',
+        source: 'Sahih al-Bukhari 2072',
+        narrator: 'Al-Miqdam ibn Ma‘dikarib (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2091,6 +2404,40 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Command of winds (morning travel = 1 month), Jinn builders & divers, language of birds & ants',
     passingAndBurialTradition: 'Remained leaning upon his staff until a tiny termite gnawed it down—teaching Jinn that none knows the Unseen except Allah.',
     keyTrials: 'Wielding unmatched global sovereignty without arrogance; inspecting justice down to the smallest ant.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Adjudicating Two Mothers & The Wolf Over One Surviving Infant',
+        topicTag: 'Beyond Quran · Judicial Wisdom',
+        detail:
+          'Completely outside the Quran: when a wolf carried off the child of one of two women, both claimed the surviving infant. Dawud awarded the child to the elder, so young Sulayman called for a knife to split the baby in two—instantly revealing the true mother who cried out sacrificing her claim just to spare the child’s life!',
+        source: 'Sahih al-Bukhari 3427 & 6769',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Prophetic Lesson of Never Forgetting "In sha Allah"',
+        topicTag: 'Beyond Quran · Spiritual Counsel',
+        detail:
+          'Sulayman once vowed to visit his wives in one night hoping each would bear a righteous warrior for Allah—forgetting to say "In sha Allah." Consequently only one half-formed child was born, prompting Muhammad ﷺ to teach: "Had he said In sha Allah, his oath would not have failed!"',
+        source: 'Sahih al-Bukhari 3424 & 5242',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Why Muhammad ﷺ Released a Capture-Bound Jinn Out of Honor for Sulayman',
+        topicTag: 'Beyond Quran · Mosque Incident',
+        detail:
+          'When a fierce Ifrit Jinn attacked Muhammad ﷺ during night Salah, he seized and strangled it—nearly tying it to a mosque pillar until morning—before recalling his brother Sulayman’s exclusive prayer ("grant me a kingdom none after me will hold") and letting it go in respect.',
+        source: 'Sahih al-Bukhari 461 & 3423',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Three Petitions After Completing Bayt al-Maqdis',
+        topicTag: 'Beyond Quran · Jerusalem Mosque',
+        detail:
+          'Upon completing construction of Masjid al-Aqsa, Sulayman asked Allah for three gifts: sound judgment aligning with His decree, an unmatched kingdom, and that anyone traveling purely to pray inside this Masjid exits stripped of sins like the day their mother bore them! The Prophet ﷺ hoped Allah granted the third for this Ummah too.',
+        source: 'Sunan an-Nasa’i 693 & Ibn Majah 1408 (Sahih)',
+        narrator: 'Abdullah ibn Amr (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2178,6 +2525,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Unyielding defense of Tawhid under royal hostility; honored with eternal praise across generations',
     passingAndBurialTradition: 'Not detailed in Sahih Hadith (narrations claiming he remains immortal on earth are classified unauthentic/fabricated by Ibn Kathir & Al-Bukhari scholars).',
     keyTrials: 'Confronting king and society after abandoning the Creator for the Phoenician deity Ba‘l.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Warning Against Unauthenticated Legends of Immortality',
+        topicTag: 'Sahih Prophetic Principle',
+        detail:
+          'Sahih Hadith scholarship (grounded in Q 21:34 and Sahih al-Bukhari) clarifies that claims of Ilyas living physically forever in deserts come from unverified tales rather than Sahih Sunnah—honoring Ilyas instead through his immortal Quranic salutation "Salamun ala Ilyasin."',
+        source: 'Quran 21:34 & Sahih al-Bukhari 4485 Principle',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2217,6 +2574,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Sustained Torah revival and honored twice among Allah’s favored elite',
     passingAndBurialTradition: 'Passed cleanly leaving his nation guided during his lifetime; specifics rest with Allah.',
     keyTrials: 'Maintaining faith amidst recurring idolatrous backsliding.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Included Among All Prophets as "Paternal Brothers Upon One Din"',
+        topicTag: 'Sahih Unity Principle',
+        detail:
+          'Though no separate Hadith story expands Al-Yasa‘s deeds beyond the Quran’s dual praise, Prophet Muhammad ﷺ affirmed the absolute brotherhood and shared creed of every Messenger sent across history.',
+        source: 'Sahih al-Bukhari 3443',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2255,7 +2622,34 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Returned to live serenely with his redeemed city after emerging from the whale',
     scriptureOrMiracle: 'Kept alive inside a great whale beneath three layers of darkness; entire city of 100,000+ spared through collective repentance',
     passingAndBurialTradition: 'Returned to shepherd his believing city peacefully ("We let them enjoy life for a time," Q 37:148).',
+    physicalAppearance: 'Witnessed during Al-Isra clad in a coarse woolen jubbah riding a ruddy camel down a valley loudly proclaiming Talbiyah (Sahih Muslim 166).',
     keyTrials: 'Exhaustion and departing before divine permission; swallowing by the whale in stormy darkness.',
+    hadithExclusiveFacts: [
+      {
+        title: '"None Should Say I Am Better Than Yunus ibn Matta"',
+        topicTag: 'Beyond Quran · Prophetic Humility',
+        detail:
+          'Twice in Sahih al-Bukhari the Messenger of Allah ﷺ rebuked boasting comparisons among prophets—declaring modestly: "It is not fitting for any servant to say, I am better than Yunus ibn Matta!" safeguarding Yunus’s immense honor despite his brief moment of trial inside the fish.',
+        source: 'Sahih al-Bukhari 3414 & 4603',
+        narrator: 'Abu Hurayrah & Ibn Abbas (RA)',
+      },
+      {
+        title: 'Witnessed Performing Hajj Talbiyah Across Eternity',
+        topicTag: 'Beyond Quran · Unseen Vision',
+        detail:
+          'During Al-Isra wal-Mi‘raj, passing Wadi al-Azraq (then Wadi Harsha), Prophet Muhammad ﷺ looked down and heard Yunus ibn Matta chanting "Labbayk Allahumma Labbayk" clad in two woolen wraps atop a red she-camel.',
+        source: 'Sahih Muslim 166',
+        narrator: 'Ibn Abbas (RA)',
+      },
+      {
+        title: 'Guaranteed Relief Through Dhu al-Nun’s Supplication',
+        topicTag: 'Beyond Quran · Du‘a Promise',
+        detail:
+          'No Muslim in distress ever invokes Allah using Yunus’s underwater supplication ("La ilaha illa Anta Subhanaka inni kuntu minaz-zalimin") except that Allah answers their call.',
+        source: 'Jami‘ at-Tirmidhi 3505 (Sahih)',
+        narrator: 'Sa‘d ibn Abi Waqqas (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2327,6 +2721,16 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     scriptureOrMiracle: 'Granted heir in barren old age after witnessing out-of-season fruit in Maryam’s sanctuary chamber; three days of silent Tasbih sign',
     passingAndBurialTradition: 'Worked humbly with his hands as a carpenter throughout life (Sahih Muslim 2379); passing details vary outside Sahih chains.',
     keyTrials: 'Fearing moral decay among temple heirs after his lifetime.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Prophet-Carpenter Who Lived by Honest Manual Craft',
+        topicTag: 'Beyond Quran · Livelihood',
+        detail:
+          'Unmentioned in the Quran: while serving Jerusalem’s sacred sanctuary and guarding Maryam (AS), Prophet Zakariyya earned his household’s living as a skilled carpenter (Najjar), setting an eternal example of dignified self-reliance.',
+        source: 'Sahih Muslim 2379',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2377,7 +2781,18 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Martyred defending Allah’s sacred law against tyrannical corruption',
     scriptureOrMiracle: 'Granted Prophetic wisdom (Hukm) from early boyhood; unique unprecedented name ("Yahya")',
     passingAndBurialTradition: 'Honored in the Second Heaven alongside Isa (AS) when greeted by Muhammad ﷺ during Mi‘raj (Bukhari 3207).',
+    physicalAppearance: 'Young, gentle, sin-free prophet greeting Muhammad ﷺ alongside his maternal cousin Isa (AS) in the Second Heaven (Sahih al-Bukhari 3207).',
     keyTrials: 'Uncompromising stand on moral purity before corrupt political elites.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Five Divine Commandments Proclaimed Inside Bayt al-Maqdis',
+        topicTag: 'Beyond Quran · Sermon',
+        detail:
+          'Not detailed in the Quran: Allah commanded Yahya to gather Bani Isra’il in Jerusalem and deliver five monumental words: (1) pure Tawhid like a master’s loyal servant; (2) attentive Salah while Allah faces the worshipper; (3) Fasting more fragrant than musk; (4) Charity rescuing hostages; and (5) Constant Dhikr like a walled citadel protecting from pursuing foes.',
+        source: 'Jami‘ at-Tirmidhi 2863 & Musnad Ahmad 17170 (Sahih)',
+        narrator: 'Al-Harith al-Ash‘ari (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2448,7 +2863,42 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: 'Ministry ~3 years before ascent at ~33; will return near the End of Times to establish 40 years of peace',
     scriptureOrMiracle: 'The Injil; speaking in the cradle; healing the blind & lepers and reviving dead by Allah’s permission',
     passingAndBurialTradition: 'Raised alive cleanly to Allah—never crucified—and will pass peacefully after returning near the Hour and fulfilling Hajj/justice (Sahih Muslim).',
+    physicalAppearance: 'Medium height, broad chest, radiant reddish-white complexion ("as if just emerging from a bath — Dimas"), lank sleek hair wet-glistening down to his shoulders (Sahih al-Bukhari 3239, 3437, 3440).',
     keyTrials: 'Slander against his pure mother, betrayal by a treacherous associate, conspiracy of crucifixion foiled by Allah.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Only Maryam & Isa Escaped Shaytan’s Prick at Birth',
+        topicTag: 'Beyond Quran · Birth',
+        detail:
+          'Every newborn cries at birth when Shaytan pokes its side—except Maryam and baby Isa, because Maryam’s mother prayed: "I place her and her offspring under Your protection from outcast Shaytan."',
+        source: 'Sahih al-Bukhari 3431 & 4548',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'One of Only Three Infants Who Spoke From the Cradle',
+        topicTag: 'Beyond Quran · Miracle Pattern',
+        detail:
+          'Only three babies spoke articulately in infancy across history: Isa ibn Maryam defending his mother, the infant vindicating pious monk Jurayj, and the nursing child warning his mother after seeing a proud tyrant rider.',
+        source: 'Sahih al-Bukhari 3436',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Mercy When Catching a Suspected Thief Who Swore by Allah',
+        topicTag: 'Beyond Quran · Humility',
+        detail:
+          'Witnessing a man steal yet swear sincerely "By Allah I did not!", Isa immediately remarked out of reverence for Allah’s Name: "I believe in Allah and belie my own eyes!"',
+        source: 'Sahih al-Bukhari 3444',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Detailed End-Times Return, Defeat of Dajjal, Hajj & Burial',
+        topicTag: 'Beyond Quran · Future Prophecy',
+        detail:
+          'Resting his hands upon two angels’ wings, Isa descends at the white minaret east of Damascus wearing two saffron-dyed garments; slays the Dajjal at Bab Ludd; prays for rescue against Ya’juj & Ma’juj; walks through Fajj al-Rawha chanting Talbiyah for Hajj/Umrah; governs with unmatched equity for 40 years; and passes cleanly in Madinah.',
+        source: 'Sahih al-Bukhari 3448, Sahih Muslim 1252 & 2937',
+        narrator: 'Abu Hurayrah & Al-Nawwas ibn Sam‘an (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2541,7 +2991,34 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
     missionSpanOrAge: '63 years (40 years prior to prophethood + 23 years of revelation across Makkah & Madinah)',
     scriptureOrMiracle: 'The Noble Quran (living eternal miracle); Al-Isra wal-Mi‘raj; splitting of the moon; water springing from his fingers',
     passingAndBurialTradition: 'Passed peacefully in Aishah’s (RA) apartment on Monday 12 Rabi al-Awwal 11 AH and was buried beneath the exact spot.',
+    physicalAppearance: 'Balanced medium-tall build, luminous fair complexion with rosy glow ("like a sliver of the moon"), wide jet-black eyes, long eyelashes, thick beard, and the Seal of Prophethood between his shoulder blades (Sahih al-Bukhari 3549–3556).',
     keyTrials: 'Orphanhood, 13 years of Makkan torture & boycott, losing Khadijah & children, defending Madinah across major wars.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Five Unique Gifts Bestowed Over Every Earlier Prophet',
+        topicTag: 'Beyond Quran · Distinction',
+        detail:
+          'The Prophet ﷺ summarized his unique honors: (1) Aided with awe across a month’s journey; (2) The entire earth made pure sanctuary for Salah and Tayammum; (3) War spoils made lawful; (4) Granted the Grand Intercession (Al-Shafa‘ah al-Uzma); and (5) Sent universally to every human nation, whereas earlier prophets went strictly to their own people.',
+        source: 'Sahih al-Bukhari 335 & 438',
+        narrator: 'Jabir ibn Abdullah (RA)',
+      },
+      {
+        title: 'The Grand Cistern (Al-Hawd) & First to Open Paradise’s Gate',
+        topicTag: 'Beyond Quran · Hereafter',
+        detail:
+          'At Al-Hawd—whose water is whiter than milk and sweeter than honey with goblets numerous as stars—he awaits believers before knocking first upon Paradise’s Gate, where Angel Khazin responds: "I was commanded not to open for anyone before you!"',
+        source: 'Sahih Muslim 197, 2300 & Sahih al-Bukhari 6581',
+        narrator: 'Anas & Abdullah ibn Amr (RA)',
+      },
+      {
+        title: 'Yearning to Meet His "Brothers" From Later Generations',
+        topicTag: 'Beyond Quran · Love for Ummah',
+        detail:
+          'Visiting Baqi‘ cemetery he exclaimed: "How I wish we could see our brothers!" When companions asked if they were his brothers, he smiled: "You are my Companions; my brothers are those who will come after me and believe without ever seeing me!"',
+        source: 'Sahih Muslim 249',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+    ],
     lifeStages: [
       {
         stageNumber: 1,
@@ -2640,6 +3117,284 @@ export const PROPHETS_CHRONOLOGY: ProphetEntry[] = [
         source: 'Sahih al-Bukhari 4463',
         narrator: 'Aishah (RA)',
         textEnglish: 'Peaceful passing in Aishah’s chamber calling out "Bal ar-Rafiq al-A‘la."',
+      },
+    ],
+  },
+  {
+    id: 'prophet-26-yusha',
+    order: 26,
+    nameEnglish: 'Yusha‘ ibn Nun (Joshua, AS)',
+    title: 'Prophet After Musa · The Only Human for Whom the Sun Was Halted',
+    isHadithOnlyProphet: true,
+    lineageAndBirth: 'Yusha‘ ibn Nun ibn Afrayim ibn Yusuf (AS); devoted young attendant of Prophet Musa (AS) before inheriting prophetic leadership of Bani Isra’il',
+    eraAndLocation: 'Sinai Wilderness → Jericho & Sacred Land (Bayt al-Maqdis)',
+    peopleAndRegion: 'New generation of Children of Israel entering the Promised Land after the 40-year wilderness',
+    missionSpanOrAge: 'Led the triumphant entry into the Holy Land following Musa and Harun (AS)',
+    scriptureOrMiracle: 'Allah literally paused the setting sun in the sky so Yusha‘ could complete conquest before Shabbat',
+    passingAndBurialTradition: 'Guided Bani Isra’il faithfully in justice and monotheism upon establishing them in Palestine.',
+    keyTrials: 'Leading a scarred wilderness nation, confronting fortified Canaanite citadels, purifying ranks from secret war-booty theft.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Sole Human in History for Whom Allah Stopped the Sun',
+        topicTag: 'Hadith-Only Prophet · Cosmic Miracle',
+        detail:
+          'Nowhere in the Quran is this cosmic miracle or Yusha‘s name explicitly written—rather, Sahih al-Bukhari and Sahih Muslim preserve the Prophet’s ﷺ awe-inspiring testimony: "The sun was never stopped for any human being except Yusha‘ during the evenings when he marched toward Bayt al-Maqdis!"',
+        source: 'Sahih al-Bukhari 3124 & Sahih Muslim 1747',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Commanding Soldiers Pure in Intention & Halting Sunset Prayer',
+        topicTag: 'Beyond Quran · Leadership & Sunnah',
+        detail:
+          'Before marching, Yusha‘ forbade three types from joining battle—newlyweds, half-built homeowners, and pregnant-flock owners—so every fighter’s heart was focused wholly. When Asr approached outside Jericho right before sunset, he addressed the sun: "You are under command and I am under command; O Allah, hold it back for us!" and the sun froze until victory.',
+        source: 'Sahih al-Bukhari 3124 & Sahih Muslim 1747',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Accompanying Musa (AS) on the Journey to Al-Khidr',
+        topicTag: 'Quran Link (Q 18:60 Named via Sahih Hadith)',
+        detail:
+          'While Surah Al-Kahf refers only to "Musa’s young attendant (Fatahu)" carrying the salted fish that sprang back to life in the sea, Sahih al-Bukhari 122 explicitly names that loyal youth as Prophet Yusha‘ ibn Nun (AS).',
+        source: 'Sahih al-Bukhari 122 & 4725',
+        narrator: 'Ibn Abbas & Ubayy ibn Ka‘b (RA)',
+      },
+    ],
+    lifeStages: [
+      {
+        stageNumber: 1,
+        phaseTitle: '1. Loyal Disciple of Musa & Witness of the Living Fish Miracle',
+        where: 'Wandering Era → Majma‘ al-Bahrayn (Junction of Two Seas)',
+        whatHappened:
+          'Young Yusha‘ carried a basket containing a salted fish beside Musa (AS) searching for Allah’s knowledgeable servant Al-Khidr. Resting beside a rock spring of life, the dead salted fish flopped upright and tunneled back into the sea!',
+        howItUnfolded:
+          'Satan made Yusha‘ forget mentioning the miracle until Musa noticed fatigue later; retracing steps back to that exact rock brought them straight to Al-Khidr.',
+        revelation: {
+          surahNumber: 18,
+          ayahNumber: 60,
+          ayahRangeLabel: 'Surah Al-Kahf 18:60–65 (Named in Bukhari)',
+          contextEnglish: 'Mentions Musa’s faithful young servant—explicitly identified as Yusha‘ ibn Nun in Sahih al-Bukhari.',
+        },
+        sahihHadith: {
+          source: 'Sahih al-Bukhari 122 & 4725',
+          narrator: 'Ibn Abbas & Ubayy ibn Ka‘b (RA)',
+          textEnglish: 'Identifies Musa’s companion "Fatahu" explicitly as Yusha‘ ibn Nun.',
+        },
+      },
+      {
+        stageNumber: 2,
+        phaseTitle: '2. Stopping the Setting Sun & Liberation of the Holy Land',
+        where: 'Jericho & Approaches to Bayt al-Maqdis',
+        whatHappened:
+          'Appointed prophet after Musa’s passing, Yusha‘ mobilized the new unafraid generation of Israelites, prayed aloud to halt the descending Friday afternoon sun so battle would finish cleanly before Sabbath sunset, and captured the walled city.',
+        howItUnfolded:
+          'When lawful spoils remained untouched waiting for heavenly fire to accept them (before spoils were later made lawful for Muhammad’s ﷺ Ummah), heavenly fire refused to descend until a secret thief repented and returned a single cow’s-head lump of gold!',
+        warOrConfrontation: {
+          cause: 'Liberating the Sacred Land after forty years of wilderness purification following Bani Isra’il’s prior refusal.',
+          commanders: 'Prophet Yusha‘ ibn Nun (AS) commanding the disciplined new generation of Israel.',
+          forces: 'Hand-picked focused army free of domestic distractions fighting walled Canaanite fortifications.',
+          howItUnfolded:
+            'Closing in on victory late Friday evening, Yusha‘ raised his eyes skyward addressing the sun by Allah’s command; Allah suspended sunset until the city walls fell and spoils were gathered cleanly.',
+          outcomeAndLesson:
+            'Taught sacred discipline: hidden greed (ghulul) blocks divine acceptance even on the verge of victory, whereas sincere courage invokes cosmic miracles.',
+        },
+        sahihHadith: {
+          source: 'Sahih al-Bukhari 3124 & Sahih Muslim 1747',
+          narrator: 'Abu Hurayrah (RA)',
+          textEnglish:
+            'The Prophet ﷺ narrated the full campaign of the Prophet [Yusha‘] who prayed for the sun to be detained until victory was sealed, and how heavenly fire exposed a hidden gold cow-head theft among the spoils.',
+        },
+      },
+    ],
+    revelations: [
+      {
+        surahNumber: 18,
+        ayahNumber: 60,
+        ayahRangeLabel: 'Surah Al-Kahf 18:60–64',
+        contextEnglish: 'Contextual Quranic verse mentioning Yusha‘ anonymously as Musa’s loyal companion.',
+      },
+    ],
+    sahihHadiths: [
+      {
+        source: 'Sahih al-Bukhari 3124 & Sahih Muslim 1747',
+        narrator: 'Abu Hurayrah (RA)',
+        textEnglish: 'Sole authentic record of the sun halting in mid-sky for Prophet Yusha‘ ibn Nun (AS).',
+      },
+    ],
+  },
+  {
+    id: 'prophet-27-alkhidr',
+    order: 27,
+    nameEnglish: 'Al-Khidr (AS)',
+    title: 'Prophet / Servant of Hidden Mercy (‘Ilm Ladunni)',
+    isHadithOnlyProphet: true,
+    lineageAndBirth: 'Named expressly "Al-Khidr" (The Green One) in Sahih al-Bukhari; revered by majority scholars (including Ibn Hajar & Al-Qurtubi) as a Prophet gifted direct revelation of Allah’s merciful wisdom',
+    eraAndLocation: 'Majma‘ al-Bahrayn (Junction of the Two Seas) · Era of Musa (AS)',
+    peopleAndRegion: 'Travelers, poor boatmen & orphans along coastal seas',
+    missionSpanOrAge: 'Passed in his appointed earthly span before the Prophethood of Muhammad ﷺ (Quran 21:34 & Sahih Muslim 2537)',
+    scriptureOrMiracle: 'Barren white earth turning lush green wherever he sat (Bukhari 3402); direct divine foresight into unseen outcomes',
+    passingAndBurialTradition: 'Classical Hadith masters (Al-Bukhari, Ibn al-Jawzi, Ibn Kathir) verify from Muslim 2537 & Q 21:34 that every prophet and human prior to Islam passed before the Last Hour’s century.',
+    keyTrials: 'Carrying out heartbreaking external decrees—scuttling a boat, removing a wicked future oppressor, guarding an orphan treasure—under strict divine command.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Why He Was Named "Al-Khidr" (The Green One)',
+        topicTag: 'Hadith-Only Prophet · Origin of Name',
+        detail:
+          'Never named "Al-Khidr" in the Quran (which calls him solely "One of Our Servants"). Sahih al-Bukhari explicitly teaches: "He was called Al-Khidr because he sat upon a barren white piece of land (farwah), and suddenly it quivered beneath him turning lush green!"',
+        source: 'Sahih al-Bukhari 3402',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Sparrow Sipping One Drop Comparing Human Knowledge to Allah’s',
+        topicTag: 'Beyond Quran · Boat Parable',
+        detail:
+          'While sailing aboard the small wooden ship, a tiny sparrow perched on the boat’s edge and dipped its beak once into the ocean. Al-Khidr turned to Musa explaining: "O Musa, my knowledge and your knowledge do not diminish Allah’s knowledge even as much as this sparrow took from the sea!"',
+        source: 'Sahih al-Bukhari 122 & 4725',
+        narrator: 'Ibn Abbas & Ubayy ibn Ka‘b (RA)',
+      },
+      {
+        title: 'Note on Authenticity: Why Tales of His Enduring Immortality Are Rejected',
+        topicTag: 'Sahih Hadith Verification',
+        detail:
+          'Despite popular folklore, Prophet Muhammad ﷺ stated plainly a month before passing: "Not a single soul alive on the face of the earth today will remain after 100 years" (Sahih Muslim 2537). Authentic scholars cite this alongside Q 21:34 to confirm Al-Khidr passed cleanly in his era.',
+        source: 'Sahih Muslim 2537 & Sahih al-Bukhari 116',
+        narrator: 'Abdullah ibn Umar & Jabir (RA)',
+      },
+    ],
+    lifeStages: [
+      {
+        stageNumber: 1,
+        phaseTitle: '1. Seated Upon Green Cushion at Junction of Two Seas',
+        where: 'Coastal Rock at Majma‘ al-Bahrayn',
+        whatHappened:
+          'Covering himself gently in a garment upon green coastal grass overlooking the sea, Al-Khidr was greeted by Musa ibn Imran with "As-Salamu alaykum." Surprised anyone knew greeting-of-peace in that remote land, Al-Khidr recognized Allah’s Prophet Musa.',
+        howItUnfolded:
+          'Al-Khidr warned openly: "O Musa, I possess knowledge from Allah you do not know, and you possess knowledge from Allah I do not know"—setting one firm rule of silent patience until Al-Khidr himself explained.',
+        revelation: {
+          surahNumber: 18,
+          ayahNumber: 65,
+          ayahRangeLabel: 'Surah Al-Kahf 18:65–70',
+          contextEnglish: 'Musa meets Allah’s servant and agrees to test patience.',
+        },
+        sahihHadith: {
+          source: 'Sahih al-Bukhari 122, 3400 & 4725',
+          narrator: 'Ubayy ibn Ka‘b & Ibn Abbas (RA)',
+          textEnglish: 'Complete verbatim dialogue between Musa and Al-Khidr on the shore and aboard the ship.',
+        },
+      },
+      {
+        stageNumber: 2,
+        phaseTitle: '2. Three Baffling Acts Unveiled as Pure Divine Mercy',
+        where: 'Sea Voyage → Village → Orphan Town',
+        whatHappened:
+          'Al-Khidr (1) pulled a plank out of poor boatmen’s ferry; (2) slew an arrogant youth whose rebellion threatened his pious parents’ faith; and (3) rebuilt a crumbling wall in an inhospitable town without asking wages—prompting Musa to object three times.',
+        howItUnfolded:
+          'Parting ways kindly, Al-Khidr unveiled the unseen wisdom: a tyrant king ahead was seizing every undamaged ship, Allah replaced the wicked son with a pure daughter/child, and righteous orphans owned treasure buried beneath that wall. "I did none of it of my own accord!"',
+        revelation: {
+          surahNumber: 18,
+          ayahNumber: 71,
+          ayahRangeLabel: 'Surah Al-Kahf 18:71–82',
+          contextEnglish: 'Explanation of the damaged boat, the lost boy, and the orphans’ wall.',
+        },
+        sahihHadith: {
+          source: 'Sahih al-Bukhari 4725',
+          narrator: 'Ubayy ibn Ka‘b (RA)',
+          textEnglish:
+            'Muhammad ﷺ commented tenderly: "We wished Musa had been patient a little longer so Allah would have narrated even more wonders between the two of them!"',
+        },
+      },
+    ],
+    revelations: [
+      {
+        surahNumber: 18,
+        ayahNumber: 65,
+        ayahRangeLabel: 'Surah Al-Kahf 18:65–82',
+        contextEnglish: 'Complete Quranic account of Musa learning humility alongside Al-Khidr.',
+      },
+    ],
+    sahihHadiths: [
+      {
+        source: 'Sahih al-Bukhari 3402 & 4725',
+        narrator: 'Abu Hurayrah & Ubayy ibn Ka‘b (RA)',
+        textEnglish: 'Origin of the name "Al-Khidr" and full explanation of the sparrow’s drop parable.',
+      },
+    ],
+  },
+  {
+    id: 'prophet-28-sahih-unnamed-prophets',
+    order: 28,
+    nameEnglish: 'Additional Prophets & The 124,000 Messengers',
+    title: 'True Prophetic Accounts Documented Exclusively in Sahih Hadiths',
+    isHadithOnlyProphet: true,
+    lineageAndBirth: 'Allah sent messengers to every single human nation across history (Q 16:36), though only 25 names appear inside the Noble Quran',
+    eraAndLocation: 'Across All Generations & Nations Prior to Muhammad ﷺ',
+    peopleAndRegion: 'Every ancient tribe and settlement on Earth',
+    missionSpanOrAge: '124,000 Prophets (among them 315 Messengers) sent before the Seal of Prophets ﷺ',
+    scriptureOrMiracle: 'Countless miracles of perseverance, prayer, mercy & Resurrection rankings confirmed in Sahih Sunnah',
+    passingAndBurialTradition: 'Some prophets lived decades with loyal nations; others were martyred or died peacefully with only one, two, or zero followers.',
+    keyTrials: 'Extreme loneliness—standing before entire stubborn generations even when only two souls or none responded.',
+    hadithExclusiveFacts: [
+      {
+        title: 'Total Count: 124,000 Prophets & 315 Messengers',
+        topicTag: 'Hadith-Only Record · Prophetic Scale',
+        detail:
+          'When Abu Dharr (RA) asked how many prophets Allah dispatched, the Prophet ﷺ taught: "One hundred and twenty-four thousand (124,000) Prophets, and among them three hundred and fifteen (315) Messengers (Rusul)—a vast multitude!"',
+        source: 'Musnad Ahmad 22288 & Sahih Ibn Hibban 361 (Graded Sahih)',
+        narrator: 'Abu Dharr al-Ghifari (RA)',
+      },
+      {
+        title: 'The Wounded Prophet Who Wiped Blood Praying Forgiveness for His Nation',
+        topicTag: 'Hadith-Only Prophet · Forgiveness',
+        detail:
+          'Ibn Mas‘ud (RA) recalled watching the Prophet ﷺ recount a prior prophet beaten bloody by his own townspeople: wiping blood down his cheeks, that prophet prayed gently: "Allahummaghfir li-qawmi fa-innahum la ya‘lamun — O Allah, forgive my people, for they do not know!"—the very prayer Muhammad ﷺ echoed at Uhud!',
+        source: 'Sahih al-Bukhari 3477 & Sahih Muslim 1792',
+        narrator: 'Abdullah ibn Mas‘ud (RA)',
+      },
+      {
+        title: 'The Prophet Rebuked Over Burning an Ant Colony',
+        topicTag: 'Hadith-Only Prophet · Animal Mercy',
+        detail:
+          'A prophet once sat beneath a tree and was stung by an ant. Ordering all his belongings removed, he set fire to the ant mound. Allah immediately revealed a gentle rebuke: "Just because a single ant stung you, you destroyed an entire community (ummah) that glorifies Me?!"',
+        source: 'Sahih al-Bukhari 3019, 3319 & Sahih Muslim 2241',
+        narrator: 'Abu Hurayrah (RA)',
+      },
+      {
+        title: 'Prophets Arriving on Judgment Day With Only 1, 2, or Zero Followers',
+        topicTag: 'Hadith-Only Insight · Success Standard',
+        detail:
+          'Prophet Muhammad ﷺ was shown the nations gathered on Judgment Day: a prophet passing accompanied by an entire multitude, a prophet with only a small band, a prophet trailing just one or two believers—and a sincere prophet walking wholly alone without a single follower!',
+        source: 'Sahih al-Bukhari 5752 & Sahih Muslim 220',
+        narrator: 'Ibn Abbas (RA)',
+      },
+    ],
+    lifeStages: [
+      {
+        stageNumber: 1,
+        phaseTitle: '1. 124,000 Sent Across Every Nation — Truth Stands Beyond Numbers',
+        where: 'Global Nations Across Human History',
+        whatHappened:
+          'Sahih Hadith lifts the veil beyond the 25 named Quranic prophets, reminding believers that true prophetic success rests purely in conveying Allah’s message—even if an entire city beats a prophet or zero listeners accept in his lifetime.',
+        howItUnfolded:
+          'From prophets forgiving their attackers while bleeding, to being corrected for harming an ant nest, these authentic narrations preserve unforgettable moral lessons straight from the lips of Muhammad ﷺ.',
+        sahihHadith: {
+          source: 'Sahih al-Bukhari 3477 & 5752',
+          narrator: 'Ibn Mas‘ud & Ibn Abbas (RA)',
+          textEnglish: 'A wounded prophet praying forgiveness for his people, and Judgment Day showing prophets with zero followers.',
+        },
+      },
+    ],
+    revelations: [
+      {
+        surahNumber: 40,
+        ayahNumber: 78,
+        ayahRangeLabel: 'Surah Ghafir 40:78 & An-Nisa 4:164',
+        contextEnglish: '"Of some Messengers We have already told you, and of some Messengers We have NOT told you their stories."',
+      },
+    ],
+    sahihHadiths: [
+      {
+        source: 'Sahih al-Bukhari 3019, 3477 & 5752',
+        narrator: 'Abu Hurayrah, Ibn Mas‘ud & Ibn Abbas (RA)',
+        textEnglish: 'Three immortal Sahih Bukhari accounts detailing unnamed earlier prophets outside the Quran.',
       },
     ],
   },

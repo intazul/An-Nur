@@ -23,6 +23,14 @@ export interface TimelineHadith {
   textEnglish: string;
 }
 
+export interface SahihExclusiveDetail {
+  title: string;
+  topicTag: string; // e.g., "Beyond Quran · Miracle", "Physical Appearance", "Al-Isra wal-Mi'raj", "Hereafter"
+  detail: string;
+  source: string;
+  narrator: string;
+}
+
 export interface ProphetLifeStage {
   stageNumber: number;
   phaseTitle: string; // e.g., "Creation in Paradise", "Test & Descent to Earth", "Final Days & Passing"
@@ -54,13 +62,16 @@ export interface ProphetEntry {
   order: number;
   nameEnglish: string;
   title: string;
+  isHadithOnlyProphet?: boolean; // True for Prophets/narrations not explicitly named among the 25 in the Quran
   lineageAndBirth: string;
   eraAndLocation: string;
   peopleAndRegion: string;
   missionSpanOrAge: string;
   scriptureOrMiracle: string;
   passingAndBurialTradition: string;
+  physicalAppearance?: string;
   keyTrials: string;
+  hadithExclusiveFacts?: SahihExclusiveDetail[];
   lifeStages: ProphetLifeStage[];
   revelations: TimelineRevelation[];
   sahihHadiths: TimelineHadith[];

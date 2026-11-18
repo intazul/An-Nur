@@ -9,13 +9,15 @@ import {
   Save,
   Heart,
 } from 'lucide-react';
-import { DailyPrayers, ImanDayRecord } from '../types/quran';
+import { DailyPrayers, ImanDayRecord, UserProfileData } from '../types/quran';
 import { playGentleChime } from '../utils/notifications';
+import { calculateImanBreakdown } from '../utils/imanScore';
 
 interface ImanTrackerModalProps {
   isOpen: boolean;
   onClose: () => void;
   imanRecord: ImanDayRecord;
+  profile?: UserProfileData;
   onUpdateImanRecord: (record: ImanDayRecord) => void;
   streak: number;
 }
@@ -32,6 +34,7 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
   isOpen,
   onClose,
   imanRecord,
+  profile,
   onUpdateImanRecord,
   streak,
 }) => {
@@ -96,8 +99,9 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
     { id: 'duha', label: 'Salat ad-Duha (Forenoon)', arabic: 'الضُّحَى' },
   ];
 
-  const completedObligatory = obligatoryPrayers.filter((p) => imanRecord.prayers[p.id]).length;
-  const progressPercent = Math.round((completedObligatory / obligatoryPrayers.length) * 100);
+  const imanBreakdown = calculateImanBreakdown(imanRecord, profile);
+  const completedObligatory = imanBreakdown.completedFard;
+  const progressPercent = imanBreakdown.totalPercent;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
@@ -131,24 +135,41 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
         {/* Modal Scrollable Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {/* Top Status & Consistency Card */}
-          <div className="p-4 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 flex flex-wrap items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="text-xs text-stone-500 uppercase tracking-wider font-semibold">
-                Today's Prayer Fulfillment
-              </span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold text-black dark:text-white tabular-nums">
-                  {completedObligatory} / 5
+          <div className="p-4 rounded-xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="space-y-1">
+                <span className="text-xs text-stone-500 uppercase tracking-wider font-semibold">
+                  Today's Overall Iman Level
                 </span>
-                <span className="text-xs font-bold text-black dark:text-white">
-                  ({progressPercent}% Completed)
-                </span>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-bold text-black dark:text-white tabular-nums font-cinzel">
+                    {progressPercent}%
+                  </span>
+                  <span className="text-xs font-bold text-stone-600 dark:text-stone-300">
+                    ({completedObligatory}/5 Prayers)
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold">
+                <Flame className="w-4 h-4 fill-current" />
+                <span>{streak} Days Active Streak</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-black text-white dark:bg-white dark:text-black rounded-lg text-xs font-bold">
-              <Flame className="w-4 h-4 fill-current" />
-              <span>{streak} Days Active Streak</span>
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-stone-200 dark:border-stone-800 text-center text-xs">
+              <div className="p-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
+                <span className="text-[10px] text-stone-500 block">Ayahs Read</span>
+                <strong className="font-cinzel text-black dark:text-white">{imanBreakdown.versesRead}/{imanBreakdown.verseGoal}</strong>
+              </div>
+              <div className="p-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
+                <span className="text-[10px] text-stone-500 block">Dhikr</span>
+                <strong className="font-cinzel text-black dark:text-white">{imanBreakdown.dhikrCount}/{imanBreakdown.dhikrGoal}</strong>
+              </div>
+              <div className="p-2 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
+                <span className="text-[10px] text-stone-500 block">Hadiths</span>
+                <strong className="font-cinzel text-black dark:text-white">{imanBreakdown.hadithsStudied}/{imanBreakdown.hadithGoal}</strong>
+              </div>
             </div>
           </div>
 

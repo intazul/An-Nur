@@ -6,6 +6,8 @@ interface FluidCircleProps {
   completedPrayers: number;
   totalPrayers?: number;
   versesRead: number;
+  dhikrCount?: number;
+  hadithsStudied?: number;
   onTap?: () => void;
 }
 
@@ -15,6 +17,8 @@ export const FluidCircle: React.FC<FluidCircleProps> = ({
   completedPrayers,
   totalPrayers = 5,
   versesRead,
+  dhikrCount = 0,
+  hadithsStudied = 0,
   onTap,
 }) => {
   const [waveOffset, setWaveOffset] = useState(0);
@@ -149,12 +153,12 @@ export const FluidCircle: React.FC<FluidCircleProps> = ({
             %
           </span>
         </div>
-        <div className="mt-1 flex flex-col items-center">
-          <span className="text-[11px] font-bold drop-shadow-xs">
-            {completedPrayers}/{totalPrayers} Prayers
+        <div className="mt-1 flex flex-col items-center leading-tight space-y-0.5">
+          <span className="text-[10.5px] font-bold drop-shadow-xs">
+            {completedPrayers}/{totalPrayers} Prayers · {versesRead} Ayahs
           </span>
-          <span className="text-[10px] font-bold">
-            {versesRead} Verses Read
+          <span className="text-[9.5px] font-bold opacity-95">
+            {dhikrCount} Dhikr · {hadithsStudied} Hadiths
           </span>
         </div>
       </div>

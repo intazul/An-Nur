@@ -379,6 +379,68 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <span>50 verses (Dedicated)</span>
                 </div>
               </div>
+
+              {/* Daily Dhikr Goal Setting */}
+              <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-black dark:text-white" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
+                      Daily Sacred Dhikr Goal
+                    </span>
+                  </div>
+                  <span className="text-sm font-bold font-cinzel text-black dark:text-white tabular-nums">
+                    {profile.dailyDhikrGoal || 33} Dhikr / Day
+                  </span>
+                </div>
+
+                <input
+                  type="range"
+                  min="10"
+                  max="200"
+                  step="1"
+                  value={profile.dailyDhikrGoal || 33}
+                  onChange={(e) => onUpdateProfile({ dailyDhikrGoal: Number(e.target.value) })}
+                  className="w-full accent-black dark:accent-white cursor-pointer"
+                />
+
+                <div className="flex justify-between text-[11px] text-stone-400">
+                  <span>10 Dhikr</span>
+                  <span>33 Tasbih (Balanced)</span>
+                  <span>200 Dhikr</span>
+                </div>
+              </div>
+
+              {/* Daily Hadith Study Goal Setting */}
+              <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Target className="w-4 h-4 text-black dark:text-white" />
+                    <span className="text-xs font-semibold uppercase tracking-wider text-black dark:text-white">
+                      Daily Hadith Lessons Goal
+                    </span>
+                  </div>
+                  <span className="text-sm font-bold font-cinzel text-black dark:text-white tabular-nums">
+                    {profile.dailyHadithGoal || 5} Hadiths / Day
+                  </span>
+                </div>
+
+                <input
+                  type="range"
+                  min="1"
+                  max="20"
+                  step="1"
+                  value={profile.dailyHadithGoal || 5}
+                  onChange={(e) => onUpdateProfile({ dailyHadithGoal: Number(e.target.value) })}
+                  className="w-full accent-black dark:accent-white cursor-pointer"
+                />
+
+                <div className="flex justify-between text-[11px] text-stone-400">
+                  <span>1 Lesson</span>
+                  <span>5 Lessons (Balanced)</span>
+                  <span>20 Lessons</span>
+                </div>
+              </div>
             </div>
           )}
 
@@ -561,14 +623,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </button>
                 </div>
 
-                {/* 2. Download Core Recitations Audio (Arabic, English & Urdu MP3s) */}
+                {/* 2. Download Core Arabic Recitations Audio */}
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Core & Favorites Audio (Arabic, English & Urdu)
+                      Core & Favorites Arabic Audio (Qari MP3s)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Caches every ayah MP3 for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last 10 Surahs & Favorites.
+                      Caches Arabic Qari MP3s for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last 10 Surahs & Favorites. (English & Urdu recitations are already 100% offline.)
                     </p>
                   </div>
                   <button
@@ -585,14 +647,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </button>
                 </div>
 
-                {/* 3. Download Complete Quran Audio (All 114 Surahs: Arabic, English & Urdu) */}
+                {/* 3. Download Complete Arabic Quran Audio (All 114 Surahs) */}
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Complete Quran Audio (All 114 Surahs)
+                      Complete Arabic Qari Audio (All 114 Surahs)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Full offline Arabic, English & Urdu recitations for every Surah. Resumable anytime if paused.
+                      Caches studio Arabic Qari recitations for every Surah. All 114 Surahs of English & Urdu recitations work 100% built-in offline.
                     </p>
                   </div>
                   <button

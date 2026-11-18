@@ -572,7 +572,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           </div>
         </div>
 
-        {/* SECTION 6: Recitation Mode & Audio Voices (Arabic, English, Urdu, Assamese) */}
+        {/* SECTION 6: Recitation Mode & Audio Voices (Arabic + 100% Offline English & Urdu) */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
             <Volume2 className="w-3.5 h-3.5" />
@@ -583,12 +583,10 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             {(
               [
                 { id: 'arabic', title: 'Arabic Only', sub: 'عربي تلاوت' },
-                { id: 'english', title: 'English Audio', sub: 'Ibrahim Walk' },
-                { id: 'urdu', title: 'Urdu Audio', sub: 'اردو ترجمہ (No Assamese)' },
-                { id: 'assamese', title: 'Assamese Audio', sub: 'অসমীয়া (No Urdu)' },
-                { id: 'arabic_english', title: 'Arabic + English', sub: 'Sequential pair' },
-                { id: 'arabic_urdu', title: 'Arabic + Urdu', sub: 'پہلے عربی پھر اردو' },
-                { id: 'arabic_assamese', title: 'Arabic + Assamese', sub: 'আৰবী + অসমীয়া' },
+                { id: 'english', title: 'English Audio', sub: '100% Offline Voice' },
+                { id: 'urdu', title: 'Urdu Audio', sub: '100% Offline · اردو ترجمہ' },
+                { id: 'arabic_english', title: 'Arabic + English', sub: 'Sequential · Offline En' },
+                { id: 'arabic_urdu', title: 'Arabic + Urdu', sub: 'پہلے عربی پھر اردو · Offline' },
               ] as const
             ).map((opt) => {
               const active =
@@ -603,12 +601,6 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                         recitationLanguageMode: opt.id,
                         showUrdu: true,
                         showAssamese: false,
-                      });
-                    } else if (opt.id === 'assamese' || opt.id === 'arabic_assamese') {
-                      onUpdateProfile({
-                        recitationLanguageMode: opt.id,
-                        showAssamese: true,
-                        showUrdu: false,
                       });
                     } else {
                       onUpdateProfile({ recitationLanguageMode: opt.id });
@@ -635,7 +627,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               <div className="text-xs font-bold text-black dark:text-white flex items-center justify-between">
                 <span>Urdu Translation Voice (اردو قاری)</span>
                 <span className="text-[10px] font-mono font-semibold text-stone-700 dark:text-stone-300">
-                  EveryAyah CDN
+                  100% Offline
                 </span>
               </div>
 
@@ -675,7 +667,6 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             profile.recitationLanguageMode === 'both' ||
             profile.recitationLanguageMode === 'arabic_english' ||
             profile.recitationLanguageMode === 'arabic_urdu' ||
-            profile.recitationLanguageMode === 'arabic_assamese' ||
             !profile.recitationLanguageMode) && (
             <div className="space-y-2">
               <div className="text-xs font-bold text-black dark:text-white">
@@ -728,7 +719,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             <div className="min-w-0">
               <div className="text-xs font-bold">Clear Pronunciation & Vocal Clarity EQ</div>
               <div className="text-[10px] opacity-80 leading-tight">
-                Enhances Arabic Tajweed, English & Urdu diction + Assamese phonetic clarity
+                Enhances Arabic Tajweed, English & Urdu diction clarity
               </div>
             </div>
             <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-white/20 dark:bg-black/20 shrink-0">
