@@ -65,7 +65,7 @@ const CalligraphicDivider: React.FC = () => (
 export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue }) => {
   return (
     <div
-      className="absolute inset-0 z-50 h-full w-full bg-white text-black dark:bg-black dark:text-white flex flex-col justify-between p-4 sm:p-5 overflow-hidden select-none"
+      className="absolute inset-0 z-50 h-full w-full bg-white text-black dark:bg-black dark:text-white flex flex-col justify-between p-4 sm:p-5 safe-top-zone safe-bottom-zone overflow-hidden select-none"
       role="dialog"
       aria-label="An-Nur Calligraphic Salam Introduction"
     >

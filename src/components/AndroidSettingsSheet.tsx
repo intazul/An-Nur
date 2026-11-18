@@ -92,7 +92,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 max-w-md w-full mx-auto bg-white dark:bg-black flex flex-col h-full animate-in fade-in duration-200 select-none">
+    <div className="fixed inset-0 z-50 max-w-md w-full mx-auto bg-white dark:bg-black flex flex-col h-full animate-in fade-in duration-200 select-none safe-top-zone safe-bottom-zone">
       {/* 1. Android Top App Bar for Settings Tab */}
       <div className="px-4 py-3.5 border-b border-black/10 dark:border-white/15 flex items-center justify-between bg-white dark:bg-black shrink-0">
         <button

@@ -912,7 +912,7 @@ export default function App() {
   return (
     <div className="h-screen sm:min-h-screen bg-stone-100 dark:bg-black flex flex-col items-center justify-start sm:p-4 transition-colors overflow-hidden">
       {/* Android Device Portrait Frame */}
-      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-white text-black dark:bg-black dark:text-white flex flex-col overflow-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800">
+      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-white text-black dark:bg-black dark:text-white flex flex-col overflow-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800 safe-top-zone safe-bottom-zone">
         {/* Offline Mode Status Banner (visible when disconnected from network) */}
         {!isOnline && (
           <div className="w-full bg-black text-white dark:bg-white dark:text-black px-4 py-1.5 text-[11px] font-bold flex items-center justify-between border-b border-black/20 dark:border-white/20 shrink-0 select-none z-50">

@@ -204,6 +204,15 @@
   }
 }
 
+/* Subtle yet sufficient top safe-zone to clear notification bar & camera notch on every tab */
+@utility safe-top-zone {
+  padding-top: max(calc(env(safe-area-inset-top, 0px) + 0.375rem), 1.5rem);
+}
+
+@utility safe-bottom-zone {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* Custom scrollbars for clean dashboard */
 ::-webkit-scrollbar {
   width: 6px;

@@ -72,9 +72,9 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   const totalImanPercent = imanBreakdown.totalPercent;
 
   return (
-    <div className="flex-1 flex flex-col max-w-md sm:max-w-lg w-full mx-auto px-4 sm:px-5 py-4 select-none bg-white dark:bg-black overflow-y-auto space-y-4 pb-8">
+    <div className="flex-1 flex flex-col max-w-md sm:max-w-lg w-full mx-auto px-4 sm:px-5 pt-1.5 pb-8 select-none bg-white dark:bg-black overflow-y-auto space-y-4">
       {/* 1. Clean App Header */}
-      <header className="flex items-center justify-between pt-1 pb-1">
+      <header className="flex items-center justify-between pt-0.5 pb-1">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-scheherazade font-bold text-lg shadow-xs shrink-0">
             ن
