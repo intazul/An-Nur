@@ -260,7 +260,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto min-h-screen bg-stone-50 dark:bg-stone-950 px-5 py-3 overflow-y-auto select-none">
+    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto h-full min-h-0 bg-stone-50 dark:bg-stone-950 px-5 py-3 overflow-y-auto select-none">
       {/* 1. Header Bar */}
       <div className="flex items-center justify-between py-2 border-b border-stone-200 dark:border-stone-800">
         <button

@@ -3,6 +3,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer utilities {
+  /* Safe top breathing room so headers never interfere with mobile notification bar or camera notch */
+  .safe-top-offset {
+    padding-top: calc(env(safe-area-inset-top, 0px) + 1.375rem);
+  }
+
   .font-quran {
     font-family: 'Amiri Quran', 'Scheherazade New', 'Amiri', serif;
     letter-spacing: 0.02em;

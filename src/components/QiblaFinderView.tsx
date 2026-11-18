@@ -332,7 +332,7 @@ export const QiblaFinderView: React.FC<QiblaFinderViewProps> = ({ onBackToDashbo
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto min-h-screen bg-stone-50 dark:bg-stone-950 px-4 sm:px-5 py-4 overflow-x-hidden select-none">
+    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto h-full min-h-0 bg-stone-50 dark:bg-stone-950 px-4 sm:px-5 py-4 overflow-y-auto overflow-x-hidden select-none">
       {/* 1. Header Bar */}
       <div className="flex items-center justify-between pt-1 pb-2">
         <button

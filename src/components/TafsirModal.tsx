@@ -140,7 +140,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in select-none">
       <div
-        className="w-full max-w-md h-full sm:h-[92vh] bg-white dark:bg-black rounded-none sm:rounded-3xl border-0 sm:border border-black/15 dark:border-white/20 shadow-2xl overflow-hidden flex flex-col"
+        className="w-full max-w-md h-full sm:h-[92vh] bg-white dark:bg-black rounded-none sm:rounded-3xl border-0 sm:border border-black/15 dark:border-white/20 shadow-2xl overflow-hidden flex flex-col safe-top-offset sm:pt-0"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Drag Handle on Android */}
