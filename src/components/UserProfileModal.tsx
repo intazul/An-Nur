@@ -603,10 +603,10 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Cache All 114 Surahs (Quran + Ibn Kathir & Assamese Tafsir)
+                      Sync All 114 Surahs & Tafsirs Offline
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Stores Arabic, English, Urdu & Assamese Quran plus complete Tafsir Ibn Kathir & Assamese Tafsir in offline device storage for all 6,236 verses.
+                      Stores Arabic, English, Urdu & Assamese Quran plus complete English Ibn Kathir, Urdu & Assamese Tafsirs in IndexedDB for all 6,236 verses.
                     </p>
                   </div>
                   <button
@@ -619,18 +619,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     ) : (
                       <Download className="w-3.5 h-3.5" />
                     )}
-                    <span>{isDownloadingAllText ? 'Saving...' : 'Download Text'}</span>
+                    <span>{isDownloadingAllText ? 'Saving...' : 'Sync All 114'}</span>
                   </button>
                 </div>
 
-                {/* 2. Download Core Arabic Recitations Audio */}
+                {/* 2. Download Core Arabic + Translation Recitations Audio */}
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Core & Favorites Arabic Audio (Qari MP3s)
+                      Core & Favorites Audio (Arabic + English + Urdu MP3s)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Caches Arabic Qari MP3s for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last 10 Surahs & Favorites. (English & Urdu recitations are already 100% offline.)
+                      Caches studio Arabic Qari, English & Urdu MP3s for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last Surahs & Favorites.
                     </p>
                   </div>
                   <button
@@ -647,14 +647,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </button>
                 </div>
 
-                {/* 3. Download Complete Arabic Quran Audio (All 114 Surahs) */}
+                {/* 3. Download Complete Quran Audio (All 114 Surahs) */}
                 <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
-                      Complete Arabic Qari Audio (All 114 Surahs)
+                      Complete Quran Audio (All 114 Surahs · Ar + En + Ur)
                     </div>
                     <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
-                      Caches studio Arabic Qari recitations for every Surah. All 114 Surahs of English & Urdu recitations work 100% built-in offline.
+                      Caches studio Arabic Qari, English & Urdu translation MP3s locally for every Surah across the entire Quran.
                     </p>
                   </div>
                   <button

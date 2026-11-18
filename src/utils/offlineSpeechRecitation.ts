@@ -489,6 +489,11 @@ function splitIntoClauses(text: string): string[] {
   return merged;
 }
 
+interface VoiceCandidate {
+  voice: SpeechSynthesisVoice;
+  tier: OfflineVoiceTier;
+}
+
 class OfflineSpeechRecitationController {
   private sessionSeq = 0;
   private isPlaying = false;
@@ -504,9 +509,104 @@ class OfflineSpeechRecitationController {
   private timerId: number | null = null;
   private safetyTimeoutId: number | null = null;
   private clausePauseTimeoutId: number | null = null;
+  private cancelDelayTimeoutId: number | null = null;
+  private keepAliveIntervalId: number | null = null;
   private callbacks: OfflineSpeechCallbacks | null = null;
   private usingNativeSpeech = false;
   private activeTier: OfflineVoiceTier = 'timer_only';
+  private cachedVoices: SpeechSynthesisVoice[] = [];
+  private voicesListenerBound = false;
+
+  constructor() {
+    this.bindVoicesListener();
+  }
+
+  private bindVoicesListener() {
+    if (this.voicesListenerBound || typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      return;
+    }
+    this.voicesListenerBound = true;
+    try {
+      const refresh = () => {
+        const list = window.speechSynthesis.getVoices();
+        if (list && list.length > 0) {
+          this.cachedVoices = list;
+        }
+      };
+      refresh();
+      if (typeof window.speechSynthesis.addEventListener === 'function') {
+        window.speechSynthesis.addEventListener('voiceschanged', refresh);
+      } else {
+        window.speechSynthesis.onvoiceschanged = refresh;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  public warmUp() {
+    this.bindVoicesListener();
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
+    try {
+      const list = window.speechSynthesis.getVoices();
+      if (list && list.length > 0) {
+        this.cachedVoices = list;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  private getAvailableVoices(): SpeechSynthesisVoice[] {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return [];
+    try {
+      const live = window.speechSynthesis.getVoices();
+      if (live && live.length > 0) {
+        this.cachedVoices = live;
+        return live;
+      }
+    } catch {
+      // ignore
+    }
+    return this.cachedVoices;
+  }
+
+  private waitForVoices(timeoutMs: number = 350): Promise<SpeechSynthesisVoice[]> {
+    const existing = this.getAvailableVoices();
+    if (existing.length > 0) return Promise.resolve(existing);
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      return Promise.resolve([]);
+    }
+
+    return new Promise((resolve) => {
+      let settled = false;
+      const done = () => {
+        if (settled) return;
+        settled = true;
+        resolve(this.getAvailableVoices());
+      };
+
+      const timer = window.setTimeout(done, timeoutMs);
+      const onVoices = () => {
+        const list = this.getAvailableVoices();
+        if (list.length > 0) {
+          window.clearTimeout(timer);
+          if (typeof window.speechSynthesis.removeEventListener === 'function') {
+            window.speechSynthesis.removeEventListener('voiceschanged', onVoices);
+          }
+          done();
+        }
+      };
+
+      try {
+        if (typeof window.speechSynthesis.addEventListener === 'function') {
+          window.speechSynthesis.addEventListener('voiceschanged', onVoices);
+        }
+      } catch {
+        // ignore
+      }
+    });
+  }
 
   private clearTimers() {
     if (this.timerId !== null) {
@@ -521,88 +621,125 @@ class OfflineSpeechRecitationController {
       window.clearTimeout(this.clausePauseTimeoutId);
       this.clausePauseTimeoutId = null;
     }
+    if (this.cancelDelayTimeoutId !== null) {
+      window.clearTimeout(this.cancelDelayTimeoutId);
+      this.cancelDelayTimeoutId = null;
+    }
+    if (this.keepAliveIntervalId !== null) {
+      window.clearInterval(this.keepAliveIntervalId);
+      this.keepAliveIntervalId = null;
+    }
+  }
+
+  private sortVoicePreference(list: SpeechSynthesisVoice[], preferFemale: boolean): SpeechSynthesisVoice[] {
+    const score = (v: SpeechSynthesisVoice): number => {
+      let s = 0;
+      if (v.localService) s += 100;
+      if (v.default) s += 5;
+      const isFem = /female|woman|zira|samantha|victoria|karen|lekha|heera|kalpana|fiona|serena|sara|aria/i.test(
+        v.name
+      );
+      const isMale = /male|man|daniel|david|mark|alex|rishi|prabhat|asad|uzair|george|arthur/i.test(v.name);
+      if (preferFemale && isFem) s += 20;
+      if (!preferFemale && isMale) s += 20;
+      return s;
+    };
+    return [...list].sort((a, b) => score(b) - score(a));
+  }
+
+  /**
+   * Builds an ordered cascade of offline-capable voice candidates.
+   * When disconnected (!navigator.onLine), strictly filters to localService === true first
+   * so cloud voices never silently stall playback offline.
+   */
+  private getVoiceCandidates(
+    language: OfflineRecitationLanguage,
+    urduReciterId: string,
+    voicesOverride?: SpeechSynthesisVoice[]
+  ): VoiceCandidate[] {
+    const allVoices = voicesOverride || this.getAvailableVoices();
+    if (!allVoices || allVoices.length === 0) return [];
+
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+    const localOnly = allVoices.filter((v) => v.localService);
+    // When offline and local OS voices exist, use strictly local voices so cloud TTS never hangs
+    const primaryPool = isOffline && localOnly.length > 0 ? localOnly : allVoices;
+    const preferFemale = language === 'ur' && urduReciterId === 'farhat';
+
+    const candidates: VoiceCandidate[] = [];
+    const seenUris = new Set<string>();
+    const addMatches = (list: SpeechSynthesisVoice[], tier: OfflineVoiceTier) => {
+      for (const v of this.sortVoicePreference(list, preferFemale)) {
+        const key = `${v.voiceURI}|${v.name}|${tier}`;
+        if (!seenUris.has(key)) {
+          seenUris.add(key);
+          candidates.push({ voice: v, tier });
+        }
+      }
+    };
+
+    if (language === 'en') {
+      const enGbUs = primaryPool.filter((v) => {
+        const l = v.lang.toLowerCase();
+        return l.startsWith('en-gb') || l.startsWith('en-us');
+      });
+      const enOther = primaryPool.filter((v) => v.lang.toLowerCase().startsWith('en'));
+      addMatches(enGbUs, 'native_en');
+      addMatches(enOther, 'native_en');
+      addMatches(localOnly, 'native_en');
+      if (!isOffline) addMatches(allVoices, 'native_en');
+      return candidates;
+    }
+
+    // Urdu multi-tier offline cascade:
+    // 1. Native Urdu (localService preferred, or online if connected)
+    const urVoices = primaryPool.filter(
+      (v) => v.lang.toLowerCase().startsWith('ur') || v.name.toLowerCase().includes('urdu')
+    );
+    addMatches(urVoices, 'native_ur');
+
+    // 2. Hindi (hi-IN) with Devanagari phonetic Quranic transliteration
+    const hiVoices = primaryPool.filter(
+      (v) => v.lang.toLowerCase().startsWith('hi') || v.name.toLowerCase().includes('hindi')
+    );
+    addMatches(hiVoices, 'phonetic_hi');
+
+    // 3. Indian English / English with Romanized Urdu transliteration
+    const enInVoices = primaryPool.filter((v) => v.lang.toLowerCase() === 'en-in');
+    const enVoices = primaryPool.filter((v) => v.lang.toLowerCase().startsWith('en'));
+    addMatches(enInVoices, 'phonetic_roman');
+    addMatches(enVoices, 'phonetic_roman');
+
+    // 4. Any remaining local OS voice as safe offline fallback
+    addMatches(localOnly, 'phonetic_roman');
+    if (!isOffline) addMatches(allVoices, 'phonetic_roman');
+
+    return candidates;
   }
 
   private pickBestOfflineVoice(
     language: OfflineRecitationLanguage,
     urduReciterId: string
   ): SelectedVoiceResult {
-    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+    const candidates = this.getVoiceCandidates(language, urduReciterId);
+    if (candidates.length === 0) {
       return { voice: null, tier: 'timer_only' };
     }
-    const voices = window.speechSynthesis.getVoices();
-    if (!voices || voices.length === 0) {
-      return { voice: null, tier: 'timer_only' };
+    return candidates[0];
+  }
+
+  public hasWorkingSpeech(
+    language: OfflineRecitationLanguage = this.currentLanguage,
+    urduReciterId: string = this.currentUrduReciterId
+  ): boolean {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) return false;
+    const candidates = this.getVoiceCandidates(language, urduReciterId);
+    if (candidates.length === 0) return false;
+    const isOffline = typeof navigator !== 'undefined' && !navigator.onLine;
+    if (isOffline) {
+      return candidates.some((c) => c.voice.localService);
     }
-
-    const preferLocal = (list: SpeechSynthesisVoice[], preferFemale = false) => {
-      const localList = list.filter((v) => v.localService);
-      const pool = localList.length > 0 ? localList : list;
-      if (preferFemale) {
-        const fem = pool.find((v) =>
-          /female|woman|zira|samantha|victoria|karen|lekha|heera|kalpana|fiona|serena|sara|aria/i.test(
-            v.name
-          )
-        );
-        if (fem) return fem;
-      } else {
-        const male = pool.find((v) =>
-          /male|man|daniel|david|mark|alex|rishi|prabhat|asad|uzair|george|arthur/i.test(v.name)
-        );
-        if (male) return male;
-      }
-      return pool[0] || null;
-    };
-
-    if (language === 'en') {
-      const enVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('en'));
-      if (enVoices.length > 0) {
-        const gbOrUs = enVoices.filter(
-          (v) =>
-            v.lang.toLowerCase().startsWith('en-gb') ||
-            v.lang.toLowerCase().startsWith('en-us')
-        );
-        return {
-          voice: preferLocal(gbOrUs.length > 0 ? gbOrUs : enVoices, false),
-          tier: 'native_en',
-        };
-      }
-      return { voice: voices[0], tier: 'native_en' };
-    }
-
-    // Urdu voice selection
-    const preferFemale = urduReciterId === 'farhat';
-    const urVoices = voices.filter(
-      (v) =>
-        v.lang.toLowerCase().startsWith('ur') ||
-        v.name.toLowerCase().includes('urdu')
-    );
-    if (urVoices.length > 0) {
-      return { voice: preferLocal(urVoices, preferFemale), tier: 'native_ur' };
-    }
-
-    // Tier 2 for Urdu: Hindi (hi-IN) with Quranic Urdu-to-Devanagari phonetic transliteration
-    const hiVoices = voices.filter(
-      (v) =>
-        v.lang.toLowerCase().startsWith('hi') ||
-        v.name.toLowerCase().includes('hindi')
-    );
-    if (hiVoices.length > 0) {
-      return { voice: preferLocal(hiVoices, preferFemale), tier: 'phonetic_hi' };
-    }
-
-    // Tier 3 for Urdu: Indian English or English OS voice with Romanized Urdu
-    const enInVoices = voices.filter((v) => v.lang.toLowerCase() === 'en-in');
-    if (enInVoices.length > 0) {
-      return { voice: preferLocal(enInVoices, preferFemale), tier: 'phonetic_roman' };
-    }
-
-    const enVoices = voices.filter((v) => v.lang.toLowerCase().startsWith('en'));
-    if (enVoices.length > 0) {
-      return { voice: preferLocal(enVoices, preferFemale), tier: 'phonetic_roman' };
-    }
-
-    return { voice: voices[0], tier: 'phonetic_roman' };
+    return true;
   }
 
   public getEngineStatus(
@@ -610,37 +747,44 @@ class OfflineSpeechRecitationController {
     urduReciterId: string = 'shamshad'
   ): { tier: OfflineVoiceTier; label: string; isOfflineCapable: boolean } {
     const { tier, voice } = this.pickBestOfflineVoice(language, urduReciterId);
+    if (!voice) {
+      return {
+        tier: 'timer_only',
+        label: 'No device TTS voice found',
+        isOfflineCapable: false,
+      };
+    }
     if (language === 'en') {
       return {
         tier,
-        label: voice ? `Offline English (${voice.name})` : 'Offline English Sync Mode',
-        isOfflineCapable: true,
+        label: `Offline English (${voice.name})`,
+        isOfflineCapable: voice.localService,
       };
     }
     switch (tier) {
       case 'native_ur':
         return {
           tier,
-          label: `Offline Urdu (${voice?.name || 'ur-PK'})`,
-          isOfflineCapable: true,
+          label: `Offline Urdu (${voice.name})`,
+          isOfflineCapable: voice.localService,
         };
       case 'phonetic_hi':
         return {
           tier,
           label: 'Offline Urdu Phonetic Voice',
-          isOfflineCapable: true,
+          isOfflineCapable: voice.localService,
         };
       case 'phonetic_roman':
         return {
           tier,
           label: 'Offline Urdu Syllable Voice',
-          isOfflineCapable: true,
+          isOfflineCapable: voice.localService,
         };
       default:
         return {
           tier: 'timer_only',
-          label: 'Offline Urdu Sync Mode',
-          isOfflineCapable: true,
+          label: 'No device TTS voice found',
+          isOfflineCapable: false,
         };
     }
   }
@@ -724,100 +868,174 @@ class OfflineSpeechRecitationController {
       }
     }, 100);
 
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      try {
-        window.speechSynthesis.cancel();
-        const { voice, tier } = this.pickBestOfflineVoice(
-          this.currentLanguage,
-          this.currentUrduReciterId
-        );
-        this.activeTier = tier;
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      this.usingNativeSpeech = false;
+      this.activeTier = 'timer_only';
+      return;
+    }
 
-        if (!voice) {
-          this.usingNativeSpeech = false;
+    const beginWithVoices = (voicesList: SpeechSynthesisVoice[]) => {
+      if (seq !== this.sessionSeq || this.finished || !this.isPlaying || this.isPaused) return;
+
+      const candidates = this.getVoiceCandidates(
+        this.currentLanguage,
+        this.currentUrduReciterId,
+        voicesList
+      );
+
+      if (candidates.length === 0) {
+        this.usingNativeSpeech = false;
+        this.activeTier = 'timer_only';
+        return;
+      }
+
+      let candidateIdx = 0;
+      let clauseIdx = -1;
+      let currentClauses: string[] = [];
+
+      const prepareForCandidate = (idx: number) => {
+        const chosen = candidates[idx];
+        this.activeTier = chosen.tier;
+        const prepared = this.prepareSpokenText(rawText, this.currentLanguage, chosen.tier);
+        currentClauses = splitIntoClauses(prepared);
+        if (clauseIdx < 0) {
+          clauseIdx = Math.min(
+            currentClauses.length - 1,
+            Math.max(0, Math.floor(startClauseFraction * currentClauses.length))
+          );
+        } else {
+          clauseIdx = Math.min(currentClauses.length - 1, clauseIdx);
+        }
+      };
+
+      prepareForCandidate(candidateIdx);
+      this.usingNativeSpeech = true;
+
+      const baseMultiplier =
+        this.currentLanguage === 'en'
+          ? 0.94
+          : this.currentUrduReciterId === 'farhat'
+          ? 0.88
+          : 0.91;
+      const clarityRate = Math.max(0.65, Math.min(1.4, this.playbackSpeed * baseMultiplier));
+      const pitch =
+        this.currentLanguage === 'ur' && this.currentUrduReciterId === 'farhat'
+          ? 1.07
+          : this.currentLanguage === 'ur'
+          ? 0.95
+          : 1.0;
+
+      const speakNextClause = () => {
+        if (seq !== this.sessionSeq || this.finished || !this.isPlaying || this.isPaused) {
+          return;
+        }
+        if (clauseIdx >= currentClauses.length) {
+          finishOnce();
           return;
         }
 
-        const prepared = this.prepareSpokenText(rawText, this.currentLanguage, tier);
-        const clauses = splitIntoClauses(prepared);
-        this.usingNativeSpeech = true;
+        const chosen = candidates[candidateIdx];
+        if (!chosen) {
+          this.usingNativeSpeech = false;
+          this.activeTier = 'timer_only';
+          return;
+        }
 
-        const baseMultiplier =
-          this.currentLanguage === 'en'
-            ? 0.94
-            : this.currentUrduReciterId === 'farhat'
-            ? 0.88
-            : 0.91;
-        const clarityRate = Math.max(0.65, Math.min(1.4, this.playbackSpeed * baseMultiplier));
-        const pitch =
-          this.currentLanguage === 'ur' && this.currentUrduReciterId === 'farhat'
-            ? 1.07
-            : this.currentLanguage === 'ur'
-            ? 0.95
-            : 1.0;
+        const clauseText = currentClauses[clauseIdx];
+        const utterance = new SpeechSynthesisUtterance(clauseText);
+        utterance.voice = chosen.voice;
+        utterance.lang =
+          chosen.voice.lang || (this.currentLanguage === 'ur' ? 'ur-PK' : 'en-US');
+        utterance.rate = clarityRate;
+        utterance.pitch = pitch;
+        utterance.volume = 1.0;
 
-        let clauseIdx = Math.min(
-          clauses.length - 1,
-          Math.max(0, Math.floor(startClauseFraction * clauses.length))
-        );
+        const startTime = performance.now();
+        let handledOutcome = false;
 
-        const speakNextClause = () => {
-          if (seq !== this.sessionSeq || this.finished || !this.isPlaying || this.isPaused) {
-            return;
-          }
-          if (clauseIdx >= clauses.length) {
-            finishOnce();
-            return;
-          }
-
-          const clauseText = clauses[clauseIdx];
-          const utterance = new SpeechSynthesisUtterance(clauseText);
-          utterance.voice = voice;
-          utterance.lang =
-            voice.lang || (this.currentLanguage === 'ur' ? 'ur-PK' : 'en-US');
-          utterance.rate = clarityRate;
-          utterance.pitch = pitch;
-          utterance.volume = 1.0;
-
-          const startTime = performance.now();
-
-          utterance.onend = () => {
-            if (seq !== this.sessionSeq || this.finished || !this.isPlaying) return;
-            const ranMs = performance.now() - startTime;
-            if (ranMs < 110 && clauseText.length > 6) {
-              this.usingNativeSpeech = false;
-              return;
-            }
-            clauseIdx += 1;
-            if (clauseIdx < clauses.length) {
-              this.clausePauseTimeoutId = window.setTimeout(speakNextClause, 130);
-            } else {
-              finishOnce();
-            }
-          };
-
-          utterance.onerror = () => {
-            if (seq !== this.sessionSeq) return;
+        const tryFallbackOrContinue = () => {
+          if (handledOutcome || seq !== this.sessionSeq || this.finished || !this.isPlaying) return;
+          handledOutcome = true;
+          if (candidateIdx + 1 < candidates.length) {
+            candidateIdx += 1;
+            prepareForCandidate(candidateIdx);
+            this.clausePauseTimeoutId = window.setTimeout(speakNextClause, 40);
+          } else {
             this.usingNativeSpeech = false;
-          };
-
-          window.speechSynthesis.speak(utterance);
+            this.activeTier = 'timer_only';
+          }
         };
 
-        speakNextClause();
-
-        // Safety timeout so playback never hangs if OS speech engine stalls
-        const remainingEst = Math.max(2, this.estimatedDuration - this.elapsedBeforePause);
-        this.safetyTimeoutId = window.setTimeout(() => {
-          if (seq === this.sessionSeq && !this.finished && this.isPlaying && !this.isPaused) {
+        utterance.onend = () => {
+          if (handledOutcome || seq !== this.sessionSeq || this.finished || !this.isPlaying) return;
+          const ranMs = performance.now() - startTime;
+          if (ranMs < 85 && clauseText.length > 6) {
+            tryFallbackOrContinue();
+            return;
+          }
+          handledOutcome = true;
+          clauseIdx += 1;
+          if (clauseIdx < currentClauses.length) {
+            this.clausePauseTimeoutId = window.setTimeout(speakNextClause, 120);
+          } else {
             finishOnce();
           }
-        }, (remainingEst + 6) * 1000);
+        };
+
+        utterance.onerror = () => {
+          if (seq !== this.sessionSeq) return;
+          tryFallbackOrContinue();
+        };
+
+        try {
+          window.speechSynthesis.speak(utterance);
+        } catch {
+          tryFallbackOrContinue();
+        }
+      };
+
+      // Chrome >14s utterance stall keepalive
+      this.keepAliveIntervalId = window.setInterval(() => {
+        if (!this.isPlaying || this.isPaused || seq !== this.sessionSeq) return;
+        try {
+          if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+            window.speechSynthesis.pause();
+            window.speechSynthesis.resume();
+          }
+        } catch {
+          // ignore
+        }
+      }, 9000);
+
+      // Avoid Chromium's cancel() + immediate speak() silent-drop bug:
+      // only cancel if speaking/pending, and wait 50ms before speaking.
+      try {
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+          window.speechSynthesis.cancel();
+          this.cancelDelayTimeoutId = window.setTimeout(speakNextClause, 50);
+        } else {
+          speakNextClause();
+        }
       } catch {
-        this.usingNativeSpeech = false;
+        speakNextClause();
       }
+
+      // Safety timeout so playback never hangs if OS speech engine stalls
+      const remainingEst = Math.max(2, this.estimatedDuration - this.elapsedBeforePause);
+      this.safetyTimeoutId = window.setTimeout(() => {
+        if (seq === this.sessionSeq && !this.finished && this.isPlaying && !this.isPaused) {
+          finishOnce();
+        }
+      }, (remainingEst + 6) * 1000);
+    };
+
+    const currentVoices = this.getAvailableVoices();
+    if (currentVoices.length > 0) {
+      beginWithVoices(currentVoices);
     } else {
-      this.usingNativeSpeech = false;
+      this.waitForVoices(350).then((loadedVoices) => {
+        beginWithVoices(loadedVoices);
+      });
     }
   }
 
@@ -908,7 +1126,9 @@ class OfflineSpeechRecitationController {
 
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       try {
-        window.speechSynthesis.cancel();
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+          window.speechSynthesis.cancel();
+        }
       } catch {
         // ignore
       }

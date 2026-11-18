@@ -12,6 +12,7 @@ import {
 import { ALL_SURAHS } from '../data/surahList';
 import { BUNDLED_SURAHS } from '../data/defaultSurahs';
 import { HADITH_CHAPTER_TOPICS } from '../data/hadithChapters';
+import { getAllCachedSurahsSync } from '../utils/offlineQuranStore';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -53,7 +54,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<SearchTab>('all');
 
-  // Search surahs, bundled verses, and hadiths
+  // Search surahs, bundled + offline-cached verses, and hadiths
   const results = useMemo(() => {
     if (!query.trim()) {
       return { surahs: [], verses: [], hadiths: [], roots: [] };
@@ -69,7 +70,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       return matchNum || matchEng || matchMean || matchAr;
     }).slice(0, 6);
 
-    // 2. Verse matches
+    // 2. Verse matches across offline-cached Surahs + bundled defaults
     const matchedVerses: {
       surahNumber: number;
       surahName: string;
@@ -78,11 +79,19 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       textEnglish: string;
     }[] = [];
 
-    Object.values(BUNDLED_SURAHS).forEach((surah) => {
-      surah.ayahs.forEach((ayah) => {
+    const searchableMap = new Map(
+      Object.values(BUNDLED_SURAHS).map((s) => [s.number, s])
+    );
+    getAllCachedSurahsSync().forEach((s) => {
+      searchableMap.set(s.number, s);
+    });
+
+    for (const surah of searchableMap.values()) {
+      for (const ayah of surah.ayahs) {
         const inEng = ayah.textEnglish.toLowerCase().includes(q);
         const inAr = ayah.textArabic.includes(q);
-        if (inEng || inAr) {
+        const inUr = ayah.textUrdu?.toLowerCase().includes(q);
+        if (inEng || inAr || inUr) {
           matchedVerses.push({
             surahNumber: surah.number,
             surahName: surah.nameEnglish,
@@ -90,9 +99,11 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             textArabic: ayah.textArabic,
             textEnglish: ayah.textEnglish,
           });
+          if (matchedVerses.length >= 12) break;
         }
-      });
-    });
+      }
+      if (matchedVerses.length >= 12) break;
+    }
 
     // 3. Hadith Topic matches
     const matchedHadiths = HADITH_CHAPTER_TOPICS.filter((h) => {

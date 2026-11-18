@@ -277,6 +277,32 @@ export function markAyahsReadToday(surahNumber: number, ayahNumbers: number[]): 
 }
 
 // OFFLINE SURAH & AUDIO CACHING
+const cachedAudioUrlSet = new Set<string>();
+let audioCacheWarmed = false;
+
+export async function warmAudioCacheIndex(): Promise<void> {
+  if (typeof window === 'undefined' || !('caches' in window)) return;
+  try {
+    const cache = await caches.open(AUDIO_CACHE_NAME);
+    const keys = await cache.keys();
+    cachedAudioUrlSet.clear();
+    for (const req of keys) {
+      cachedAudioUrlSet.add(req.url);
+    }
+    audioCacheWarmed = true;
+  } catch {
+    // ignore
+  }
+}
+
+export function isAudioUrlCachedSync(url: string): boolean {
+  return cachedAudioUrlSet.has(url);
+}
+
+export function isAudioCacheIndexWarmed(): boolean {
+  return audioCacheWarmed;
+}
+
 export function getDownloadedSurahsList(): DownloadedSurahInfo[] {
   try {
     const raw = localStorage.getItem(DOWNLOADS_KEY);
@@ -301,6 +327,17 @@ export function getOfflineSurahDetail(surahNumber: number): SurahDetail | null {
 }
 
 /**
+ * Frees legacy localStorage Surah blobs once safely persisted in IndexedDB.
+ */
+function clearLegacySurahFromLocalStorage(surahNumber: number): void {
+  try {
+    localStorage.removeItem(`${OFFLINE_SURAH_PREFIX}${surahNumber}`);
+  } catch {
+    // ignore
+  }
+}
+
+/**
  * Fetches and caches a single audio URL using CORS so cached Blob playback works offline
  * and through Web Audio API clarity filters. Skips if already cached.
  */
@@ -309,11 +346,15 @@ export async function cacheAudioUrl(url: string): Promise<boolean> {
   try {
     const cache = await caches.open(AUDIO_CACHE_NAME);
     const existing = await cache.match(url);
-    if (existing) return true;
+    if (existing) {
+      cachedAudioUrlSet.add(url);
+      return true;
+    }
 
     const response = await fetch(url, { mode: 'cors', credentials: 'omit' });
     if (!response.ok) return false;
     await cache.put(url, response);
+    cachedAudioUrlSet.add(url);
     return true;
   } catch {
     return false;
@@ -321,11 +362,16 @@ export async function cacheAudioUrl(url: string): Promise<boolean> {
 }
 
 export async function isAudioUrlCached(url: string): Promise<boolean> {
+  if (cachedAudioUrlSet.has(url)) return true;
   if (typeof window === 'undefined' || !('caches' in window)) return false;
   try {
     const cache = await caches.open(AUDIO_CACHE_NAME);
     const match = await cache.match(url);
-    return Boolean(match);
+    if (match) {
+      cachedAudioUrlSet.add(url);
+      return true;
+    }
+    return false;
   } catch {
     return false;
   }
@@ -350,6 +396,7 @@ export async function getLocalOnlyCachedAudioUrl(url: string): Promise<string | 
     const cache = await caches.open(AUDIO_CACHE_NAME);
     const match = await cache.match(url);
     if (match) {
+      cachedAudioUrlSet.add(url);
       const blob = await match.blob();
       return URL.createObjectURL(blob);
     }
@@ -370,6 +417,7 @@ export async function getCachedAudioUrl(url: string): Promise<string> {
     const cache = await caches.open(AUDIO_CACHE_NAME);
     const match = await cache.match(url);
     if (match) {
+      cachedAudioUrlSet.add(url);
       const blob = await match.blob();
       return URL.createObjectURL(blob);
     }
@@ -384,9 +432,8 @@ export async function getCachedAudioUrl(url: string): Promise<string> {
 }
 
 /**
- * Saves a Surah's text, translations (English, Urdu & Assamese), and precise Tafsir offline,
- * and caches Arabic Qari recitation audio into Cache Storage.
- * (All English & Urdu recitations work 100% built-in offline for all 114 Surahs.)
+ * Saves a Surah's text, translations (English, Urdu & Assamese), and precise Tafsir in IndexedDB
+ * (no 5MB localStorage limit), and optionally caches Arabic Qari + English + Urdu MP3s into CacheStorage.
  */
 export async function saveSurahOffline(
   detail: SurahDetail,
@@ -397,7 +444,9 @@ export async function saveSurahOffline(
   signal?: AbortSignal
 ): Promise<void> {
   try {
-    localStorage.setItem(`${OFFLINE_SURAH_PREFIX}${detail.number}`, JSON.stringify(detail));
+    const { saveSurahToIdb } = await import('./offlineQuranStore');
+    await saveSurahToIdb(detail);
+    clearLegacySurahFromLocalStorage(detail.number);
 
     const jsonSize = new Blob([JSON.stringify(detail)]).size;
     let totalSizeKb = Math.round(jsonSize / 1024);
@@ -405,17 +454,27 @@ export async function saveSurahOffline(
     if (downloadAudio && 'caches' in window) {
       try {
         const { getAyahAudioUrlForLanguage } = await import('../data/reciters');
-        const total = detail.ayahs.length; // Arabic Qari MP3s (English & Urdu recitations are 100% built-in offline)
-        let done = 0;
-
+        const urlsToCache: string[] = [];
         for (const ayah of detail.ayahs) {
-          if (signal?.aborted) break;
+          urlsToCache.push(
+            getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'ar', reciterId, urduReciterId),
+            getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'en', reciterId, urduReciterId),
+            getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'ur', reciterId, urduReciterId)
+          );
+        }
 
-          // Arabic Qari Audio
-          const arUrl = getAyahAudioUrlForLanguage(detail.number, ayah.numberInSurah, 'ar', reciterId, urduReciterId);
-          if (await cacheAudioUrl(arUrl)) totalSizeKb += 45;
-          done++;
-          onProgress?.(done, total);
+        const total = detail.ayahs.length;
+        let completedAyahs = 0;
+        const CONCURRENCY = 6;
+
+        for (let i = 0; i < urlsToCache.length; i += CONCURRENCY) {
+          if (signal?.aborted) break;
+          const chunk = urlsToCache.slice(i, i + CONCURRENCY);
+          const results = await Promise.all(chunk.map((u) => cacheAudioUrl(u)));
+          const cachedCount = results.filter(Boolean).length;
+          totalSizeKb += cachedCount * 45;
+          completedAyahs = Math.min(total, Math.floor((i + chunk.length) / 3));
+          onProgress?.(completedAyahs, total);
         }
       } catch (cacheErr) {
         console.warn('Cache API unavailable for audio:', cacheErr);
@@ -444,11 +503,56 @@ export async function saveSurahOffline(
 }
 
 /**
+ * Syncs lightweight offline metadata list with Surahs already stored in IndexedDB.
+ */
+export async function syncAllSurahsMetadataWithIdb(): Promise<DownloadedSurahInfo[]> {
+  try {
+    const { getAllIdbSurahNumbers, getSurahFromIdb } = await import('./offlineQuranStore');
+    const { ALL_SURAHS } = await import('../data/surahList');
+    const storedNums = await getAllIdbSurahNumbers();
+    const storedSet = new Set(storedNums);
+    const existingList = getDownloadedSurahsList();
+    const existingMap = new Map(existingList.map((s) => [s.surahNumber, s]));
+    const nowIso = new Date().toISOString();
+
+    const updated: DownloadedSurahInfo[] = [];
+    for (const meta of ALL_SURAHS) {
+      const prev = existingMap.get(meta.number);
+      if (storedSet.has(meta.number) || prev) {
+        let sizeKb = prev?.sizeKb || 55;
+        if (!prev) {
+          const detail = await getSurahFromIdb(meta.number);
+          if (detail) {
+            sizeKb = Math.max(2, Math.round(new Blob([JSON.stringify(detail)]).size / 1024));
+          }
+        }
+        updated.push({
+          surahNumber: meta.number,
+          nameEnglish: prev?.nameEnglish || meta.nameEnglish,
+          nameArabic: prev?.nameArabic || meta.nameArabic,
+          ayahCount: prev?.ayahCount || meta.numberOfAyahs,
+          downloadedAt: prev?.downloadedAt || nowIso,
+          sizeKb,
+          hasAudio: Boolean(prev?.hasAudio),
+        });
+      }
+    }
+
+    localStorage.setItem(DOWNLOADS_KEY, JSON.stringify(updated));
+    return updated;
+  } catch {
+    return getDownloadedSurahsList();
+  }
+}
+
+/**
  * Removes a Surah and its cached audio files.
  */
 export async function deleteOfflineSurah(surahNumber: number): Promise<DownloadedSurahInfo[]> {
   try {
-    localStorage.removeItem(`${OFFLINE_SURAH_PREFIX}${surahNumber}`);
+    clearLegacySurahFromLocalStorage(surahNumber);
+    const { deleteSurahFromIdb } = await import('./offlineQuranStore');
+    await deleteSurahFromIdb(surahNumber);
 
     if ('caches' in window) {
       try {
@@ -458,6 +562,7 @@ export async function deleteOfflineSurah(surahNumber: number): Promise<Downloade
         for (const req of keys) {
           if (req.url.includes(`/${sStr}`)) {
             await cache.delete(req);
+            cachedAudioUrlSet.delete(req.url);
           }
         }
       } catch (cacheErr) {
@@ -474,7 +579,7 @@ export async function deleteOfflineSurah(surahNumber: number): Promise<Downloade
 }
 
 /**
- * Returns summary stats of offline storage (text + audio files cached).
+ * Returns summary stats of offline storage (IndexedDB Surahs + cached audio clips).
  */
 export async function getOfflineCacheStats(): Promise<{
   surahsCount: number;
@@ -482,8 +587,18 @@ export async function getOfflineCacheStats(): Promise<{
   totalKb: number;
 }> {
   const downloaded = getDownloadedSurahsList();
-  const surahsCount = downloaded.length;
+  let idbCount = downloaded.length;
+  try {
+    const { getIdbSurahCount } = await import('./offlineQuranStore');
+    idbCount = Math.max(idbCount, await getIdbSurahCount());
+  } catch {
+    // ignore
+  }
+  const surahsCount = idbCount;
   let totalKb = downloaded.reduce((acc, s) => acc + s.sizeKb, 0);
+  if (totalKb === 0 && idbCount > 0) {
+    totalKb = idbCount * 58;
+  }
   let audioFilesCount = 0;
 
   if (typeof window !== 'undefined' && 'caches' in window) {
@@ -491,7 +606,7 @@ export async function getOfflineCacheStats(): Promise<{
       const cache = await caches.open(AUDIO_CACHE_NAME);
       const keys = await cache.keys();
       audioFilesCount = keys.length;
-      totalKb += audioFilesCount * 45; // ~45KB per ayah audio clip estimate
+      totalKb += audioFilesCount * 45;
     } catch (e) {
       console.warn('Error reading audio cache stats:', e);
     }
@@ -502,7 +617,7 @@ export async function getOfflineCacheStats(): Promise<{
 
 /**
  * Downloads/caches all 114 Surahs (Arabic, English, Urdu, Assamese text + complete English Tafsir Ibn Kathir,
- * Assamese Al-Mukhtasar Tafsir & Urdu Tafsir Ibn Kathir) into local device storage for 100% offline access.
+ * Assamese Al-Mukhtasar Tafsir & Urdu Tafsir Ibn Kathir) into IndexedDB for 100% offline reading.
  */
 export async function downloadAllSurahsTextAndTafsir(
   onProgress?: (info: { current: number; total: number; currentSurahName: string }) => void
@@ -520,19 +635,7 @@ export async function downloadAllSurahsTextAndTafsir(
         fetchSurahDetail(meta.number),
         preloadSurahTafsirs(meta.number, { includeAssamese: true, includeUrdu: true }),
       ]);
-      const currentList = getDownloadedSurahsList();
-      const prev = currentList.find((s) => s.surahNumber === meta.number);
-      const list = currentList.filter((s) => s.surahNumber !== meta.number);
-      list.push({
-        surahNumber: meta.number,
-        nameEnglish: detail.nameEnglish,
-        nameArabic: detail.nameArabic,
-        ayahCount: detail.ayahs.length,
-        downloadedAt: new Date().toISOString(),
-        sizeKb: Math.round(new Blob([JSON.stringify(detail)]).size / 1024),
-        hasAudio: Boolean(prev?.hasAudio),
-      });
-      localStorage.setItem(DOWNLOADS_KEY, JSON.stringify(list));
+      await saveSurahOffline(detail, false);
     } catch (err) {
       console.warn(`Failed caching Surah ${meta.number} & Tafsir for offline:`, err);
     }
@@ -540,10 +643,9 @@ export async function downloadAllSurahsTextAndTafsir(
 }
 
 /**
- * Downloads Arabic Qari recitation audio for core & beloved Surahs:
+ * Downloads Arabic Qari + English + Urdu MP3 recitations for core & beloved Surahs:
  * Al-Fatihah (1), Yasin (36), Ar-Rahman (55), Al-Waqi'ah (56), Al-Mulk (67),
  * Al-Ikhlas (112), Al-Falaq (113), An-Nas (114), and any additional favorited Surahs.
- * (English & Urdu recitations are already 100% built-in offline for all 114 Surahs.)
  */
 export async function downloadCoreAudioOffline(
   favoriteSurahs: number[] = [],
@@ -565,7 +667,7 @@ export async function downloadCoreAudioOffline(
         current: idx + 1,
         total: totalSurahs,
         surahName: detail.nameEnglish,
-        step: `Caching Arabic Qari MP3s for ${detail.nameEnglish}`,
+        step: `Caching Arabic + En + Ur audio for ${detail.nameEnglish}`,
       });
       await saveSurahOffline(detail, true, reciterId, urduReciterId, undefined, signal);
     } catch (err) {
@@ -575,8 +677,7 @@ export async function downloadCoreAudioOffline(
 }
 
 /**
- * Downloads complete Arabic Qari audio (all 114 Surahs) locally.
- * English & Urdu recitations are already 100% built-in offline across all 114 Surahs.
+ * Downloads complete Arabic Qari + English + Urdu MP3 audio (all 114 Surahs) into CacheStorage.
  */
 export async function downloadAllQuranAudioOffline(
   reciterId: string = 'alafasy',
@@ -597,7 +698,7 @@ export async function downloadAllQuranAudioOffline(
         current: i + 1,
         total,
         surahName: detail.nameEnglish,
-        step: `Caching Surah ${detail.nameEnglish} (${i + 1}/114)`,
+        step: `Caching ${detail.nameEnglish} (Ar + En + Ur) (${i + 1}/114)`,
       });
       await saveSurahOffline(detail, true, reciterId, urduReciterId, undefined, signal);
     } catch (err) {

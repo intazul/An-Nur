@@ -57,6 +57,8 @@ interface AndroidRecitationViewProps {
   onUpdateProfile?: (updates: Partial<UserProfileData>) => void;
   currentAudioPhase?: 'arabic' | 'urdu' | 'english';
   isCurrentSurahAudioOffline?: boolean;
+  offlineSpeechReady?: boolean;
+  isOnline?: boolean;
   surahAudioDownloadProgress?: { current: number; total: number } | null;
   onDownloadCurrentSurahOffline?: () => void;
   ayahLoopRange?: { enabled: boolean; fromAyah: number; toAyah: number };
@@ -90,6 +92,8 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
   onUpdateProfile,
   currentAudioPhase = 'arabic',
   isCurrentSurahAudioOffline = false,
+  offlineSpeechReady = true,
+  isOnline = true,
   surahAudioDownloadProgress = null,
   onDownloadCurrentSurahOffline,
   ayahLoopRange,
@@ -495,10 +499,15 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             <Volume2 className="w-4 h-4 shrink-0" />
             <span className="truncate">
               {modeBadgeLabel}
-              {(isCurrentSurahAudioOffline ||
-                currentAudioPhase === 'english' ||
-                currentAudioPhase === 'urdu') &&
-                ' · Offline'}
+              {isCurrentSurahAudioOffline
+                ? ' · Offline MP3'
+                : currentAudioPhase === 'english' || currentAudioPhase === 'urdu'
+                ? offlineSpeechReady
+                  ? ' · Offline Voice'
+                  : isOnline
+                  ? ' · Streaming & Caching'
+                  : ' · Save Audio Offline'
+                : ''}
             </span>
           </button>
 
@@ -799,11 +808,11 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                           {surahAudioDownloadProgress
                             ? `Saving ${currentSurah.nameEnglish} (${surahAudioDownloadProgress.current}/${surahAudioDownloadProgress.total})`
                             : isCurrentSurahAudioOffline
-                            ? `${currentSurah.nameEnglish} Arabic Audio Saved Offline`
-                            : `Save ${currentSurah.nameEnglish} Arabic Audio Offline`}
+                            ? `${currentSurah.nameEnglish} Audio Saved Offline`
+                            : `Save ${currentSurah.nameEnglish} Audio Offline`}
                         </div>
                         <div className="text-[10px] opacity-75 truncate">
-                          Caches Arabic Qari MP3s · English & Urdu are 100% built-in offline
+                          Caches Arabic Qari + English + Urdu MP3s locally for 100% offline playback
                         </div>
                       </div>
                     </div>

@@ -137,7 +137,7 @@ export default defineConfig(() => {
         },
         workbox: {
           maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}', 'data/quran/*.json'],
           cleanupOutdatedCaches: true,
           clientsClaim: true,
           skipWaiting: true,
@@ -150,7 +150,7 @@ export default defineConfig(() => {
               options: {
                 cacheName: 'annur-offline-tafsir-quran-v1',
                 expiration: {
-                  maxEntries: 600,
+                  maxEntries: 1000,
                   maxAgeSeconds: 60 * 60 * 24 * 365,
                 },
                 cacheableResponse: {

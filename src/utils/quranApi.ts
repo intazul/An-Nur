@@ -1,6 +1,7 @@
 import { BUNDLED_SURAHS } from '../data/defaultSurahs';
 import { ALL_SURAHS } from '../data/surahList';
 import { Ayah, SurahDetail } from '../types/quran';
+import { getCachedSurahSync, getSurahFromIdb, saveSurahToIdb } from './offlineQuranStore';
 import { getOfflineSurahDetail, saveSurahOffline } from './offlineStorage';
 import { preloadSurahTafsirs } from './offlineTafsirStore';
 import { getPreciseVerseTafsir } from './verseTafsir';
@@ -48,8 +49,9 @@ async function fetchAssameseSurahTranslations(surahNumber: number): Promise<stri
 }
 
 /**
- * Loads a Surah with full offline-first resilience.
- * Prioritizes local bundled static Quran datasets (/data/quran/1..114.json) and local storage,
+ * Loads a Surah with full 100% offline-first resilience.
+ * Prioritizes Memory Cache & IndexedDB (annur_offline_quran_v1),
+ * then precached local static Quran JSON (/data/quran/1..114.json),
  * and preloads the corresponding complete Tafsir dataset into IndexedDB.
  */
 export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail> {
@@ -67,18 +69,24 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
     numberOfAyahs: 10,
   };
 
-  // 1. Check offline persistent storage (instant offline read)
-  // Ensure it has all declared verses and is not an old placeholder
-  const offline = getOfflineSurahDetail(surahNumber);
+  // 1. Check Memory + IndexedDB + Legacy localStorage (instant 100% offline read)
+  const offline =
+    getCachedSurahSync(surahNumber) ||
+    (await getSurahFromIdb(surahNumber)) ||
+    getOfflineSurahDetail(surahNumber);
+
   const isLegacyPlaceholder =
     offline &&
     surahNumber !== 1 &&
     offline.ayahs?.[0]?.textEnglish?.startsWith(`Ayah 1 of Surah `);
 
   if (offline && !isLegacyPlaceholder && offline.ayahs && offline.ayahs.length >= meta.numberOfAyahs) {
+    // Ensure it is persisted cleanly in IndexedDB
+    saveSurahToIdb(offline).catch(() => {});
+
     const missingAssamese = offline.ayahs.some((a) => !a.textAssamese);
     if (missingAssamese) {
-      // Check local static Surah JSON first (works 100% offline)
+      // Check local static Surah JSON first (works 100% offline when precached)
       try {
         const localRes = await fetch(`/data/quran/${surahNumber}.json`);
         if (localRes.ok) {
@@ -125,7 +133,7 @@ export async function fetchSurahDetail(surahNumber: number): Promise<SurahDetail
     return offline;
   }
 
-  // 2. Load from complete local static Quran repository (/data/quran/1..114.json) — 100% offline
+  // 2. Load from complete local static Quran repository (/data/quran/1..114.json) — precached 100% offline
   try {
     const localRes = await fetch(`/data/quran/${surahNumber}.json`);
     if (localRes.ok) {
