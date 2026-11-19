@@ -381,8 +381,8 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                       : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
                   }`}
                 >
-                  <div className="font-urdu font-bold text-xs leading-normal">اردو</div>
-                  <div className="text-[10px] opacity-80">Urdu</div>
+                  <div className="font-bold text-xs leading-normal">Urdu (Roman)</div>
+                  <div className="text-[10px] opacity-80">In English</div>
                 </button>
 
                 {/* Assamese */}
@@ -406,7 +406,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               )}
               {profile.showUrdu && !profile.showAssamese && (
                 <div className="text-[11px] font-medium text-stone-800 dark:text-stone-300 pt-0.5">
-                  Active: Fateh Muhammad Jalandhri Urdu Translation & Tafseer (Assamese disabled)
+                  Active: Fateh Muhammad Jalandhri Urdu (Roman Transliteration in English) & Tafseer (Assamese disabled)
                 </div>
               )}
             </div>
@@ -582,11 +582,11 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           <div className="grid grid-cols-2 gap-2">
             {(
               [
-                { id: 'arabic', title: 'Arabic Only', sub: 'عربي تلاوت' },
-                { id: 'english', title: 'English Audio', sub: '100% Offline Voice' },
-                { id: 'urdu', title: 'Urdu Audio', sub: '100% Offline · اردو ترجمہ' },
-                { id: 'arabic_english', title: 'Arabic + English', sub: 'Sequential · Offline En' },
-                { id: 'arabic_urdu', title: 'Arabic + Urdu', sub: 'پہلے عربی پھر اردو · Offline' },
+                { id: 'arabic', title: 'Arabic Only', sub: 'Original Qari recitation' },
+                { id: 'english', title: 'English Audio', sub: 'Human Studio MP3 · Offline' },
+                { id: 'urdu', title: 'Urdu Audio', sub: 'Shamshad Ali Khan · Male MP3' },
+                { id: 'arabic_english', title: 'Arabic + English', sub: 'Sequential · Studio MP3' },
+                { id: 'arabic_urdu', title: 'Arabic + Urdu', sub: 'Arabic + Male Urdu MP3 · Offline' },
               ] as const
             ).map((opt) => {
               const active =
@@ -625,9 +625,9 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             profile.recitationLanguageMode === 'arabic_urdu') && (
             <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2">
               <div className="text-xs font-bold text-black dark:text-white flex items-center justify-between">
-                <span>Urdu Translation Voice (اردو قاری)</span>
+                <span>Urdu Translation Reciter (Male)</span>
                 <span className="text-[10px] font-mono font-semibold text-stone-700 dark:text-stone-300">
-                  100% Offline
+                  Offline MP3s
                 </span>
               </div>
 

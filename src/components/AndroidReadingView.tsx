@@ -33,6 +33,7 @@ import {
 import { TajweedSignHelpDialog } from './TajweedSignHelpDialog';
 import { getPreciseVerseTafsir } from '../utils/verseTafsir';
 import { getCachedVerseTafsirSync, preloadSurahTafsirs } from '../utils/offlineTafsirStore';
+import { transliterateUrduToRoman } from '../utils/urduTransliteration';
 import { markAyahsReadToday } from '../utils/offlineStorage';
 
 interface AndroidReadingViewProps {
@@ -823,18 +824,21 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     </div>
                   )}
 
-                  {/* Urdu Translation for this Section (mutually exclusive with Assamese) */}
+                  {/* Urdu Translation (English Roman Transliteration) for this Section */}
                   {profile.showUrdu && !profile.showAssamese && (
                     <div
-                      className="pt-1.5 border-t border-stone-200/60 dark:border-stone-800/60 text-right leading-[2.1] font-urdu text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-bold"
-                      dir="rtl"
+                      className="pt-1.5 border-t border-stone-200/60 dark:border-stone-800/60 text-left leading-[1.7] font-book-serif text-[13px] sm:text-[14px] text-stone-900 dark:text-stone-100 font-semibold"
+                      dir="ltr"
                     >
+                      <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-0.5">
+                        Urdu (Roman):
+                      </span>
                       {paragraph.ayahs.map((ayah) => (
-                        <span key={ayah.numberInSurah} className="inline ml-1">
-                          <span className="font-sans text-[11px] font-bold text-black dark:text-white ml-0.5">
+                        <span key={ayah.numberInSurah} className="inline mr-1">
+                          <span className="font-sans text-[11px] font-bold text-black dark:text-white mr-0.5">
                             ({ayah.numberInSurah})
                           </span>
-                          <span>{ayah.textUrdu} </span>
+                          <span>{transliterateUrduToRoman(ayah.textUrdu)} </span>
                         </span>
                       ))}
                     </div>
@@ -878,8 +882,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                         ? getCachedVerseTafsirSync(currentSurah.number, firstAyah.numberInSurah, 'as') ||
                           t.assameseExplanation
                         : profile.showUrdu && !profile.showAssamese
-                        ? getCachedVerseTafsirSync(currentSurah.number, firstAyah.numberInSurah, 'ur') ||
-                          t.urduExplanation
+                        ? transliterateUrduToRoman(
+                            getCachedVerseTafsirSync(currentSurah.number, firstAyah.numberInSurah, 'ur') ||
+                              t.urduExplanation
+                          )
                         : undefined;
                     return (
                       <div
@@ -897,9 +903,9 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                             className={
                               profile.showAssamese && !profile.showUrdu
                                 ? 'font-assamese text-black dark:text-stone-100 font-semibold text-[12px] pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
-                                : 'font-urdu text-black dark:text-stone-100 font-bold text-[12px] text-right pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
+                                : 'font-book-serif text-black dark:text-stone-100 font-medium text-[12px] text-left pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
                             }
-                            dir={profile.showAssamese && !profile.showUrdu ? 'ltr' : 'rtl'}
+                            dir="ltr"
                           >
                             {regionalTafsir}
                           </p>
@@ -1267,14 +1273,17 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 </div>
               )}
 
-              {/* Urdu Translation (mutually exclusive with Assamese) */}
+              {/* Urdu Translation in Roman English Transliteration (mutually exclusive with Assamese) */}
               {profile.showUrdu && !profile.showAssamese && activeVerseAyah.textUrdu && (
-                <div className="pt-1 border-t border-stone-200 dark:border-stone-800 text-right" dir="rtl">
+                <div className="pt-2 border-t border-stone-200 dark:border-stone-800 text-left" dir="ltr">
+                  <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400 block mb-0.5">
+                    Urdu (Roman Transliteration):
+                  </span>
                   <p
-                    className="font-urdu text-black dark:text-stone-100 font-bold"
-                    style={{ fontSize: `${Math.max(15, profile.translationFontSize + 1)}px` }}
+                    className="font-book-serif text-black dark:text-stone-100 font-medium leading-relaxed"
+                    style={{ fontSize: `${Math.max(14, profile.translationFontSize)}px` }}
                   >
-                    {activeVerseAyah.textUrdu}
+                    {transliterateUrduToRoman(activeVerseAyah.textUrdu)}
                   </p>
                 </div>
               )}
@@ -1318,8 +1327,10 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                     ? getCachedVerseTafsirSync(currentSurah.number, activeVerseAyah.numberInSurah, 'as') ||
                       t.assameseExplanation
                     : profile.showUrdu && !profile.showAssamese
-                    ? getCachedVerseTafsirSync(currentSurah.number, activeVerseAyah.numberInSurah, 'ur') ||
-                      t.urduExplanation
+                    ? transliterateUrduToRoman(
+                        getCachedVerseTafsirSync(currentSurah.number, activeVerseAyah.numberInSurah, 'ur') ||
+                          t.urduExplanation
+                      )
                     : undefined;
                 return (
                   <div
@@ -1337,9 +1348,9 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                         className={
                           profile.showAssamese && !profile.showUrdu
                             ? 'font-assamese text-black dark:text-stone-100 font-semibold text-xs pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
-                            : 'font-urdu text-black dark:text-stone-100 font-bold text-xs text-right pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
+                            : 'font-book-serif text-black dark:text-stone-100 font-medium text-xs text-left pt-1 border-t border-stone-200 dark:border-stone-700 line-clamp-3'
                         }
-                        dir={profile.showAssamese && !profile.showUrdu ? 'ltr' : 'rtl'}
+                        dir="ltr"
                       >
                         {regionalTafsir}
                       </p>
@@ -1423,7 +1434,7 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 <span>Reciting Ayah {activePlayingAyah}</span>
                 {(profile.recitationLanguageMode === 'urdu' || profile.recitationLanguageMode === 'arabic_urdu') && (
                   <span className="text-[9px] px-1.5 py-0.2 bg-black text-white dark:bg-white dark:text-black rounded font-bold">
-                    اردو
+                    UR
                   </span>
                 )}
                 {(profile.recitationLanguageMode === 'english' || profile.recitationLanguageMode === 'arabic_english') && (

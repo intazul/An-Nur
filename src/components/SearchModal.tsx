@@ -13,6 +13,7 @@ import { ALL_SURAHS } from '../data/surahList';
 import { BUNDLED_SURAHS } from '../data/defaultSurahs';
 import { HADITH_CHAPTER_TOPICS } from '../data/hadithChapters';
 import { getAllCachedSurahsSync } from '../utils/offlineQuranStore';
+import { transliterateUrduToRoman } from '../utils/urduTransliteration';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -90,7 +91,9 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       for (const ayah of surah.ayahs) {
         const inEng = ayah.textEnglish.toLowerCase().includes(q);
         const inAr = ayah.textArabic.includes(q);
-        const inUr = ayah.textUrdu?.toLowerCase().includes(q);
+        const inUr =
+          ayah.textUrdu?.toLowerCase().includes(q) ||
+          (ayah.textUrdu ? transliterateUrduToRoman(ayah.textUrdu).toLowerCase().includes(q) : false);
         if (inEng || inAr || inUr) {
           matchedVerses.push({
             surahNumber: surah.number,

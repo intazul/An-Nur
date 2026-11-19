@@ -27,8 +27,10 @@ import {
 import {
   downloadAllQuranAudioOffline,
   downloadAllSurahsTextAndTafsir,
+  downloadAllUrduAudioOffline,
   downloadCoreAudioOffline,
   getOfflineCacheStats,
+  UrduAudioSyncProgress,
 } from '../utils/offlineStorage';
 
 interface UserProfileModalProps {
@@ -44,6 +46,8 @@ interface UserProfileModalProps {
   downloadedSurahs: DownloadedSurahInfo[];
   onDeleteDownloadedSurah: (surahNumber: number) => void;
   onRefreshDownloadedSurahs?: () => void;
+  urduAudioSyncProgress?: UrduAudioSyncProgress | null;
+  onUrduAudioSyncUpdate?: (snap: UrduAudioSyncProgress) => void;
   initialTab?: 'profile' | 'bookmarks' | 'offline' | 'reminders';
 }
 
@@ -60,6 +64,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   downloadedSurahs,
   onDeleteDownloadedSurah,
   onRefreshDownloadedSurahs,
+  urduAudioSyncProgress,
+  onUrduAudioSyncUpdate,
   initialTab = 'profile',
 }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'bookmarks' | 'offline' | 'reminders'>(initialTab);
@@ -70,6 +76,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
   // Batch offline downloading state
   const [isDownloadingAllText, setIsDownloadingAllText] = useState(false);
+  const [isDownloadingUrduAudio, setIsDownloadingUrduAudio] = useState(false);
   const [isDownloadingCoreAudio, setIsDownloadingCoreAudio] = useState(false);
   const [isDownloadingAllAudio, setIsDownloadingAllAudio] = useState(false);
   const downloadAbortRef = React.useRef<AbortController | null>(null);
@@ -151,6 +158,50 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     } finally {
       downloadAbortRef.current = null;
       setIsDownloadingCoreAudio(false);
+      setDownloadProgress(null);
+    }
+  };
+
+  const handleDownloadAllUrduAudio = async () => {
+    const controller = new AbortController();
+    downloadAbortRef.current = controller;
+    setIsDownloadingUrduAudio(true);
+    setDownloadProgress({
+      current: urduAudioSyncProgress?.cachedCount || 0,
+      total: 6236,
+      label: 'Caching Shamshad Ali Khan Urdu MP3s (All 114 Surahs)...',
+      percent: urduAudioSyncProgress?.percent || 0,
+    });
+
+    try {
+      const priority = [
+        profile.lastRead?.surahNumber || 1,
+        ...(profile.favoriteSurahs || []),
+      ];
+      const finalSnap = await downloadAllUrduAudioOffline(
+        priority,
+        (info) => {
+          onUrduAudioSyncUpdate?.(info);
+          setDownloadProgress({
+            current: info.cachedCount,
+            total: info.totalCount,
+            label: info.currentSurahName
+              ? `Urdu MP3s · ${info.currentSurahName} (${info.completedSurahsCount}/114 Surahs)`
+              : `Urdu MP3s (${info.cachedCount}/${info.totalCount} verses)`,
+            percent: info.percent,
+          });
+        },
+        controller.signal,
+        6
+      );
+      onUrduAudioSyncUpdate?.(finalSnap);
+      playGentleChime();
+      refreshStats();
+    } catch (err) {
+      console.error('Urdu audio offline download failed:', err);
+    } finally {
+      downloadAbortRef.current = null;
+      setIsDownloadingUrduAudio(false);
       setDownloadProgress(null);
     }
   };
@@ -611,7 +662,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <button
                     onClick={handleDownloadAllText}
-                    disabled={isDownloadingAllText || isDownloadingCoreAudio || isDownloadingAllAudio}
+                    disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
                     className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingAllText ? (
@@ -620,6 +671,45 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                       <Download className="w-3.5 h-3.5" />
                     )}
                     <span>{isDownloadingAllText ? 'Saving...' : 'Sync All 114'}</span>
+                  </button>
+                </div>
+
+                {/* 1b. All 114 Surahs Male Human Urdu Recitation MP3s (Shamshad Ali Khan) */}
+                <div className="p-3.5 rounded-2xl border border-black/25 dark:border-white/25 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 flex-wrap">
+                      <span>All 114 Urdu Recitation MP3s (Shamshad Ali Khan · Male)</span>
+                      {urduAudioSyncProgress && (
+                        <span className="px-1.5 py-0.5 rounded bg-black text-white dark:bg-white dark:text-black text-[10px] font-mono tabular-nums">
+                          {urduAudioSyncProgress.isComplete
+                            ? '100% Offline'
+                            : `${urduAudioSyncProgress.completedSurahsCount}/114 Surahs`}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight mt-0.5">
+                      Natural male human Urdu voice (Fateh Muhammad Jalandhri) cached locally for all 6,236 verses — zero robotic voice.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleDownloadAllUrduAudio}
+                    disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                  >
+                    {isDownloadingUrduAudio ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : urduAudioSyncProgress?.isComplete ? (
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    ) : (
+                      <Volume2 className="w-3.5 h-3.5" />
+                    )}
+                    <span>
+                      {isDownloadingUrduAudio
+                        ? 'Caching...'
+                        : urduAudioSyncProgress?.isComplete
+                        ? 'All Cached'
+                        : 'All 114 Urdu'}
+                    </span>
                   </button>
                 </div>
 
@@ -635,7 +725,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <button
                     onClick={handleDownloadCoreAudio}
-                    disabled={isDownloadingAllText || isDownloadingCoreAudio || isDownloadingAllAudio}
+                    disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
                     className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingCoreAudio ? (
@@ -659,7 +749,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <button
                     onClick={handleDownloadAllAudio}
-                    disabled={isDownloadingAllText || isDownloadingCoreAudio || isDownloadingAllAudio}
+                    disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
                     className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingAllAudio ? (

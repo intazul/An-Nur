@@ -22,6 +22,8 @@ import {
 } from 'lucide-react';
 import { ALL_SURAHS } from '../data/surahList';
 import { ARABIC_RECITERS, ENGLISH_RECITERS, URDU_RECITERS } from '../data/reciters';
+import { transliterateUrduToRoman } from '../utils/urduTransliteration';
+import { UrduAudioSyncProgress } from '../utils/offlineStorage';
 import {
   Ayah,
   RecitationLanguageMode,
@@ -57,6 +59,8 @@ interface AndroidRecitationViewProps {
   onUpdateProfile?: (updates: Partial<UserProfileData>) => void;
   currentAudioPhase?: 'arabic' | 'urdu' | 'english';
   isCurrentSurahAudioOffline?: boolean;
+  isCurrentSurahUrduAudioOffline?: boolean;
+  urduAudioSyncProgress?: UrduAudioSyncProgress | null;
   offlineSpeechReady?: boolean;
   isOnline?: boolean;
   surahAudioDownloadProgress?: { current: number; total: number } | null;
@@ -92,6 +96,8 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
   onUpdateProfile,
   currentAudioPhase = 'arabic',
   isCurrentSurahAudioOffline = false,
+  isCurrentSurahUrduAudioOffline = false,
+  urduAudioSyncProgress = null,
   offlineSpeechReady = true,
   isOnline = true,
   surahAudioDownloadProgress = null,
@@ -169,7 +175,9 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
 
   const getLyricText = (ayah: Ayah): string => {
     if (lyricsLang === 'english') return ayah.textEnglish || ayah.textArabic;
-    if (lyricsLang === 'urdu' && !profile.showAssamese) return ayah.textUrdu || ayah.textEnglish;
+    if (lyricsLang === 'urdu' && !profile.showAssamese) {
+      return ayah.textUrdu ? transliterateUrduToRoman(ayah.textUrdu) : ayah.textEnglish;
+    }
     if (lyricsLang === 'assamese' && !profile.showUrdu) {
       return ayah.textAssamese || ayah.textEnglish;
     }
@@ -183,7 +191,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
       } text-right leading-[2.15] ${isActive ? 'text-2xl sm:text-[26px]' : 'text-lg sm:text-xl'}`;
     }
     if (lyricsLang === 'urdu') {
-      return `font-urdu text-right leading-[2.1] ${isActive ? 'text-lg sm:text-xl' : 'text-sm sm:text-base'}`;
+      return `font-book-serif text-left leading-[1.65] ${isActive ? 'text-[17px] sm:text-lg' : 'text-sm sm:text-base'}`;
     }
     if (lyricsLang === 'assamese') {
       return `font-assamese text-left leading-[1.7] ${isActive ? 'text-[17px] sm:text-lg' : 'text-sm'}`;
@@ -305,7 +313,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                     : 'text-black/70 dark:text-white/70 hover:text-black dark:hover:text-white'
                 }`}
               >
-                اردو
+                Urdu (Roman)
               </button>
             )}
           </div>
@@ -315,7 +323,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
         <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-5 py-10 space-y-4">
           {ayahs.map((ayah) => {
             const isActive = ayah.numberInSurah === activeAyahNumber;
-            const isRtl = lyricsLang === 'arabic' || lyricsLang === 'urdu';
+            const isRtl = lyricsLang === 'arabic';
             return (
               <button
                 key={ayah.numberInSurah}
@@ -499,13 +507,23 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             <Volume2 className="w-4 h-4 shrink-0" />
             <span className="truncate">
               {modeBadgeLabel}
-              {isCurrentSurahAudioOffline
-                ? ' · Offline MP3'
-                : currentAudioPhase === 'english' || currentAudioPhase === 'urdu'
-                ? offlineSpeechReady
-                  ? ' · Offline Voice'
+              {currentAudioPhase === 'urdu'
+                ? isCurrentSurahAudioOffline || isCurrentSurahUrduAudioOffline || urduAudioSyncProgress?.isComplete
+                  ? ' · Offline Male MP3'
+                  : urduAudioSyncProgress && isOnline
+                  ? ` · Saving Offline (${urduAudioSyncProgress.percent}%)`
                   : isOnline
-                  ? ' · Streaming & Caching'
+                  ? ' · Shamshad Ali Khan MP3'
+                  : offlineSpeechReady
+                  ? ' · Offline Voice'
+                  : ' · Save Audio Offline'
+                : isCurrentSurahAudioOffline
+                ? ' · Offline MP3'
+                : currentAudioPhase === 'english'
+                ? isOnline
+                  ? ' · Studio MP3'
+                  : offlineSpeechReady
+                  ? ' · Offline Voice'
                   : ' · Save Audio Offline'
                 : ''}
             </span>
@@ -641,7 +659,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                     [
                       { id: 'arabic', label: 'Arabic', sub: 'عربي' },
                       { id: 'english', label: 'English', sub: 'En' },
-                      { id: 'urdu', label: 'Urdu', sub: 'اردو' },
+                      { id: 'urdu', label: 'Urdu', sub: 'Roman English' },
                       { id: 'assamese', label: 'Assamese', sub: 'অসমীয়া' },
                     ] as const
                   ).map((item) => {
@@ -673,10 +691,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                   {(
                     [
                       { id: 'arabic', title: 'Arabic Qari', desc: 'Original recitation' },
-                      { id: 'english', title: 'English Audio', desc: '100% Offline Voice' },
-                      { id: 'urdu', title: 'Urdu Audio', desc: '100% Offline · اردو' },
-                      { id: 'arabic_english', title: 'Arabic + English', desc: 'Sequential · Offline En' },
-                      { id: 'arabic_urdu', title: 'Arabic + Urdu', desc: 'Sequential · Offline Ur' },
+                      { id: 'english', title: 'English Audio', desc: 'Human Studio MP3' },
+                      { id: 'urdu', title: 'Urdu Audio', desc: 'Male Human MP3 · Offline' },
+                      { id: 'arabic_english', title: 'Arabic + English', desc: 'Sequential · Studio MP3' },
+                      { id: 'arabic_urdu', title: 'Arabic + Urdu', desc: 'Sequential · Male Urdu MP3' },
                     ] as const
                   ).map((modeItem) => {
                     const isSelected =
@@ -734,21 +752,25 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                 {(recitationMode === 'urdu' ||
                   recitationMode === 'both' ||
                   recitationMode === 'arabic_urdu') && (
-                  <div>
-                    <label className="text-xs font-bold text-black dark:text-white block mb-1">
-                      Urdu Voice
-                    </label>
-                    <select
-                      value={profile.preferredUrduReciter || 'shamshad'}
-                      onChange={(e) => onUpdateProfile?.({ preferredUrduReciter: e.target.value })}
-                      className="w-full h-11 px-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/15 dark:border-white/15 text-xs font-bold text-black dark:text-white focus:outline-none"
-                    >
-                      {URDU_RECITERS.map((r) => (
-                        <option key={r.id} value={r.id}>
-                          {r.name}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/15 dark:border-white/15 space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-black dark:text-white">
+                        Urdu Reciter (Male Human Voice)
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-black/70 dark:text-white/70">
+                        {urduAudioSyncProgress?.isComplete
+                          ? '114/114 Offline'
+                          : urduAudioSyncProgress
+                          ? `${urduAudioSyncProgress.percent}% Offline`
+                          : 'Offline Ready'}
+                      </span>
+                    </div>
+                    <div className="text-xs font-semibold text-black/85 dark:text-white/85">
+                      {URDU_RECITERS[0].name}
+                    </div>
+                    <div className="text-[10px] text-black/60 dark:text-white/60">
+                      {URDU_RECITERS[0].style}
+                    </div>
                   </div>
                 )}
               </div>

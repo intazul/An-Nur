@@ -34,15 +34,18 @@ import {
   UserProfileData,
 } from './types/quran';
 import {
+  cacheSurahUrduAudio,
   calculateStreak,
   deleteAudioBookmark,
   deleteOfflineSurah,
+  ensureBackgroundUrduAudioSync,
   getCachedAudioUrl,
   getDownloadedSurahsList,
   getLocalOnlyCachedAudioUrl,
-  isAudioCacheIndexWarmed,
+  getUrduAudioCacheProgress,
   isAudioUrlCachedSync,
   isSurahOffline,
+  isSurahUrduAudioOfflineSync,
   loadAudioBookmarks,
   loadImanRecord,
   loadUserProfile,
@@ -52,10 +55,13 @@ import {
   saveImanRecord,
   saveSurahOffline,
   saveUserProfile,
+  subscribeUrduAudioProgress,
   syncAllSurahsMetadataWithIdb,
+  UrduAudioSyncProgress,
   warmAudioCacheIndex,
 } from './utils/offlineStorage';
 import { ensureAllQuranTextsOffline } from './utils/offlineQuranStore';
+import { ensureAllTafsirsOffline } from './utils/offlineTafsirStore';
 import { fetchSurahDetail } from './utils/quranApi';
 import { getDailyPrayerTimes, PrayerStatus } from './utils/prayerTimes';
 import { getAyahAudioUrlForLanguage } from './data/reciters';
@@ -152,6 +158,7 @@ export default function App() {
   });
   const [currentAudioPhase, setCurrentAudioPhase] = useState<'arabic' | 'urdu' | 'english'>('arabic');
   const [surahAudioDownloadProgress, setSurahAudioDownloadProgress] = useState<{ current: number; total: number } | null>(null);
+  const [urduAudioSyncProgress, setUrduAudioSyncProgress] = useState<UrduAudioSyncProgress | null>(null);
   const [offlineSpeechReady, setOfflineSpeechReady] = useState<boolean>(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isSpeechPausedRef = useRef<boolean>(false);
@@ -251,10 +258,18 @@ export default function App() {
 
   useEffect(() => {
     offlineSpeech.warmUp();
-    warmAudioCacheIndex().catch(() => {});
+    const unsubUrdu = subscribeUrduAudioProgress((snap) => {
+      setUrduAudioSyncProgress(snap);
+    });
+
+    warmAudioCacheIndex()
+      .then(() => getUrduAudioCacheProgress())
+      .then((snap) => setUrduAudioSyncProgress(snap))
+      .catch(() => {});
 
     // Silently hydrate all 114 Surahs (Arabic + English + Urdu + Assamese) into IndexedDB
-    // so both translation reading and offline voice recitation work across the entire Quran offline.
+    // and gently sync Shamshad Ali Khan (male) Urdu translation MP3s across all 114 Surahs
+    // so both Urdu reading and human Urdu recitation work completely offline.
     const syncTimer = window.setTimeout(() => {
       ensureAllQuranTextsOffline()
         .then(() => syncAllSurahsMetadataWithIdb())
@@ -262,15 +277,37 @@ export default function App() {
           if (list && list.length > 0) {
             setDownloadedSurahs(list);
           }
+          return ensureAllTafsirsOffline(['ur', 'en', 'as']);
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          ensureBackgroundUrduAudioSync([
+            currentSurahNumber,
+            ...(profile.favoriteSurahs || []),
+          ]).catch(() => {});
+        });
     }, 600);
 
     return () => {
       window.clearTimeout(syncTimer);
+      unsubUrdu();
       offlineSpeech.stop();
     };
   }, []);
+
+  // Automatically resume background Urdu MP3 caching when back online or when prioritizing active Surah
+  useEffect(() => {
+    if (!isOnline) return;
+    if (currentSurah) {
+      cacheSurahUrduAudio(currentSurah.number, currentSurah.ayahs.length)
+        .then(() => getUrduAudioCacheProgress().then(setUrduAudioSyncProgress))
+        .catch(() => {});
+    }
+    ensureBackgroundUrduAudioSync([
+      currentSurahNumber,
+      ...(profile.favoriteSurahs || []),
+    ]).catch(() => {});
+  }, [isOnline, currentSurah?.number, profile.recitationLanguageMode]);
 
   // Sync clarity EQ preference
   useEffect(() => {
@@ -363,63 +400,78 @@ export default function App() {
       }
     };
 
-    if (activePhase === 'english' || activePhase === 'urdu') {
-      const speechLang = langCode as 'en' | 'ur';
-      const urduId = profile.preferredUrduReciter || 'shamshad';
-      const hasCachedMp3Sync = isAudioUrlCachedSync(rawUrl);
-
-      if (hasCachedMp3Sync || !isAudioCacheIndexWarmed()) {
-        getLocalOnlyCachedAudioUrl(rawUrl).then((localBlobUrl) => {
-          if (isCancelled) {
-            if (localBlobUrl) URL.revokeObjectURL(localBlobUrl);
-            return;
-          }
-          if (localBlobUrl) {
-            setOfflineSpeechReady(true);
-            playBlobOrRemoteAudio(localBlobUrl);
-            return;
-          }
-          // Not cached in CacheStorage:
-          // Use Built-in 100% Offline Voice if OS has local/working voices OR if currently offline.
-          // If OS has zero voices AND online, stream + cache the studio MP3 so it's saved offline too.
-          if (offlineSpeech.hasWorkingSpeech(speechLang, urduId) || !isOnline) {
-            startBuiltInOfflineVoice(speechLang);
-          } else {
-            getCachedAudioUrl(rawUrl).then(playBlobOrRemoteAudio);
-          }
-        });
-      } else {
-        // Synchronous path: MP3 not cached -> start built-in offline voice without async delay
-        if (offlineSpeech.hasWorkingSpeech(speechLang, urduId) || !isOnline) {
-          startBuiltInOfflineVoice(speechLang);
-        } else {
-          getCachedAudioUrl(rawUrl).then(playBlobOrRemoteAudio);
-        }
+    const resolveAndPlayHumanMp3 = async () => {
+      setOfflineSpeechReady(true);
+      const localBlobUrl = await getLocalOnlyCachedAudioUrl(rawUrl);
+      if (isCancelled) {
+        if (localBlobUrl) URL.revokeObjectURL(localBlobUrl);
+        return;
+      }
+      if (localBlobUrl) {
+        playBlobOrRemoteAudio(localBlobUrl);
+        return;
       }
 
-      return () => {
-        isCancelled = true;
-      };
+      // Always prefer real human studio MP3 (Shamshad Ali Khan for Urdu / Ibrahim Walk for English)
+      // when online and simultaneously write-through cache it for offline listening.
+      if (isOnline) {
+        const resolved = await getCachedAudioUrl(rawUrl);
+        playBlobOrRemoteAudio(resolved);
+        return;
+      }
+
+      // Emergency fallback ONLY when genuinely offline AND this verse's MP3 hasn't been cached yet.
+      if (activePhase === 'english' || activePhase === 'urdu') {
+        startBuiltInOfflineVoice(activePhase === 'urdu' ? 'ur' : 'en');
+      } else {
+        const resolved = await getCachedAudioUrl(rawUrl);
+        playBlobOrRemoteAudio(resolved);
+      }
+    };
+
+    resolveAndPlayHumanMp3().catch(() => {});
+
+    // Prefetch upcoming verses in active language AND secondary dual-mode language (e.g., Urdu Shamshad MP3s)
+    const prefetchUrls: string[] = [];
+    const secondary = getSecondaryPhaseForDualMode(profile.recitationLanguageMode || 'arabic');
+    const secondaryCode: 'ur' | 'en' | null =
+      secondary === 'urdu' ? 'ur' : secondary === 'english' ? 'en' : null;
+
+    if (secondaryCode) {
+      prefetchUrls.push(
+        getAyahAudioUrlForLanguage(
+          currentSurah.number,
+          activeAyahNumber,
+          secondaryCode,
+          profile.preferredReciter,
+          'shamshad'
+        )
+      );
     }
 
-    // Arabic Qari recitation: offline-first CacheStorage resolution + gentle background prefetch
-    setOfflineSpeechReady(true);
-    usingSpeechForPhaseRef.current = false;
-    getCachedAudioUrl(rawUrl).then(playBlobOrRemoteAudio);
-
-    const prefetchUrls: string[] = [];
-    for (let offset = 1; offset <= 2; offset++) {
+    for (let offset = 1; offset <= 3; offset++) {
       const nextAyah = activeAyahNumber + offset;
       if (nextAyah <= currentSurah.ayahs.length) {
         prefetchUrls.push(
           getAyahAudioUrlForLanguage(
             currentSurah.number,
             nextAyah,
-            'ar',
+            langCode,
             profile.preferredReciter,
-            profile.preferredUrduReciter || 'shamshad'
+            'shamshad'
           )
         );
+        if (secondaryCode) {
+          prefetchUrls.push(
+            getAyahAudioUrlForLanguage(
+              currentSurah.number,
+              nextAyah,
+              secondaryCode,
+              profile.preferredReciter,
+              'shamshad'
+            )
+          );
+        }
       }
     }
     if (prefetchUrls.length > 0) {
@@ -618,10 +670,7 @@ export default function App() {
 
     const shouldUseSpeech =
       (activePhase === 'english' || activePhase === 'urdu') &&
-      (usingSpeechForPhaseRef.current ||
-        (!isAudioUrlCachedSync(rawUrl) &&
-          (offlineSpeech.hasWorkingSpeech(speechLang, profile.preferredUrduReciter || 'shamshad') ||
-            !isOnline)));
+      (usingSpeechForPhaseRef.current || (!isOnline && !isAudioUrlCachedSync(rawUrl)));
 
     if (shouldUseSpeech && (activePhase === 'english' || activePhase === 'urdu')) {
       usingSpeechForPhaseRef.current = true;
@@ -647,7 +696,7 @@ export default function App() {
           }
           offlineSpeech.start(spokenText, playbackSpeed, {
             language: speechLang,
-            urduReciterId: profile.preferredUrduReciter || 'shamshad',
+            urduReciterId: 'shamshad',
             onProgress: (cur, dur) => {
               setCurrentTime(cur);
               setDuration(dur);
@@ -664,15 +713,27 @@ export default function App() {
       audioRef.current.pause();
       setIsPlayingAudio(false);
     } else {
-      audioClarity.attach(audioRef.current);
-      audioClarity.setEnabled(profile.vocalClarityEnhancer !== false);
-      audioRef.current.play().then(() => {
+      const startHtmlAudio = async () => {
+        if (!audioRef.current) return;
+        if (!audioRef.current.getAttribute('src') && rawUrl) {
+          const resolved = await getCachedAudioUrl(rawUrl);
+          if (!audioRef.current) return;
+          audioClarity.applyPitchPreservation(audioRef.current);
+          audioRef.current.src = resolved;
+          audioRef.current.playbackRate = playbackSpeed;
+          audioRef.current.load();
+        }
+        audioClarity.attach(audioRef.current);
+        audioClarity.setEnabled(profile.vocalClarityEnhancer !== false);
+        await audioRef.current.play();
         setIsPlayingAudio(true);
         if (currentSurah) {
           const newlyRead = markAyahsReadToday(currentSurah.number, [activeAyahNumber]);
           if (newlyRead > 0) handleVerseRead(newlyRead);
         }
-      }).catch((err) => {
+      };
+
+      startHtmlAudio().catch((err) => {
         console.warn('Playback error:', err);
         setIsPlayingAudio(false);
       });
@@ -907,6 +968,14 @@ export default function App() {
   const isCurrentSurahAudioOffline = downloadedSurahs.some(
     (s) => s.surahNumber === currentSurahNumber && s.hasAudio
   );
+  const currentSurahAyahTotal =
+    currentSurah?.ayahs.length ||
+    ALL_SURAHS.find((s) => s.number === currentSurahNumber)?.numberOfAyahs ||
+    0;
+  const isCurrentSurahUrduAudioOffline = isSurahUrduAudioOfflineSync(
+    currentSurahNumber,
+    currentSurahAyahTotal
+  );
   const isFavorite = (profile.favoriteSurahs || []).includes(currentSurahNumber);
 
   return (
@@ -938,9 +1007,34 @@ export default function App() {
           onError={() => {
             const recMode = profile.recitationLanguageMode || 'arabic';
             const secondary = getSecondaryPhaseForDualMode(recMode);
-            if (secondary && getActiveAudioPhase() === 'arabic' && isPlayingAudioRef.current) {
-              // If Arabic MP3 isn't cached offline, seamlessly advance to offline English/Urdu translation
+            const activePhase = getActiveAudioPhase();
+            if (secondary && activePhase === 'arabic' && isPlayingAudioRef.current) {
+              // If Arabic MP3 isn't cached offline, seamlessly advance to Urdu/English MP3
               setCurrentAudioPhase(secondary);
+              return;
+            }
+            if (
+              (activePhase === 'urdu' || activePhase === 'english') &&
+              isPlayingAudioRef.current &&
+              currentSurah &&
+              typeof navigator !== 'undefined' &&
+              !navigator.onLine
+            ) {
+              usingSpeechForPhaseRef.current = true;
+              const spokenText = getSpokenTranslationForActiveAyah(
+                activePhase,
+                currentSurah,
+                activeAyahNumber
+              );
+              offlineSpeech.start(spokenText, playbackSpeed, {
+                language: activePhase === 'urdu' ? 'ur' : 'en',
+                urduReciterId: 'shamshad',
+                onProgress: (cur, dur) => {
+                  setCurrentTime(cur);
+                  setDuration(dur);
+                },
+                onEnded: () => handleAudioEndedRef.current(),
+              });
               return;
             }
             setIsPlayingAudio(false);
@@ -1151,6 +1245,8 @@ export default function App() {
             onUpdateProfile={handleUpdateProfile}
             currentAudioPhase={getActiveAudioPhase()}
             isCurrentSurahAudioOffline={isCurrentSurahAudioOffline}
+            isCurrentSurahUrduAudioOffline={isCurrentSurahUrduAudioOffline}
+            urduAudioSyncProgress={urduAudioSyncProgress}
             offlineSpeechReady={offlineSpeechReady}
             isOnline={isOnline}
             surahAudioDownloadProgress={surahAudioDownloadProgress}
@@ -1411,6 +1507,8 @@ export default function App() {
         downloadedSurahs={downloadedSurahs}
         onDeleteDownloadedSurah={handleDeleteDownloadedSurah}
         onRefreshDownloadedSurahs={() => setDownloadedSurahs(getDownloadedSurahsList())}
+        urduAudioSyncProgress={urduAudioSyncProgress}
+        onUrduAudioSyncUpdate={setUrduAudioSyncProgress}
         initialTab={profileInitialTab}
       />
 

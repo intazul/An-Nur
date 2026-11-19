@@ -17,6 +17,8 @@
  *      4. Resilient timer-sync fallback
  */
 
+import { transliterateUrduToRoman } from './urduTransliteration';
+
 export interface OfflineSpeechCallbacks {
   onProgress: (currentTime: number, duration: number) => void;
   onEnded: () => void;
@@ -200,101 +202,6 @@ const URDU_TO_DEVANAGARI_LEXICON: Record<string, string> = {
   'پیچھے': 'पीछे',
 };
 
-const URDU_TO_ROMAN_LEXICON: Record<string, string> = {
-  'شروع': 'shuru',
-  'الله': 'Allah',
-  'اللہ': 'Allah',
-  'خدا': 'Khuda',
-  'کا': 'ka',
-  'کی': 'ki',
-  'کے': 'ke',
-  'کو': 'ko',
-  'سے': 'se',
-  'میں': 'mein',
-  'پر': 'par',
-  'نے': 'ne',
-  'اور': 'aur',
-  'یا': 'ya',
-  'جو': 'jo',
-  'وہ': 'woh',
-  'یہ': 'yeh',
-  'اس': 'is',
-  'ان': 'un',
-  'ہم': 'hum',
-  'تم': 'tum',
-  'تو': 'tu',
-  'کہ': 'ke',
-  'بڑا': 'bada',
-  'مہربان': 'meherbaan',
-  'نہایت': 'nihayat',
-  'رحم': 'rahm',
-  'والا': 'wala',
-  'والے': 'wale',
-  'والوں': 'walon',
-  'نام': 'naam',
-  'لے': 'le',
-  'کر': 'kar',
-  'سب': 'sab',
-  'طرح': 'tarah',
-  'تعریف': 'tareef',
-  'ہی': 'hi',
-  'سزاوار': 'sazawar',
-  'ہے': 'hai',
-  'ہیں': 'hain',
-  'ہو': 'ho',
-  'تمام': 'tamaam',
-  'مخلوقات': 'makhlooqaat',
-  'پروردگار': 'parwardigar',
-  'انصاف': 'insaf',
-  'دن': 'din',
-  'حاکم': 'hakim',
-  'تیری': 'teri',
-  'عبادت': 'ibaadat',
-  'کرتے': 'karte',
-  'تجھ': 'tujh',
-  'مدد': 'madad',
-  'مانگتے': 'maangte',
-  'ہمیں': 'hamein',
-  'سیدھے': 'seedhe',
-  'رستے': 'raste',
-  'چلا': 'chala',
-  'لوگوں': 'logon',
-  'جن': 'jin',
-  'اپنا': 'apna',
-  'فضل': 'fazl',
-  'کرم': 'karam',
-  'رہا': 'raha',
-  'نہ': 'na',
-  'نہیں': 'nahin',
-  'غصے': 'ghusse',
-  'ہوتا': 'hota',
-  'گمراہوں': 'gumrahon',
-  'بیشک': 'beshak',
-  'ایمان': 'imaan',
-  'لائے': 'laaye',
-  'کتاب': 'kitaab',
-  'قرآن': 'Quran',
-  'رسول': 'Rasool',
-  'نبی': 'Nabi',
-  'آسمانوں': 'aasmaanon',
-  'زمین': 'zameen',
-  'دنیا': 'duniya',
-  'آخرت': 'aakhirat',
-  'جنت': 'jannat',
-  'دوزخ': 'dozakh',
-  'عذاب': 'azaab',
-  'رحمت': 'rehmat',
-  'مالک': 'malik',
-  'پیدا': 'paida',
-  'کیا': 'kiya',
-  'کہو': 'kaho',
-  'بھی': 'bhi',
-  'جب': 'jab',
-  'اگر': 'agar',
-  'لیکن': 'lekin',
-  'ہر': 'har',
-  'ایک': 'ek',
-};
 
 const URDU_CHAR_TO_DEVANAGARI: Record<string, string> = {
   'آ': 'आ',
@@ -347,57 +254,6 @@ const URDU_CHAR_TO_DEVANAGARI: Record<string, string> = {
   '؟': '?',
 };
 
-const URDU_CHAR_TO_ROMAN: Record<string, string> = {
-  'آ': 'aa',
-  'ا': 'a',
-  'أ': 'a',
-  'إ': 'i',
-  'ب': 'b',
-  'پ': 'p',
-  'ت': 't',
-  'ٹ': 't',
-  'ث': 's',
-  'ج': 'j',
-  'چ': 'ch',
-  'ح': 'h',
-  'خ': 'kh',
-  'د': 'd',
-  'ڈ': 'd',
-  'ذ': 'z',
-  'ر': 'r',
-  'ڑ': 'r',
-  'ز': 'z',
-  'ژ': 'zh',
-  'س': 's',
-  'ش': 'sh',
-  'ص': 's',
-  'ض': 'z',
-  'ط': 't',
-  'ظ': 'z',
-  'ع': 'a',
-  'غ': 'gh',
-  'ف': 'f',
-  'ق': 'q',
-  'ک': 'k',
-  'ك': 'k',
-  'گ': 'g',
-  'ل': 'l',
-  'م': 'm',
-  'ن': 'n',
-  'ں': 'n',
-  'و': 'o',
-  'ہ': 'h',
-  'ھ': 'h',
-  'ی': 'i',
-  'ي': 'i',
-  'ے': 'e',
-  'ئ': 'i',
-  'ء': '',
-  '۔': '.',
-  '،': ',',
-  '؟': '?',
-};
-
 function preprocessEnglishText(raw: string): string {
   return raw
     .replace(/\[([^\]]+)\]/g, ' $1 ')
@@ -410,7 +266,7 @@ function preprocessEnglishText(raw: string): string {
 
 function preprocessUrduText(raw: string): string {
   return raw
-    .replace(/[\u064B-\u065F\u0670]/g, '') // strip optional Arabic diacritics that can confuse TTS
+    .replace(/[\u064B-\u065F\u0670]/g, '')
     .replace(/\(([^)]+)\)/g, '، $1، ')
     .replace(/\[([^\]]+)\]/g, '، $1، ')
     .replace(/۔/g, '۔ ')
@@ -446,27 +302,6 @@ function transliterateUrduToDevanagari(input: string): string {
   return preprocessUrduText(input)
     .split(/\s+/)
     .map(transliterateUrduWordToDevanagari)
-    .join(' ');
-}
-
-function transliterateUrduWordToRoman(word: string): string {
-  const clean = word.replace(/[،۔؟,.!?;:()[\]"'«»]/g, '');
-  if (!clean) return word;
-  if (URDU_TO_ROMAN_LEXICON[clean]) {
-    return word.replace(clean, URDU_TO_ROMAN_LEXICON[clean]);
-  }
-  let out = '';
-  for (let i = 0; i < clean.length; i++) {
-    const ch = clean[i];
-    out += URDU_CHAR_TO_ROMAN[ch] ?? ch;
-  }
-  return word.replace(clean, out);
-}
-
-function transliterateUrduToRoman(input: string): string {
-  return preprocessUrduText(input)
-    .split(/\s+/)
-    .map(transliterateUrduWordToRoman)
     .join(' ');
 }
 

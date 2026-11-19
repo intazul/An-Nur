@@ -22,6 +22,7 @@ import {
 import { ALL_SURAHS } from '../data/surahList';
 import { RECITERS, getAyahAudioUrl } from '../data/reciters';
 import { Ayah, SurahDetail, UserProfileData } from '../types/quran';
+import { transliterateUrduToRoman } from '../utils/urduTransliteration';
 
 interface QuranCenterpieceProps {
   currentSurah: SurahDetail | null;
@@ -194,7 +195,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
   };
 
   const handleCopyAyah = (ayah: Ayah) => {
-    const text = `${ayah.textArabic}\n\nEnglish: ${ayah.textEnglish}\n\nUrdu: ${ayah.textUrdu}\n\n[Quran ${surahNum}:${ayah.numberInSurah}]`;
+    const text = `${ayah.textArabic}\n\nEnglish: ${ayah.textEnglish}\n\nUrdu (Transliteration): ${transliterateUrduToRoman(ayah.textUrdu)}\n\n[Quran ${surahNum}:${ayah.numberInSurah}]`;
     navigator.clipboard.writeText(text);
     setCopiedAyah(ayah.numberInSurah);
     setTimeout(() => setCopiedAyah(null), 2000);
@@ -477,7 +478,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                     : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700'
                 }`}
               >
-                اردو ترجمہ (Urdu)
+                Urdu (Roman)
               </button>
               <button
                 onClick={() => onUpdateProfile({ showTafsir: !profile.showTafsir })}
@@ -514,7 +515,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
               <span>—</span>
               <span className="text-amber-300 font-cinzel">{currentSurah.englishTranslation}</span>
               <span>—</span>
-              <span className="font-urdu text-amber-200/90 text-sm">سورۃ {currentSurah.nameUrdu}</span>
+              <span className="text-amber-200/90 text-sm">Surah {currentSurah.nameEnglish}</span>
             </div>
 
             {/* Bismillah Calligraphy for all Surahs except 1 and 9 */}
@@ -660,14 +661,17 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                   </div>
                 )}
 
-                {/* Urdu Translation in Nastaliq */}
+                {/* Urdu Translation in Roman English Transliteration */}
                 {profile.showUrdu && ayah.textUrdu && (
-                  <div className="pt-2 pb-2 text-right border-t border-stone-100 dark:border-stone-800/40" dir="rtl">
+                  <div className="pt-2 pb-2 text-left border-t border-stone-100 dark:border-stone-800/40" dir="ltr">
+                    <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-0.5">
+                      Urdu (Roman Transliteration):
+                    </span>
                     <p
-                      className="font-urdu text-stone-800 dark:text-stone-200"
-                      style={{ fontSize: `${Math.max(16, profile.translationFontSize + 2)}px` }}
+                      className="font-book-serif text-stone-800 dark:text-stone-200 leading-relaxed"
+                      style={{ fontSize: `${Math.max(14, profile.translationFontSize)}px` }}
                     >
-                      {ayah.textUrdu}
+                      {transliterateUrduToRoman(ayah.textUrdu)}
                     </p>
                   </div>
                 )}

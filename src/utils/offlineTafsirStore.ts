@@ -178,6 +178,68 @@ export async function cacheAllTafsirsOffline(
   }
 }
 
+let bulkTafsirSyncPromise: Promise<void> | null = null;
+
+/**
+ * Silently batch-hydrates missing Tafsirs (Urdu Ibn Kathir, English Ibn Kathir, Assamese Al-Mukhtasar)
+ * across all 114 Surahs into IndexedDB without re-fetching already stored entries.
+ */
+export async function ensureAllTafsirsOffline(
+  editions: TafsirEdition[] = ['ur', 'en', 'as']
+): Promise<void> {
+  if (bulkTafsirSyncPromise) return bulkTafsirSyncPromise;
+
+  bulkTafsirSyncPromise = (async () => {
+    try {
+      const existingKeys = new Set<string>();
+      const db = await openTafsirDb();
+      if (db) {
+        await new Promise<void>((resolve) => {
+          try {
+            const tx = db.transaction(STORE_TAFSIR, 'readonly');
+            const req = tx.objectStore(STORE_TAFSIR).getAllKeys();
+            req.onsuccess = () => {
+              if (Array.isArray(req.result)) {
+                req.result.forEach((k) => existingKeys.add(String(k)));
+              }
+              resolve();
+            };
+            req.onerror = () => resolve();
+          } catch {
+            resolve();
+          }
+        });
+      }
+
+      const missingSurahs: number[] = [];
+      for (let s = 1; s <= 114; s++) {
+        const needsAny = editions.some((ed) => !existingKeys.has(`${ed}:${s}`));
+        if (needsAny) missingSurahs.push(s);
+      }
+
+      if (missingSurahs.length === 0) return;
+
+      const BATCH_SIZE = 6;
+      for (let i = 0; i < missingSurahs.length; i += BATCH_SIZE) {
+        const batch = missingSurahs.slice(i, i + BATCH_SIZE);
+        await Promise.all(
+          batch.map((s) =>
+            Promise.all(
+              editions
+                .filter((ed) => !existingKeys.has(`${ed}:${s}`))
+                .map((ed) => loadSurahTafsirCompact(s, ed).catch(() => null))
+            )
+          )
+        );
+      }
+    } finally {
+      bulkTafsirSyncPromise = null;
+    }
+  })();
+
+  return bulkTafsirSyncPromise;
+}
+
 export async function getOfflineTafsirCount(): Promise<number> {
   const db = await openTafsirDb();
   if (!db) return memoryCache.size;

@@ -16,6 +16,7 @@ import { Ayah, SurahDetail, UserProfileData } from '../types/quran';
 import { getPreciseVerseTafsir, PreciseTafsir } from '../utils/verseTafsir';
 import { getRelatedHadith } from '../utils/hadithDatabase';
 import { getCachedVerseTafsirSync, getVerseTafsirOffline } from '../utils/offlineTafsirStore';
+import { transliterateUrduToRoman } from '../utils/urduTransliteration';
 
 interface TafsirModalProps {
   isOpen: boolean;
@@ -114,7 +115,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
     if (useAssamese && ayah.textAssamese) {
       text += `Assamese: ${ayah.textAssamese}\n\n`;
     } else if (useUrdu && ayah.textUrdu) {
-      text += `Urdu: ${ayah.textUrdu}\n\n`;
+      text += `Urdu (Transliteration): ${transliterateUrduToRoman(ayah.textUrdu)}\n\n`;
     }
     if (ibnKathirEn) {
       text += `Tafsir Ibn Kathir (English):\n${ibnKathirEn}\n\n`;
@@ -124,7 +125,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
     if (useAssamese && (regionalDeepTafsir || tafsir.assameseExplanation)) {
       text += `Assamese Tafsir:\n${regionalDeepTafsir || tafsir.assameseExplanation}\n\n`;
     } else if (useUrdu && (regionalDeepTafsir || tafsir.urduExplanation)) {
-      text += `Urdu Tafsir Ibn Kathir:\n${regionalDeepTafsir || tafsir.urduExplanation}\n\n`;
+      text += `Urdu Tafsir Ibn Kathir (Transliteration):\n${transliterateUrduToRoman(regionalDeepTafsir || tafsir.urduExplanation)}\n\n`;
     }
     text += `Key Takeaway: ${tafsir.keyLesson}\n\n`;
     if (hadith) {
@@ -239,14 +240,14 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
                 </div>
               )}
 
-              {/* Urdu Translation (mutually exclusive with Assamese) */}
+              {/* Urdu Translation in Roman English Transliteration (mutually exclusive with Assamese) */}
               {useUrdu && ayah.textUrdu && (
-                <div className="pt-2 border-t border-black/10 dark:border-white/10 text-right" dir="rtl">
-                  <span className="font-bold text-stone-800 dark:text-stone-400 block text-[10px] font-sans-ui mb-0.5">
-                    اردو ترجمہ (فاتح محمد جالندھری):
+                <div className="pt-2 border-t border-black/10 dark:border-white/10 text-left" dir="ltr">
+                  <span className="font-bold text-stone-800 dark:text-stone-400 block text-[10px] font-sans-ui uppercase tracking-wider mb-1">
+                    Urdu Translation (Roman Transliteration · Jalandhri):
                   </span>
-                  <p className="font-urdu text-base text-black dark:text-white font-bold leading-loose select-text">
-                    {ayah.textUrdu}
+                  <p className="font-book-serif text-[15px] text-black dark:text-white font-medium leading-relaxed select-text">
+                    {transliterateUrduToRoman(ayah.textUrdu)}
                   </p>
                 </div>
               )}
@@ -302,14 +303,14 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
               </div>
             )}
 
-            {/* Urdu Tafsir Ibn Kathir (mutually exclusive with Assamese) */}
+            {/* Urdu Tafsir Ibn Kathir in Roman English Transliteration (mutually exclusive with Assamese) */}
             {useUrdu && (regionalDeepTafsir || tafsir.urduExplanation) && (
-              <div className="p-3.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15 text-right space-y-1.5" dir="rtl">
-                <span className="text-[10px] font-bold font-sans-ui text-stone-700 dark:text-stone-300 block">
-                  تفسیر ابنِ کثیر (اردو):
+              <div className="p-3.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-white/15 text-left space-y-1.5" dir="ltr">
+                <span className="text-[10px] font-bold font-sans-ui uppercase tracking-wider text-stone-700 dark:text-stone-300 block">
+                  Tafsir Ibn Kathir (Urdu Roman Transliteration):
                 </span>
-                <p className="font-urdu text-sm sm:text-base text-black dark:text-white font-bold leading-loose whitespace-pre-line select-text">
-                  {regionalDeepTafsir || tafsir.urduExplanation}
+                <p className="font-book-serif text-sm text-black dark:text-white font-medium leading-relaxed whitespace-pre-line select-text">
+                  {transliterateUrduToRoman(regionalDeepTafsir || tafsir.urduExplanation)}
                 </p>
               </div>
             )}
@@ -344,8 +345,8 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
               </p>
 
               {useUrdu && hadith.textUrdu && (
-                <p className="font-urdu text-xs sm:text-sm text-black dark:text-stone-200 text-right leading-loose font-bold" dir="rtl">
-                  {hadith.textUrdu}
+                <p className="font-book-serif text-xs sm:text-sm text-black dark:text-stone-200 text-left leading-relaxed font-medium" dir="ltr">
+                  {transliterateUrduToRoman(hadith.textUrdu)}
                 </p>
               )}
 

@@ -75,6 +75,8 @@ function enforceSingleRegionalLanguage(profile: UserProfileData): UserProfileDat
   if (normalized.showUrdu && normalized.recitationLyricsLanguage === 'assamese') {
     normalized.recitationLyricsLanguage = 'urdu';
   }
+  // Always use the dedicated male human Urdu translation reciter (Shamshad Ali Khan)
+  normalized.preferredUrduReciter = 'shamshad';
   return normalized;
 }
 
@@ -705,4 +707,214 @@ export async function downloadAllQuranAudioOffline(
       console.warn(`Failed caching complete audio for Surah ${meta.number}:`, err);
     }
   }
+}
+
+export const TOTAL_QURAN_AYAHS = 6236;
+const SHAMSHAD_SUBFOLDER = 'translations/urdu_shamshad_ali_khan_46kbps';
+
+export interface UrduAudioSyncProgress {
+  cachedCount: number;
+  totalCount: number;
+  completedSurahsCount: number;
+  percent: number;
+  isComplete: boolean;
+  currentSurahName?: string;
+}
+
+/**
+ * Synchronously checks if every Ayah MP3 for a Surah's male Urdu translation recitation
+ * (Shamshad Ali Khan) is already stored in CacheStorage.
+ */
+export function isSurahUrduAudioOfflineSync(
+  surahNumber: number,
+  ayahCount: number
+): boolean {
+  if (!audioCacheWarmed || ayahCount <= 0) return false;
+  const sStr = String(surahNumber).padStart(3, '0');
+  for (let a = 1; a <= ayahCount; a++) {
+    const aStr = String(a).padStart(3, '0');
+    const url = `https://everyayah.com/data/${SHAMSHAD_SUBFOLDER}/${sStr}${aStr}.mp3`;
+    if (!cachedAudioUrlSet.has(url)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Computes live offline cache progress for Shamshad Ali Khan (male Urdu translation MP3s) across all 114 Surahs.
+ */
+export async function getUrduAudioCacheProgress(): Promise<UrduAudioSyncProgress> {
+  if (!audioCacheWarmed) {
+    await warmAudioCacheIndex();
+  }
+  const { ALL_SURAHS } = await import('../data/surahList');
+  let cachedCount = 0;
+  let completedSurahsCount = 0;
+
+  for (const meta of ALL_SURAHS) {
+    const sStr = String(meta.number).padStart(3, '0');
+    let surahCached = 0;
+    for (let a = 1; a <= meta.numberOfAyahs; a++) {
+      const aStr = String(a).padStart(3, '0');
+      const url = `https://everyayah.com/data/${SHAMSHAD_SUBFOLDER}/${sStr}${aStr}.mp3`;
+      if (cachedAudioUrlSet.has(url)) {
+        surahCached++;
+      }
+    }
+    cachedCount += surahCached;
+    if (surahCached === meta.numberOfAyahs) {
+      completedSurahsCount++;
+    }
+  }
+
+  const percent = Math.min(100, Math.round((cachedCount / TOTAL_QURAN_AYAHS) * 100));
+  return {
+    cachedCount,
+    totalCount: TOTAL_QURAN_AYAHS,
+    completedSurahsCount,
+    percent,
+    isComplete: cachedCount >= TOTAL_QURAN_AYAHS,
+  };
+}
+
+/**
+ * Caches every Ayah MP3 for a specific Surah using Shamshad Ali Khan (male human Urdu reciter).
+ * Skips any verses already present in CacheStorage.
+ */
+export async function cacheSurahUrduAudio(
+  surahNumber: number,
+  ayahCount: number,
+  signal?: AbortSignal,
+  concurrency: number = 4
+): Promise<boolean> {
+  if (typeof window === 'undefined' || !('caches' in window)) return false;
+  if (typeof navigator !== 'undefined' && !navigator.onLine) return false;
+
+  if (!audioCacheWarmed) {
+    await warmAudioCacheIndex();
+  }
+
+  const sStr = String(surahNumber).padStart(3, '0');
+  const uncachedUrls: string[] = [];
+  for (let a = 1; a <= ayahCount; a++) {
+    const aStr = String(a).padStart(3, '0');
+    const url = `https://everyayah.com/data/${SHAMSHAD_SUBFOLDER}/${sStr}${aStr}.mp3`;
+    if (!cachedAudioUrlSet.has(url)) {
+      uncachedUrls.push(url);
+    }
+  }
+
+  if (uncachedUrls.length === 0) return true;
+
+  for (let i = 0; i < uncachedUrls.length; i += concurrency) {
+    if (signal?.aborted) return false;
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return false;
+    const chunk = uncachedUrls.slice(i, i + concurrency);
+    await Promise.all(chunk.map((u) => cacheAudioUrl(u)));
+  }
+
+  return uncachedUrls.every((u) => cachedAudioUrlSet.has(u));
+}
+
+/**
+ * Downloads/caches ALL 114 Surahs (6,236 verses) of Shamshad Ali Khan male Urdu translation MP3s
+ * into persistent CacheStorage, prioritizing active/favorite/core Surahs first.
+ */
+export async function downloadAllUrduAudioOffline(
+  prioritySurahs: number[] = [],
+  onProgress?: (info: UrduAudioSyncProgress) => void,
+  signal?: AbortSignal,
+  concurrency: number = 6
+): Promise<UrduAudioSyncProgress> {
+  if (!audioCacheWarmed) {
+    await warmAudioCacheIndex();
+  }
+
+  const { ALL_SURAHS } = await import('../data/surahList');
+  const orderedNumbers = Array.from(
+    new Set([
+      ...prioritySurahs.filter((n) => n >= 1 && n <= 114),
+      1, 36, 55, 56, 67, 108, 112, 113, 114,
+      ...ALL_SURAHS.map((s) => s.number),
+    ])
+  );
+
+  let initial = await getUrduAudioCacheProgress();
+  onProgress?.(initial);
+  if (initial.isComplete) return initial;
+
+  for (const surahNum of orderedNumbers) {
+    if (signal?.aborted) break;
+    if (typeof navigator !== 'undefined' && !navigator.onLine) break;
+    const meta = ALL_SURAHS.find((s) => s.number === surahNum);
+    if (!meta) continue;
+
+    if (isSurahUrduAudioOfflineSync(meta.number, meta.numberOfAyahs)) {
+      continue;
+    }
+
+    await cacheSurahUrduAudio(meta.number, meta.numberOfAyahs, signal, concurrency);
+    const snap = await getUrduAudioCacheProgress();
+    onProgress?.({ ...snap, currentSurahName: meta.nameEnglish });
+  }
+
+  const finalSnap = await getUrduAudioCacheProgress();
+  onProgress?.(finalSnap);
+  return finalSnap;
+}
+
+let backgroundUrduSyncPromise: Promise<void> | null = null;
+const urduProgressListeners = new Set<(info: UrduAudioSyncProgress) => void>();
+
+export function subscribeUrduAudioProgress(
+  listener: (info: UrduAudioSyncProgress) => void
+): () => void {
+  urduProgressListeners.add(listener);
+  return () => {
+    urduProgressListeners.delete(listener);
+  };
+}
+
+function emitUrduAudioProgress(info: UrduAudioSyncProgress): void {
+  urduProgressListeners.forEach((fn) => {
+    try {
+      fn(info);
+    } catch {
+      // ignore
+    }
+  });
+}
+
+/**
+ * Starts a non-blocking, resumable background sync of all 6,236 Shamshad Ali Khan Urdu MP3s.
+ * Already cached MP3s are skipped instantaneously; pauses gracefully if offline.
+ */
+export function ensureBackgroundUrduAudioSync(
+  prioritySurahs: number[] = []
+): Promise<void> {
+  if (typeof window === 'undefined' || !('caches' in window)) {
+    return Promise.resolve();
+  }
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    return Promise.resolve();
+  }
+  if (backgroundUrduSyncPromise) {
+    return backgroundUrduSyncPromise;
+  }
+
+  backgroundUrduSyncPromise = (async () => {
+    try {
+      await downloadAllUrduAudioOffline(
+        prioritySurahs,
+        (info) => emitUrduAudioProgress(info),
+        undefined,
+        3
+      );
+    } finally {
+      backgroundUrduSyncPromise = null;
+    }
+  })();
+
+  return backgroundUrduSyncPromise;
 }

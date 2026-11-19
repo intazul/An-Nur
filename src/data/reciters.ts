@@ -55,16 +55,9 @@ export const ARABIC_RECITERS: Reciter[] = [
 export const URDU_RECITERS: Reciter[] = [
   {
     id: 'shamshad',
-    name: 'Shamshad Ali Khan · Offline (شمشاد علی خان)',
-    style: 'Fateh Muhammad Jalandhri · 100% Offline Urdu Recitation',
+    name: 'Shamshad Ali Khan (Male Human Voice)',
+    style: 'Fateh Muhammad Jalandhri · Clear Studio Recitation · Offline MP3s',
     subfolder: 'translations/urdu_shamshad_ali_khan_46kbps',
-    language: 'ur',
-  },
-  {
-    id: 'farhat',
-    name: 'Dr. Farhat Hashmi · Offline (ڈاکٹر فرحت ہاشمی)',
-    style: 'Expressive Urdu Translation · 100% Offline Recitation',
-    subfolder: 'translations/urdu_farhat_hashmi',
     language: 'ur',
   },
 ];

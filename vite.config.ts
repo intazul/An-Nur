@@ -137,7 +137,13 @@ export default defineConfig(() => {
         },
         workbox: {
           maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}', 'data/quran/*.json'],
+          globPatterns: [
+            '**/*.{js,css,html,ico,png,svg,woff,woff2}',
+            'data/quran/*.json',
+            'data/tafsir-ur/*.json',
+            'data/tafsir/*.json',
+            'data/tafsir-as/*.json',
+          ],
           cleanupOutdatedCaches: true,
           clientsClaim: true,
           skipWaiting: true,

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { ALL_SURAHS } from '../data/surahList';
 import { LastReadPosition, SurahMeta, UserProfileData } from '../types/quran';
+import { transliterateUrduToRoman } from '../utils/urduTransliteration';
 
 interface SurahListViewProps {
   onBackToDashboard: () => void;
@@ -55,7 +56,8 @@ export const SurahListView: React.FC<SurahListViewProps> = ({
         const matchesEng = s.nameEnglish.toLowerCase().includes(q);
         const matchesTranslation = s.englishTranslation.toLowerCase().includes(q);
         const matchesArabic = s.nameArabic.includes(q);
-        const matchesUrdu = s.nameUrdu.includes(q);
+        const matchesUrdu =
+          s.nameUrdu.includes(q) || transliterateUrduToRoman(s.nameUrdu).toLowerCase().includes(q);
         return matchesNum || matchesEng || matchesTranslation || matchesArabic || matchesUrdu;
       });
     }
