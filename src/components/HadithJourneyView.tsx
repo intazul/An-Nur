@@ -298,7 +298,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
       {viewMode !== 'lesson_reader' && (
         <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden">
           {/* App Header */}
-          <header className="shrink-0 bg-white dark:bg-black border-b border-stone-200 dark:border-stone-800 px-4 py-3 flex items-center justify-between gap-3">
+          <header className="shrink-0 bg-white dark:bg-black border-b border-neutral-200 dark:border-neutral-800 px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
               <button
                 onClick={() => {
@@ -320,7 +320,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                     ? 'Hadith Topics & Lessons'
                     : `Ch ${activeTopic.chapterNumber} · ${activeTopic.titleEnglish}`}
                 </h1>
-                <p className="text-[10.5px] text-stone-500 dark:text-stone-400 font-semibold truncate mt-0.5">
+                <p className="text-[10.5px] text-neutral-500 dark:text-neutral-400 font-semibold truncate mt-0.5">
                   {viewMode === 'topics_overview'
                     ? `${HADITH_TOPICS.length} Topics · ${HADITH_CURRICULUM.length} Lessons · ${totalLearnedCount} Learned`
                     : `${currentTopicLessons.filter((l) => learnedSet.has(l.id)).length}/${currentTopicLessons.length} Lessons Remembered`}
@@ -340,7 +340,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                 onOpenLibrary && (
                   <button
                     onClick={onOpenLibrary}
-                    className="px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-black dark:text-white text-xs font-bold flex items-center gap-1"
+                    className="px-3 py-1.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-black dark:text-white text-xs font-bold flex items-center gap-1"
                     title="Browse Hadiths by Canonical Book"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
@@ -352,20 +352,20 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
           </header>
 
           {/* Search & Topic Quick Tabs */}
-          <div className="shrink-0 p-3 bg-stone-50 dark:bg-stone-950 border-b border-stone-200 dark:border-stone-800 space-y-2.5">
+          <div className="shrink-0 p-3 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 space-y-2.5">
             <div className="relative">
-              <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search Hadith lessons, keywords, or narrators..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl text-xs text-black dark:text-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"
+                className="w-full pl-9 pr-8 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl text-xs text-black dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-black dark:hover:text-white"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black dark:hover:text-white"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -382,7 +382,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                 className={`snap-start shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all ${
                   viewMode === 'topics_overview'
                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                    : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-800'
+                    : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800'
                 }`}
               >
                 All {HADITH_TOPICS.length} Topics
@@ -397,7 +397,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                     className={`snap-start shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all ${
                       isSelected
                         ? 'bg-black text-white dark:bg-white dark:text-black'
-                        : 'bg-white dark:bg-stone-900 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-800'
+                        : 'bg-white dark:bg-neutral-900 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800'
                     }`}
                   >
                     Ch {t.chapterNumber} · {t.shortLabel}
@@ -421,10 +421,10 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                   <button
                     key={lesson.id}
                     onClick={() => handleStartLesson(lesson.topicId, idxInTopic)}
-                    className="w-full p-3.5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white text-left space-y-1.5 transition-all"
+                    className="w-full p-3.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white text-left space-y-1.5 transition-all"
                   >
                     <div className="flex items-center justify-between text-[11px] font-bold">
-                      <span className="text-stone-500">
+                      <span className="text-neutral-500">
                         Ch {lesson.chapterNumber} · Lesson {lesson.lessonNumber} · {lesson.topicTitle}
                       </span>
                       {isDone && (
@@ -436,7 +436,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                     <h3 className="text-xs font-bold text-black dark:text-white font-cinzel">
                       {lesson.lessonTitle}
                     </h3>
-                    <p className="text-[11px] text-stone-600 dark:text-stone-300 line-clamp-2">
+                    <p className="text-[11px] text-neutral-600 dark:text-neutral-300 line-clamp-2">
                       "{lesson.corePhraseEnglish}"
                     </p>
                   </button>
@@ -444,7 +444,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               })}
 
               {searchResults.length === 0 && (
-                <div className="py-12 text-center text-xs text-stone-500">
+                <div className="py-12 text-center text-xs text-neutral-500">
                   No Hadith lessons matched "{searchQuery}".
                 </div>
               )}
@@ -494,23 +494,23 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               </div>
 
               {/* Distribution by Topic Breakdown */}
-              <div className="p-4 rounded-3xl bg-stone-50 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 space-y-3">
+              <div className="p-4 rounded-3xl bg-neutral-50 dark:bg-neutral-900/60 border border-neutral-200 dark:border-neutral-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-xs font-bold uppercase tracking-wider text-black dark:text-white">
                       Hadith Distribution by Topic Type
                     </h2>
-                    <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400">
                       Every Hadith grouped by subject & taught as progressive lessons
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono font-bold text-stone-500">
+                  <span className="text-[10px] font-mono font-bold text-neutral-500">
                     {HADITH_CURRICULUM.length} Total
                   </span>
                 </div>
 
                 {/* Stacked Proportional Topic Distribution Bar */}
-                <div className="flex w-full h-2.5 rounded-full overflow-hidden gap-0.5 bg-stone-200 dark:bg-stone-800">
+                <div className="flex w-full h-2.5 rounded-full overflow-hidden gap-0.5 bg-neutral-200 dark:bg-neutral-800">
                   {topicStats.map((stat, idx) => (
                     <div
                       key={stat.topic.id}
@@ -520,7 +520,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                       className={`h-full cursor-pointer transition-opacity hover:opacity-80 ${
                         idx % 2 === 0
                           ? 'bg-black dark:bg-white'
-                          : 'bg-stone-500 dark:bg-stone-400'
+                          : 'bg-neutral-500 dark:bg-neutral-400'
                       }`}
                     />
                   ))}
@@ -532,12 +532,12 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                     <button
                       key={stat.topic.id}
                       onClick={() => handleOpenTopic(stat.topic.id)}
-                      className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white text-left transition-colors"
+                      className="flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white text-left transition-colors"
                     >
                       <span className="font-bold text-black dark:text-white truncate pr-1">
                         {stat.topic.chapterNumber}. {stat.topic.shortLabel}
                       </span>
-                      <span className="font-mono font-bold text-stone-500 shrink-0">
+                      <span className="font-mono font-bold text-neutral-500 shrink-0">
                         {stat.totalCount} ({stat.sharePercent}%)
                       </span>
                     </button>
@@ -548,10 +548,10 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               {/* Ordered Chapter Cards (1 to 8) */}
               <div className="space-y-2.5 pb-4">
                 <div className="flex items-center justify-between px-1">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">
                     Chapters One After Another
                   </span>
-                  <span className="text-[10.5px] font-semibold text-stone-400">
+                  <span className="text-[10.5px] font-semibold text-neutral-400">
                     Tap a chapter to see its lessons
                   </span>
                 </div>
@@ -560,7 +560,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                   <button
                     key={topic.id}
                     onClick={() => handleOpenTopic(topic.id)}
-                    className="w-full p-4 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white text-left space-y-2.5 transition-all active:scale-[0.99] shadow-2xs"
+                    className="w-full p-4 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white text-left space-y-2.5 transition-all active:scale-[0.99] shadow-2xs"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
@@ -571,26 +571,26 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                           <h3 className="text-sm font-bold text-black dark:text-white font-cinzel truncate">
                             {topic.titleEnglish}
                           </h3>
-                          <p className="text-[11px] text-stone-500 dark:text-stone-400 truncate">
+                          <p className="text-[11px] text-neutral-500 dark:text-neutral-400 truncate">
                             {topic.subtitle}
                           </p>
                         </div>
                       </div>
 
-                      <span className="font-quran text-xs font-bold text-stone-600 dark:text-stone-300 shrink-0" dir="rtl">
+                      <span className="font-quran text-xs font-bold text-neutral-600 dark:text-neutral-300 shrink-0" dir="rtl">
                         {topic.titleArabic}
                       </span>
                     </div>
 
                     <div className="space-y-1">
-                      <div className="w-full h-1.5 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
                         <div
                           className="h-full bg-black dark:bg-white rounded-full transition-all duration-500"
                           style={{ width: `${progressPercent}%` }}
                         />
                       </div>
                       <div className="flex items-center justify-between text-[11px] font-bold">
-                        <span className="text-stone-500">
+                        <span className="text-neutral-500">
                           {learnedCount} / {totalCount} Lessons Learned
                         </span>
                         <span className="text-black dark:text-white flex items-center gap-1">
@@ -609,20 +609,20 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                ===================================================================== */
             <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3 pb-6">
               {/* Chapter Intro Banner */}
-              <div className="p-4 rounded-3xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2">
+              <div className="p-4 rounded-3xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-stone-500">
+                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-neutral-500">
                     Chapter {activeTopic.chapterNumber} of {HADITH_TOPICS.length}
                   </span>
                   <span className="font-quran text-sm font-bold text-black dark:text-white" dir="rtl">
                     {activeTopic.titleArabic}
                   </span>
                 </div>
-                <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed">
+                <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                   {activeTopic.description}
                 </p>
                 <div className="pt-1 flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-stone-500">
+                  <span className="text-[11px] font-bold text-neutral-500">
                     {currentTopicLessons.length} Sequential Lessons
                   </span>
                   <button
@@ -662,8 +662,8 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                       onClick={() => handleStartLesson(activeTopic.id, idx)}
                       className={`w-full p-3.5 rounded-2xl border text-left transition-all flex items-start gap-3 active:scale-[0.99] ${
                         isCurrentStep
-                          ? 'bg-stone-100 dark:bg-stone-900 border-2 border-black dark:border-white shadow-xs'
-                          : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white'
+                          ? 'bg-neutral-100 dark:bg-neutral-900 border-2 border-black dark:border-white shadow-xs'
+                          : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white'
                       }`}
                     >
                       <div
@@ -672,7 +672,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                             ? 'bg-black text-white dark:bg-white dark:text-black'
                             : isCurrentStep
                             ? 'bg-black text-white dark:bg-white dark:text-black'
-                            : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                            : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300'
                         }`}
                       >
                         {isDone ? <Check className="w-4 h-4 stroke-[2.8]" /> : lesson.lessonNumber}
@@ -680,7 +680,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
 
                       <div className="flex-1 min-w-0 space-y-1">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
                             Lesson {lesson.lessonNumber} · {lesson.reference.split('·')[0].trim()}
                           </span>
                           {isDone ? (
@@ -698,12 +698,12 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                           {lesson.lessonTitle}
                         </h3>
 
-                        <p className="text-xs text-stone-600 dark:text-stone-400 line-clamp-1">
+                        <p className="text-xs text-neutral-600 dark:text-neutral-400 line-clamp-1">
                           {lesson.corePhraseEnglish}
                         </p>
                       </div>
 
-                      <ChevronRight className="w-4 h-4 text-stone-400 shrink-0 self-center" />
+                      <ChevronRight className="w-4 h-4 text-neutral-400 shrink-0 self-center" />
                     </button>
                   );
                 })}
@@ -712,7 +712,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               {/* Next Chapter Quick Footer */}
               <button
                 onClick={() => handleOpenTopic(nextTopicObj.id)}
-                className="w-full p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs font-bold text-black dark:text-white hover:border-black dark:hover:border-white transition-all"
+                className="w-full p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs font-bold text-black dark:text-white hover:border-black dark:hover:border-white transition-all"
               >
                 <span>
                   Next Chapter ({nextTopicObj.chapterNumber}): {nextTopicObj.titleEnglish}
@@ -730,11 +730,11 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
       {viewMode === 'lesson_reader' && (
         <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden relative">
           {/* Top Lesson Bar */}
-          <header className="shrink-0 bg-white dark:bg-black border-b border-stone-200 dark:border-stone-800 px-3.5 py-2.5 flex items-center justify-between gap-2">
+          <header className="shrink-0 bg-white dark:bg-black border-b border-neutral-200 dark:border-neutral-800 px-3.5 py-2.5 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <button
                 onClick={() => setViewMode('chapter_lessons')}
-                className="p-1.5 -ml-1 text-black dark:text-white rounded-full hover:bg-stone-100 dark:hover:bg-stone-900 transition-colors shrink-0"
+                className="p-1.5 -ml-1 text-black dark:text-white rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors shrink-0"
                 title="Back to Chapter Lessons"
               >
                 <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
@@ -746,14 +746,14 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                   <span className="opacity-40">·</span>
                   <span className="font-cinzel truncate">{activeTopic.shortLabel}</span>
                 </div>
-                <p className="text-[10.5px] text-stone-500 dark:text-stone-400 font-semibold">
+                <p className="text-[10.5px] text-neutral-500 dark:text-neutral-400 font-semibold">
                   Lesson {safeLessonIdx + 1} of {currentTopicLessons.length}
                 </p>
               </div>
             </div>
 
             {/* Study vs Recall Memory Mode Toggle */}
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shrink-0">
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shrink-0">
               <button
                 onClick={() => {
                   setPracticeRecallMode(false);
@@ -762,7 +762,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all ${
                   !practiceRecallMode
                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                    : 'text-stone-600 dark:text-stone-400'
+                    : 'text-neutral-600 dark:text-neutral-400'
                 }`}
               >
                 <BookOpen className="w-3 h-3" />
@@ -776,7 +776,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                 className={`px-2.5 py-1 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all ${
                   practiceRecallMode
                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                    : 'text-stone-600 dark:text-stone-400'
+                    : 'text-neutral-600 dark:text-neutral-400'
                 }`}
                 title="Hide English & practice remembering this Hadith"
               >
@@ -802,7 +802,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
           >
             <div
               onAnimationEnd={() => setSlideAnimation('none')}
-              className={`flex-1 min-h-0 flex flex-col justify-between p-4 sm:p-5 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-800 shadow-md overflow-hidden ${
+              className={`flex-1 min-h-0 flex flex-col justify-between p-4 sm:p-5 rounded-3xl bg-white dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 shadow-md overflow-hidden ${
                 slideAnimation === 'next'
                   ? 'animate-slide-next'
                   : slideAnimation === 'prev'
@@ -811,13 +811,13 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               }`}
             >
               {/* Top Source & Remembered Toggle */}
-              <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-stone-200 dark:border-stone-800 shrink-0 gap-2">
+              <div className="flex items-center justify-between pb-2.5 mb-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0 gap-2">
                 <button
                   onClick={() => handleToggleLearnedState(currentLesson.id)}
                   className={`px-2.5 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1 transition-all ${
                     isCurrentLearned
                       ? 'bg-black text-white dark:bg-white dark:text-black'
-                      : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-700'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700'
                   }`}
                   title={isCurrentLearned ? 'Marked as learned & remembered' : 'Tap to mark learned'}
                 >
@@ -831,7 +831,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
 
                 <button
                   onClick={() => handleOpenReferenceModal(currentLesson)}
-                  className="px-2.5 py-1 rounded-xl bg-stone-100 dark:bg-stone-800 text-black dark:text-white font-cinzel text-[10.5px] font-bold flex items-center gap-1 hover:bg-stone-200 dark:hover:bg-stone-700 transition-colors truncate"
+                  className="px-2.5 py-1 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white font-cinzel text-[10.5px] font-bold flex items-center gap-1 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors truncate"
                 >
                   <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
                   <span className="truncate">{currentLesson.reference.split('·')[0].trim()}</span>
@@ -842,20 +842,20 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain space-y-3.5 pr-1 scrollbar-thin">
                 {/* Lesson Title & Guiding Question */}
                 <div className="space-y-1 text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-stone-500">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                     Lesson {currentLesson.lessonNumber} · {currentLesson.lessonTitle}
                   </span>
                   <h2 className="font-cinzel text-base sm:text-lg font-bold text-black dark:text-white leading-snug">
                     {currentLesson.question}
                   </h2>
-                  <p className="text-[11px] text-stone-500 dark:text-stone-400 font-semibold">
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 font-semibold">
                     Narrated by <strong className="text-black dark:text-white">{currentLesson.narrator}</strong>
                   </p>
                 </div>
 
                 {/* Easy-to-Memorize Core Anchor Phrase */}
-                <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 space-y-1.5">
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400">
+                <div className="p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                     <span>Core Line to Remember</span>
                     <span className="font-quran">خلاصة الحديث</span>
                   </div>
@@ -871,13 +871,13 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
 
                 {/* Practice Recall Veil when Recall Mode is active & unrevealed */}
                 {practiceRecallMode && !recallRevealed ? (
-                  <div className="p-5 rounded-2xl border-2 border-dashed border-stone-300 dark:border-stone-700 text-center space-y-3 bg-stone-50 dark:bg-stone-950/60">
+                  <div className="p-5 rounded-2xl border-2 border-dashed border-neutral-300 dark:border-neutral-700 text-center space-y-3 bg-neutral-50 dark:bg-neutral-950/60">
                     <Brain className="w-7 h-7 mx-auto text-black dark:text-white" />
                     <div className="space-y-1">
                       <h3 className="text-xs font-bold text-black dark:text-white uppercase tracking-wider">
                         Memory Check
                       </h3>
-                      <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
                         Look at the Arabic phrase and question above. Can you recall the Prophet’s ﷺ teaching and key lesson before revealing?
                       </p>
                     </div>
@@ -893,14 +893,14 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                   <>
                     {/* Full Authentic Arabic Text */}
                     <div className="text-right select-text" dir="rtl">
-                      <p className="font-quran text-base sm:text-lg text-stone-950 dark:text-stone-50 leading-[2.3] font-bold">
+                      <p className="font-quran text-base sm:text-lg text-neutral-950 dark:text-neutral-50 leading-[2.3] font-bold">
                         {currentLesson.textArabic}
                       </p>
                     </div>
 
                     {/* Clear English Text */}
-                    <div className="pt-2.5 border-t border-stone-200 dark:border-stone-800 select-text">
-                      <p className="font-book-serif text-[14px] sm:text-[15px] leading-[1.75] text-stone-900 dark:text-stone-100">
+                    <div className="pt-2.5 border-t border-neutral-200 dark:border-neutral-800 select-text">
+                      <p className="font-book-serif text-[14px] sm:text-[15px] leading-[1.75] text-neutral-900 dark:text-neutral-100">
                         “{currentLesson.textEnglish}”
                       </p>
                     </div>
@@ -916,11 +916,11 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                         </p>
                       </div>
 
-                      <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-xs space-y-0.5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block">
+                      <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-800/60 border border-neutral-200 dark:border-neutral-700 text-xs space-y-0.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">
                           Apply Today
                         </span>
-                        <p className="text-stone-800 dark:text-stone-200 font-medium leading-relaxed">
+                        <p className="text-neutral-800 dark:text-neutral-200 font-medium leading-relaxed">
                           {currentLesson.keyLesson}
                         </p>
                       </div>
@@ -930,7 +930,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                       <div className="flex items-center justify-between gap-2 pt-1">
                         <button
                           onClick={() => setRecallRevealed(false)}
-                          className="px-3 py-2 rounded-xl border border-stone-300 dark:border-stone-700 text-xs font-bold text-stone-600 dark:text-stone-300 flex items-center gap-1"
+                          className="px-3 py-2 rounded-xl border border-neutral-300 dark:border-neutral-700 text-xs font-bold text-neutral-600 dark:text-neutral-300 flex items-center gap-1"
                         >
                           <EyeOff className="w-3.5 h-3.5" />
                           <span>Hide Again</span>
@@ -949,7 +949,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
               </div>
 
               {/* Chapter Lesson Step Progress Strip */}
-              <div className="pt-2.5 border-t border-stone-200 dark:border-stone-800 flex items-center gap-1.5 shrink-0">
+              <div className="pt-2.5 border-t border-neutral-200 dark:border-neutral-800 flex items-center gap-1.5 shrink-0">
                 {currentTopicLessons.map((l, i) => {
                   const done = learnedSet.has(l.id);
                   const active = i === safeLessonIdx;
@@ -962,8 +962,8 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
                         active
                           ? 'bg-black dark:bg-white scale-y-125'
                           : done
-                          ? 'bg-stone-600 dark:bg-stone-400'
-                          : 'bg-stone-200 dark:bg-stone-800'
+                          ? 'bg-neutral-600 dark:bg-neutral-400'
+                          : 'bg-neutral-200 dark:bg-neutral-800'
                       }`}
                     />
                   );
@@ -975,7 +975,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
             <div className="mt-2.5 flex items-center justify-between gap-2 shrink-0">
               <button
                 onClick={goToPrevLesson}
-                className="py-3 px-3.5 rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-white font-bold text-xs shadow-2xs transition-all active:scale-95 flex items-center justify-center gap-1"
+                className="py-3 px-3.5 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-black dark:text-white font-bold text-xs shadow-2xs transition-all active:scale-95 flex items-center justify-center gap-1"
                 title="Previous Lesson"
               >
                 <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
@@ -984,7 +984,7 @@ export const HadithJourneyView: React.FC<HadithJourneyViewProps> = ({
 
               <button
                 onClick={handleCopyLesson}
-                className="p-3 rounded-2xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-white font-bold transition-all active:scale-95 shadow-2xs"
+                className="p-3 rounded-2xl border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-black dark:text-white font-bold transition-all active:scale-95 shadow-2xs"
                 title="Copy Lesson & Hadith"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}

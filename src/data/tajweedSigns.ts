@@ -5,73 +5,73 @@ export const TAJWEED_STOPPING_SIGNS: Record<string, WaqfSignInfo> = {
     symbol: 'مـ',
     arabicName: 'وَقْفٌ لَازِمٌ (وقف م)',
     name: 'Compulsory Stop',
-    ruleSimple: '🛑 MUST STOP HERE',
+    ruleSimple: '■ MUST STOP HERE',
     instruction: 'You must stop your recitation here. Continuing into the next sentence changes or distorts the sacred divine meaning.',
     category: 'must_stop',
-    badgeColor: 'bg-rose-500/20 text-rose-700 dark:text-rose-300 border-rose-500/40',
+    badgeColor: 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white',
   },
   'قلى': {
     symbol: 'قلى',
     arabicName: 'الْوَقْفُ أَوْلَى (قلى)',
     name: 'Better to Stop',
-    ruleSimple: '🟢 BETTER TO PAUSE HERE',
+    ruleSimple: '● BETTER TO PAUSE HERE',
     instruction: 'It is preferred and recommended to pause and take a breath here, though continuing is permissible.',
     category: 'better_stop',
-    badgeColor: 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-500/40',
+    badgeColor: 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-black border-neutral-900 dark:border-neutral-100',
   },
   'ج': {
     symbol: 'ج',
     arabicName: 'وَقْفٌ جَائِزٌ (ج)',
     name: 'Permissible Pause',
-    ruleSimple: '🟡 EQUAL CHOICE',
+    ruleSimple: '◆ EQUAL CHOICE',
     instruction: 'You may either stop or continue reciting; both options are equally good and valid.',
     category: 'can_stop',
-    badgeColor: 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40',
+    badgeColor: 'bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white border-neutral-400 dark:border-neutral-600',
   },
   'صلى': {
     symbol: 'صلى',
     arabicName: 'الْوَصْلُ أَوْلَى (صلى)',
     name: 'Better to Continue',
-    ruleSimple: '🔵 BETTER TO CONTINUE',
+    ruleSimple: '→ BETTER TO CONTINUE',
     instruction: 'It is preferred to connect and continue reading without stopping. If you run out of breath, pausing is allowed.',
     category: 'better_continue',
-    badgeColor: 'bg-sky-500/20 text-sky-700 dark:text-sky-300 border-sky-500/40',
+    badgeColor: 'bg-white text-black dark:bg-black dark:text-white border-neutral-300 dark:border-neutral-700',
   },
   'لا': {
     symbol: 'لا',
     arabicName: 'لَا تَقِفْ (لا)',
     name: 'Do NOT Stop',
-    ruleSimple: '⛔ DO NOT STOP HERE',
+    ruleSimple: '✕ DO NOT STOP HERE',
     instruction: 'Do not stop here because the sentence is still ongoing. If you stop due to running out of breath, repeat the previous word before continuing.',
     category: 'do_not_stop',
-    badgeColor: 'bg-red-500/20 text-red-700 dark:text-red-300 border-red-500/40',
+    badgeColor: 'bg-white text-black dark:bg-black dark:text-white border-dashed border-black dark:border-white',
   },
   '∴': {
     symbol: '∴',
     arabicName: 'تَعَانُقُ الْوَقْفِ (معانقة)',
     name: 'Embracing Stop',
-    ruleSimple: '⚖️ STOP AT ONE ONLY',
+    ruleSimple: '❖ STOP AT ONE ONLY',
     instruction: 'These three dots appear in pairs. You must stop at either the first mark OR the second mark, but NEVER stop at both.',
     category: 'can_stop',
-    badgeColor: 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border-purple-500/40',
+    badgeColor: 'bg-neutral-200 text-black dark:bg-neutral-800 dark:text-white border-neutral-500',
   },
   'س': {
     symbol: 'س',
     arabicName: 'سَكْتَةٌ لَطِيفَةٌ (س)',
     name: 'Silent Breathless Pause',
-    ruleSimple: '⏸️ PAUSE WITHOUT BREATH',
+    ruleSimple: '‖ PAUSE WITHOUT BREATH',
     instruction: 'Pause your voice briefly (about 1 second) without drawing breath, then resume reading immediately.',
     category: 'saktah',
-    badgeColor: 'bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-500/40',
+    badgeColor: 'bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white border-black/40 dark:border-white/40',
   },
   '۩': {
     symbol: '۩',
     arabicName: 'سَجْدَةُ التِّلَاوَةِ (سجدة)',
     name: 'Prostration of Recitation',
-    ruleSimple: '🕌 PROSTRATE (SAJDAH)',
+    ruleSimple: '۩ PROSTRATE (SAJDAH)',
     instruction: 'It is a beloved prophetic Sunnah to perform one prostration (Sujud) to Allah upon reciting or listening to this verse.',
     category: 'sajdah',
-    badgeColor: 'bg-emerald-600/25 text-emerald-800 dark:text-emerald-200 border-emerald-500',
+    badgeColor: 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white',
   },
 };
 
@@ -93,13 +93,6 @@ export function getVerseWaqfSigns(surahNumber: number, ayahNumber: number, textA
   }
 
   // Detect embedded Unicode Waqf marks in text (U+06D6 through U+06DC)
-  // U+06D6: Small High Ligature Sad With Lam With Alef Maksura (صلى)
-  // U+06D7: Small High Ligature Qaf With Lam With Alef Maksura (قلى)
-  // U+06D8: Small High Meem Initial Form (مـ)
-  // U+06D9: Small High Lam Alef (لا)
-  // U+06DA: Small High Jeem (ج)
-  // U+06DB: Small High Three Dots (∴)
-  // U+06DC: Small High Seen (س)
   if (textArabic.includes('\u06D8') || textArabic.includes('مـ')) {
     signs.push(TAJWEED_STOPPING_SIGNS['مـ']);
   }
@@ -129,10 +122,10 @@ export function getVerseWaqfSigns(surahNumber: number, ayahNumber: number, textA
       symbol: '۝',
       arabicName: 'رَأْسُ الْآيَةِ (سُنَّةٌ)',
       name: 'End of Ayah (Sunnah Stop)',
-      ruleSimple: '🟢 SUNNAH STOP AT END OF VERSE',
+      ruleSimple: '● SUNNAH STOP AT END OF VERSE',
       instruction: 'Stopping at the end of every Ayah is the authentic Sunnah of the Prophet Muhammad (ﷺ). Take a breath before beginning the next verse.',
       category: 'better_stop',
-      badgeColor: 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30',
+      badgeColor: 'bg-neutral-100 text-black dark:bg-neutral-900 dark:text-white border-neutral-300 dark:border-neutral-700',
     });
   }
 

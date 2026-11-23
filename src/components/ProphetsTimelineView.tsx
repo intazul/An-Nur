@@ -277,7 +277,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
     if (revelations.length === 0) return null;
     return (
       <section className="space-y-2.5">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
           <BookOpen className="w-3.5 h-3.5" />
           <span>Linked Quran Revelations ({revelations.length})</span>
         </div>
@@ -286,11 +286,11 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
           {revelations.map((rev, idx) => (
             <div
               key={`${rev.surahNumber}-${rev.ayahNumber}-${idx}`}
-              className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2.5"
+              className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2.5"
             >
               <div>
                 <p className="text-xs font-bold text-black dark:text-white">{rev.ayahRangeLabel}</p>
-                <p className="text-xs text-stone-700 dark:text-stone-300 mt-1 leading-relaxed">
+                <p className="text-xs text-neutral-700 dark:text-neutral-300 mt-1 leading-relaxed">
                   {rev.contextEnglish}
                 </p>
               </div>
@@ -322,7 +322,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
     if (!hadiths || hadiths.length === 0) return null;
     return (
       <section className="space-y-2.5">
-        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+        <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
           <ScrollText className="w-3.5 h-3.5" />
           <span>
             {heading} ({hadiths.length})
@@ -361,33 +361,33 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
       <div className="space-y-2.5 text-xs">
         <div>
-          <span className="font-bold block text-stone-600 dark:text-stone-400">
+          <span className="font-bold block text-neutral-600 dark:text-neutral-400">
             Cause &amp; Context
           </span>
           <p className="leading-relaxed mt-0.5">{battleDetails.cause}</p>
         </div>
         {battleDetails.commanders && (
           <div>
-            <span className="font-bold block text-stone-600 dark:text-stone-400">
+            <span className="font-bold block text-neutral-600 dark:text-neutral-400">
               Commanders
             </span>
             <p className="leading-relaxed mt-0.5">{battleDetails.commanders}</p>
           </div>
         )}
         <div>
-          <span className="font-bold block text-stone-600 dark:text-stone-400">
+          <span className="font-bold block text-neutral-600 dark:text-neutral-400">
             Forces Engaged
           </span>
           <p className="leading-relaxed mt-0.5">{battleDetails.forces}</p>
         </div>
         <div>
-          <span className="font-bold block text-stone-600 dark:text-stone-400">
+          <span className="font-bold block text-neutral-600 dark:text-neutral-400">
             Course &amp; Strategy of Fighting
           </span>
           <p className="leading-relaxed mt-0.5">{battleDetails.howItUnfolded}</p>
         </div>
         <div>
-          <span className="font-bold block text-stone-600 dark:text-stone-400">
+          <span className="font-bold block text-neutral-600 dark:text-neutral-400">
             Outcome &amp; Prophetic Lesson
           </span>
           <p className="leading-relaxed mt-0.5">{battleDetails.outcomeAndLesson}</p>
@@ -399,7 +399,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
   return (
     <div className="flex-1 flex flex-col bg-white dark:bg-black text-black dark:text-white overflow-hidden select-none relative">
       {/* Top Sticky Monochrome Header */}
-      <header className="px-4 pt-3.5 pb-2.5 border-b border-stone-200 dark:border-stone-800 bg-white dark:bg-black shrink-0 space-y-3 z-20">
+      <header className="px-4 pt-3.5 pb-2.5 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black shrink-0 space-y-3 z-20">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <button
@@ -414,7 +414,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               <h1 className="font-cinzel font-bold text-sm text-black dark:text-white truncate leading-tight">
                 Prophets &amp; Sirah Study
               </h1>
-              <p className="text-[11px] text-stone-600 dark:text-stone-400 truncate">
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 truncate">
                 English Only • 100% Offline • Sahih Hadiths
               </p>
             </div>
@@ -455,20 +455,20 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search prophet, war, stage, Bukhari, Muslim..."
-              className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-stone-50 dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-xs text-black dark:text-white placeholder:text-stone-500 focus:outline-none focus:border-black dark:focus:border-white"
+              className="w-full min-h-[44px] px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs text-black dark:text-white placeholder:text-neutral-500 focus:outline-none focus:border-black dark:focus:border-white"
               autoFocus
             />
           </div>
         )}
 
         {/* Primary 3-Tab Mode Switcher */}
-        <div className="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800">
+        <div className="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
           <button
             onClick={() => setActiveTab('sirah')}
             className={`min-h-[44px] px-2 py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${
               activeTab === 'sirah'
                 ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                : 'text-stone-700 dark:text-stone-300'
+                : 'text-neutral-700 dark:text-neutral-300'
             }`}
           >
             Sirah (570→632)
@@ -478,7 +478,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
             className={`min-h-[44px] px-2 py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${
               activeTab === 'prophets'
                 ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                : 'text-stone-700 dark:text-stone-300'
+                : 'text-neutral-700 dark:text-neutral-300'
             }`}
           >
             Prophets ({PROPHETS_CHRONOLOGY.length})
@@ -488,7 +488,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
             className={`min-h-[44px] px-2 py-2 rounded-xl text-[11px] font-bold transition-all leading-tight ${
               activeTab === 'wars'
                 ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                : 'text-stone-700 dark:text-stone-300'
+                : 'text-neutral-700 dark:text-neutral-300'
             }`}
           >
             Important Wars ({allImportantWars.length})
@@ -514,7 +514,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                   className={`px-3 py-1.5 rounded-xl text-[11px] font-bold whitespace-nowrap border transition-all ${
                     categoryFilter === item.id
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                      : 'bg-white text-black border-stone-300 dark:bg-black dark:text-white dark:border-stone-700'
+                      : 'bg-white text-black border-neutral-300 dark:bg-black dark:text-white dark:border-neutral-700'
                   }`}
                 >
                   {item.label}
@@ -528,7 +528,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                   <button
                     key={era}
                     onClick={() => scrollToEra(era)}
-                    className="px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-[10px] font-bold text-stone-700 dark:text-stone-300 whitespace-nowrap hover:border-black dark:hover:border-white transition-colors"
+                    className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-[10px] font-bold text-neutral-700 dark:text-neutral-300 whitespace-nowrap hover:border-black dark:hover:border-white transition-colors"
                   >
                     {idx + 1}. {SIRAH_ERA_META[era].span}
                   </button>
@@ -554,7 +554,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 className={`px-3 py-1.5 rounded-xl text-[11px] font-bold whitespace-nowrap border transition-all ${
                   prophetFilter === item.id
                     ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                    : 'bg-white text-black border-stone-300 dark:bg-black dark:text-white dark:border-stone-700'
+                    : 'bg-white text-black border-neutral-300 dark:bg-black dark:text-white dark:border-neutral-700'
                 }`}
               >
                 {item.label}
@@ -568,7 +568,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
       <main className="flex-1 overflow-y-auto px-4 py-4 space-y-6 pb-10">
         {activeTab === 'sirah' && (
           groupedSirahByEra.length === 0 ? (
-            <div className="p-6 rounded-2xl border border-stone-200 dark:border-stone-800 text-center space-y-2">
+            <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 text-center space-y-2">
               <p className="text-sm font-bold">No matching Sirah events found</p>
               <button
                 onClick={() => {
@@ -600,7 +600,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </div>
 
                 {/* Vertical Timeline Rail */}
-                <div className="relative ml-3.5 pl-6 border-l-2 border-stone-300 dark:border-stone-700 space-y-4">
+                <div className="relative ml-3.5 pl-6 border-l-2 border-neutral-300 dark:border-neutral-700 space-y-4">
                   {group.events.map((ev) => (
                     <div key={ev.id} className="relative">
                       <div className="absolute -left-[35px] top-4 w-7 h-7 rounded-full bg-black text-white dark:bg-white dark:text-black border-2 border-white dark:border-black flex items-center justify-center shadow-xs">
@@ -609,10 +609,10 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
                       <button
                         onClick={() => setSelectedSirahId(ev.id)}
-                        className="w-full text-left p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
+                        className="w-full text-left p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
                       >
                         <div className="flex items-center justify-between gap-2 text-[11px]">
-                          <span className="font-mono font-bold text-stone-700 dark:text-stone-300">
+                          <span className="font-mono font-bold text-neutral-700 dark:text-neutral-300">
                             {ev.order}. {ev.yearLabel}
                           </span>
                           <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
@@ -624,23 +624,23 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                           {ev.title}
                         </h3>
 
-                        <p className="flex items-start gap-1.5 text-[11px] text-stone-600 dark:text-stone-400">
+                        <p className="flex items-start gap-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
                           <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-black dark:text-white" />
                           <span>{ev.where}</span>
                         </p>
 
-                        <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed">
+                        <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed">
                           {ev.whatSummary}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-1.5 pt-1">
                           {ev.battleDetails && (
-                            <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
+                            <span className="px-2 py-0.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-[10px] font-bold text-black dark:text-white">
                               War Strategy
                             </span>
                           )}
                           {ev.revelations.length > 0 && (
-                            <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
+                            <span className="px-2 py-0.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-[10px] font-bold text-black dark:text-white">
                               {ev.revelations[0].ayahRangeLabel}
                             </span>
                           )}
@@ -666,7 +666,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
         {activeTab === 'prophets' && (
           filteredProphets.length === 0 ? (
-            <div className="p-6 rounded-2xl border border-stone-200 dark:border-stone-800 text-center space-y-2">
+            <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 text-center space-y-2">
               <p className="text-sm font-bold">No matching Prophets found</p>
               <button
                 onClick={() => {
@@ -693,7 +693,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </p>
               </div>
 
-              <div className="relative ml-3.5 pl-6 border-l-2 border-stone-300 dark:border-stone-700 space-y-4">
+              <div className="relative ml-3.5 pl-6 border-l-2 border-neutral-300 dark:border-neutral-700 space-y-4">
                 {filteredProphets.map((p) => {
                   const stageHadithCount = p.lifeStages.filter((s) => Boolean(s.sahihHadith)).length;
                   const extraFactsCount = p.hadithExclusiveFacts?.length || 0;
@@ -706,7 +706,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
                       <button
                         onClick={() => setSelectedProphetId(p.id)}
-                        className="w-full text-left p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
+                        className="w-full text-left p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
                       >
                         <div>
                           <div className="flex items-start justify-between gap-2">
@@ -719,31 +719,31 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 mt-0.5">
+                          <p className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 mt-0.5">
                             {p.title}
                           </p>
                         </div>
 
-                        <p className="flex items-start gap-1.5 text-[11px] text-stone-600 dark:text-stone-400">
+                        <p className="flex items-start gap-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
                           <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-black dark:text-white" />
                           <span>{p.eraAndLocation}</span>
                         </p>
 
-                        <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed line-clamp-3">
+                        <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed line-clamp-3">
                           {p.hadithExclusiveFacts?.[0]?.detail || p.lifeStages[0]?.whatHappened || p.keyTrials}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                          <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
+                          <span className="px-2 py-0.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-[10px] font-bold text-black dark:text-white">
                             {p.lifeStages.length} Life Stage{p.lifeStages.length > 1 ? 's' : ''}
                           </span>
                           {extraFactsCount > 0 && (
-                            <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
+                            <span className="px-2 py-0.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-[10px] font-bold text-black dark:text-white">
                               {extraFactsCount} Beyond-Quran Fact{extraFactsCount > 1 ? 's' : ''}
                             </span>
                           )}
                           {p.lifeStages.some((s) => Boolean(s.warOrConfrontation)) && (
-                            <span className="px-2 py-0.5 rounded-md border border-stone-300 dark:border-stone-700 text-[10px] font-bold text-black dark:text-white">
+                            <span className="px-2 py-0.5 rounded-md border border-neutral-300 dark:border-neutral-700 text-[10px] font-bold text-black dark:text-white">
                               War History
                             </span>
                           )}
@@ -769,7 +769,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
         {activeTab === 'wars' && (
           filteredWars.length === 0 ? (
-            <div className="p-6 rounded-2xl border border-stone-200 dark:border-stone-800 text-center space-y-2">
+            <div className="p-6 rounded-2xl border border-neutral-200 dark:border-neutral-800 text-center space-y-2">
               <p className="text-sm font-bold">No matching Wars found</p>
               <button
                 onClick={() => setSearchQuery('')}
@@ -793,7 +793,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </p>
               </div>
 
-              <div className="relative ml-3.5 pl-6 border-l-2 border-stone-300 dark:border-stone-700 space-y-4">
+              <div className="relative ml-3.5 pl-6 border-l-2 border-neutral-300 dark:border-neutral-700 space-y-4">
                 {filteredWars.map((w) => (
                   <div key={w.id} className="relative">
                     <div className="absolute -left-[35px] top-4 w-7 h-7 rounded-full bg-black text-white dark:bg-white dark:text-black border-2 border-white dark:border-black flex items-center justify-center shadow-xs">
@@ -802,10 +802,10 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
                     <button
                       onClick={() => setSelectedWarId(w.id)}
-                      className="w-full text-left p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
+                      className="w-full text-left p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white transition-all active:scale-[0.99] space-y-2"
                     >
                       <div className="flex items-center justify-between gap-2 text-[11px]">
-                        <span className="font-mono font-bold text-stone-700 dark:text-stone-300">
+                        <span className="font-mono font-bold text-neutral-700 dark:text-neutral-300">
                           {w.order}. {w.eraLabel}
                         </span>
                         <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
@@ -817,12 +817,12 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                         {w.title}
                       </h3>
 
-                      <p className="flex items-start gap-1.5 text-[11px] text-stone-600 dark:text-stone-400">
+                      <p className="flex items-start gap-1.5 text-[11px] text-neutral-600 dark:text-neutral-400">
                         <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5 text-black dark:text-white" />
                         <span>{w.where}</span>
                       </p>
 
-                      <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed line-clamp-3">
+                      <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed line-clamp-3">
                         {w.summary}
                       </p>
 
@@ -842,7 +842,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
       {/* 1. Deep Study Sheet for Selected Sirah Event */}
       {selectedSirahEvent && (
         <div className="absolute inset-0 z-40 bg-white dark:bg-black flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2 shrink-0">
+          <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={() => setSelectedSirahId(null)}
               className="min-h-[44px] px-3 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-transform"
@@ -851,13 +851,13 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               <span>Timeline</span>
             </button>
 
-            <span className="text-[11px] font-mono font-bold text-stone-600 dark:text-stone-400">
+            <span className="text-[11px] font-mono font-bold text-neutral-600 dark:text-neutral-400">
               Event {selectedSirahIndex + 1} / {filteredSirahEvents.length}
             </span>
 
             <button
               onClick={() => setSelectedSirahId(null)}
-              className="min-w-[44px] min-h-[44px] rounded-xl border border-stone-300 dark:border-stone-700 flex items-center justify-center active:scale-95 transition-transform"
+              className="min-w-[44px] min-h-[44px] rounded-xl border border-neutral-300 dark:border-neutral-700 flex items-center justify-center active:scale-95 transition-transform"
               aria-label="Close detail"
             >
               <X className="w-4 h-4" />
@@ -870,7 +870,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 <span className="px-2.5 py-1 rounded-lg bg-black text-white dark:bg-white dark:text-black font-bold">
                   {getCategoryLabel(selectedSirahEvent.category)}
                 </span>
-                <span className="font-mono font-bold text-stone-700 dark:text-stone-300">
+                <span className="font-mono font-bold text-neutral-700 dark:text-neutral-300">
                   {selectedSirahEvent.yearLabel}
                 </span>
               </div>
@@ -880,10 +880,10 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               </h2>
             </div>
 
-            <section className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 flex items-start gap-2.5">
+            <section className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 flex items-start gap-2.5">
               <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-black dark:text-white" />
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Where It Took Place
                 </span>
                 <p className="text-xs font-semibold text-black dark:text-white mt-0.5">
@@ -892,8 +892,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               </div>
             </section>
 
-            <section className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+            <section className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                 What Happened
               </span>
               <p className="text-xs leading-relaxed text-black dark:text-white">
@@ -901,8 +901,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               </p>
             </section>
 
-            <section className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+            <section className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                 How It Unfolded
               </span>
               <p className="text-xs leading-relaxed text-black dark:text-white">
@@ -915,7 +915,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
             {renderHadithsList(selectedSirahEvent.hadiths, 'Authentic Sahih Hadiths')}
           </div>
 
-          <div className="px-4 py-3 border-t border-stone-200 dark:border-stone-800 grid grid-cols-2 gap-2 shrink-0 bg-white dark:bg-black">
+          <div className="px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 grid grid-cols-2 gap-2 shrink-0 bg-white dark:bg-black">
             <button
               disabled={selectedSirahIndex <= 0}
               onClick={() => {
@@ -947,7 +947,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
       {/* 2. Deep Full-Biography & Life-Stage Study Sheet for Selected Prophet */}
       {selectedProphet && (
         <div className="absolute inset-0 z-40 bg-white dark:bg-black flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2 shrink-0">
+          <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={() => setSelectedProphetId(null)}
               className="min-h-[44px] px-3 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-transform"
@@ -956,13 +956,13 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               <span>All ({PROPHETS_CHRONOLOGY.length})</span>
             </button>
 
-            <span className="text-[11px] font-mono font-bold text-stone-600 dark:text-stone-400">
+            <span className="text-[11px] font-mono font-bold text-neutral-600 dark:text-neutral-400">
               Entry {selectedProphet.order} / {PROPHETS_CHRONOLOGY.length}
             </span>
 
             <button
               onClick={() => setSelectedProphetId(null)}
-              className="min-w-[44px] min-h-[44px] rounded-xl border border-stone-300 dark:border-stone-700 flex items-center justify-center active:scale-95 transition-transform"
+              className="min-w-[44px] min-h-[44px] rounded-xl border border-neutral-300 dark:border-neutral-700 flex items-center justify-center active:scale-95 transition-transform"
               aria-label="Close detail"
             >
               <X className="w-4 h-4" />
@@ -979,15 +979,15 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               <h2 className="font-cinzel font-bold text-xl text-black dark:text-white">
                 {selectedProphet.nameEnglish}
               </h2>
-              <p className="text-xs font-semibold text-stone-600 dark:text-stone-400 mt-0.5">
+              <p className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 mt-0.5">
                 {selectedProphet.title}
               </p>
             </div>
 
             {/* Complete Overview Matrix */}
             <div className="grid grid-cols-1 gap-2">
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+              <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Lineage &amp; Birth
                 </span>
                 <p className="text-xs font-medium mt-0.5 leading-relaxed">
@@ -995,8 +995,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </p>
               </div>
 
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+              <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Era, Location &amp; Nation
                 </span>
                 <p className="text-xs font-medium mt-0.5 leading-relaxed">
@@ -1004,8 +1004,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </p>
               </div>
 
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+              <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Scripture &amp; Miracles
                 </span>
                 <p className="text-xs font-medium mt-0.5 leading-relaxed">
@@ -1014,8 +1014,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               </div>
 
               {selectedProphet.physicalAppearance && (
-                <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-300 dark:border-stone-700">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+                <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-300 dark:border-neutral-700">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                     Physical Description (Sahih Hadith Testimony)
                   </span>
                   <p className="text-xs font-medium mt-0.5 leading-relaxed">
@@ -1024,8 +1024,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 </div>
               )}
 
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+              <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Mission Span, Passing &amp; Heritage
                 </span>
                 <p className="text-xs font-medium mt-0.5 leading-relaxed">
@@ -1042,7 +1042,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                     <Shield className="w-3.5 h-3.5" />
                     <span>From Sahih Hadiths (Beyond Quran)</span>
                   </span>
-                  <span className="font-mono text-[10px] text-stone-500 dark:text-stone-400">
+                  <span className="font-mono text-[10px] text-neutral-500 dark:text-neutral-400">
                     {selectedProphet.hadithExclusiveFacts.length} Facts
                   </span>
                 </div>
@@ -1051,13 +1051,13 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                   {selectedProphet.hadithExclusiveFacts.map((fact, idx) => (
                     <div
                       key={`${fact.title}-${idx}`}
-                      className="p-3.5 rounded-2xl border-2 border-black dark:border-white bg-white dark:bg-stone-950 space-y-2"
+                      className="p-3.5 rounded-2xl border-2 border-black dark:border-white bg-white dark:bg-neutral-950 space-y-2"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-1.5">
                         <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[9.5px] font-bold uppercase tracking-wider">
                           {fact.topicTag}
                         </span>
-                        <span className="text-[10px] font-mono font-bold text-stone-600 dark:text-stone-400">
+                        <span className="text-[10px] font-mono font-bold text-neutral-600 dark:text-neutral-400">
                           {fact.source}
                         </span>
                       </div>
@@ -1066,11 +1066,11 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                         {fact.title}
                       </h3>
 
-                      <p className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
+                      <p className="text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
                         {fact.detail}
                       </p>
 
-                      <p className="text-[10px] text-stone-500 dark:text-stone-400 font-medium">
+                      <p className="text-[10px] text-neutral-500 dark:text-neutral-400 font-medium">
                         — Narrated by {fact.narrator}
                       </p>
                     </div>
@@ -1081,24 +1081,24 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
             {/* Stage-by-Stage Vertical Life Timeline */}
             <section className="space-y-3">
-              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+              <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
                 <span>Chronological Life Stages</span>
                 <span>{selectedProphet.lifeStages.length} Parts</span>
               </div>
 
-              <div className="relative ml-3 pl-5 border-l-2 border-stone-300 dark:border-stone-700 space-y-4">
+              <div className="relative ml-3 pl-5 border-l-2 border-neutral-300 dark:border-neutral-700 space-y-4">
                 {selectedProphet.lifeStages.map((stage) => (
                   <div key={stage.stageNumber} className="relative">
                     <div className="absolute -left-[30px] top-3 w-5 h-5 rounded-full bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold flex items-center justify-center border border-white dark:border-black">
                       {stage.stageNumber}
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-3">
+                    <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-3">
                       <div>
                         <h3 className="font-bold text-sm text-black dark:text-white leading-snug">
                           {stage.phaseTitle}
                         </h3>
-                        <p className="flex items-center gap-1 text-[11px] text-stone-600 dark:text-stone-400 mt-1">
+                        <p className="flex items-center gap-1 text-[11px] text-neutral-600 dark:text-neutral-400 mt-1">
                           <MapPin className="w-3 h-3 shrink-0 text-black dark:text-white" />
                           <span>{stage.where}</span>
                         </p>
@@ -1106,7 +1106,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
 
                       <div className="space-y-1.5 text-xs leading-relaxed">
                         <p className="text-black dark:text-white">{stage.whatHappened}</p>
-                        <p className="text-stone-700 dark:text-stone-300 pt-1 border-t border-stone-200 dark:border-stone-800">
+                        <p className="text-neutral-700 dark:text-neutral-300 pt-1 border-t border-neutral-200 dark:border-neutral-800">
                           {stage.howItUnfolded}
                         </p>
                       </div>
@@ -1114,12 +1114,12 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                       {stage.warOrConfrontation && renderBattleCard(stage.warOrConfrontation)}
 
                       {stage.revelation && (
-                        <div className="p-3 rounded-xl bg-white dark:bg-black border border-stone-300 dark:border-stone-700 space-y-2">
+                        <div className="p-3 rounded-xl bg-white dark:bg-black border border-neutral-300 dark:border-neutral-700 space-y-2">
                           <div>
                             <p className="text-[11px] font-bold text-black dark:text-white">
                               {stage.revelation.ayahRangeLabel}
                             </p>
-                            <p className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">
+                            <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-0.5">
                               {stage.revelation.contextEnglish}
                             </p>
                           </div>
@@ -1173,8 +1173,8 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
             </section>
 
             {/* Key Trials Summary */}
-            <section className="p-3.5 rounded-2xl border border-stone-300 dark:border-stone-700 space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+            <section className="p-3.5 rounded-2xl border border-neutral-300 dark:border-neutral-700 space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                 Key Trials &amp; Steadfastness
               </span>
               <p className="text-xs leading-relaxed">{selectedProphet.keyTrials}</p>
@@ -1184,7 +1184,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
             {renderHadithsList(selectedProphet.sahihHadiths, 'Key Sahih Hadiths Summary')}
           </div>
 
-          <div className="px-4 py-3 border-t border-stone-200 dark:border-stone-800 grid grid-cols-2 gap-2 shrink-0 bg-white dark:bg-black">
+          <div className="px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 grid grid-cols-2 gap-2 shrink-0 bg-white dark:bg-black">
             <button
               disabled={selectedProphetIndex <= 0}
               onClick={() => {
@@ -1216,7 +1216,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
       {/* 3. Deep War Study Sheet */}
       {selectedWar && (
         <div className="absolute inset-0 z-40 bg-white dark:bg-black flex flex-col overflow-hidden">
-          <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2 shrink-0">
+          <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={() => setSelectedWarId(null)}
               className="min-h-[44px] px-3 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-transform"
@@ -1225,13 +1225,13 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               <span>All Wars</span>
             </button>
 
-            <span className="text-[11px] font-mono font-bold text-stone-600 dark:text-stone-400">
+            <span className="text-[11px] font-mono font-bold text-neutral-600 dark:text-neutral-400">
               War {selectedWarIndex + 1} / {filteredWars.length}
             </span>
 
             <button
               onClick={() => setSelectedWarId(null)}
-              className="min-w-[44px] min-h-[44px] rounded-xl border border-stone-300 dark:border-stone-700 flex items-center justify-center active:scale-95 transition-transform"
+              className="min-w-[44px] min-h-[44px] rounded-xl border border-neutral-300 dark:border-neutral-700 flex items-center justify-center active:scale-95 transition-transform"
               aria-label="Close war detail"
             >
               <X className="w-4 h-4" />
@@ -1244,7 +1244,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
                 <span className="px-2.5 py-1 rounded-lg bg-black text-white dark:bg-white dark:text-black font-bold">
                   {selectedWar.prophetLabel}
                 </span>
-                <span className="font-mono font-bold text-stone-700 dark:text-stone-300">
+                <span className="font-mono font-bold text-neutral-700 dark:text-neutral-300">
                   {selectedWar.eraLabel}
                 </span>
               </div>
@@ -1254,10 +1254,10 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               </h2>
             </div>
 
-            <section className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 flex items-start gap-2.5">
+            <section className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 flex items-start gap-2.5">
               <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-black dark:text-white" />
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Location
                 </span>
                 <p className="text-xs font-semibold text-black dark:text-white mt-0.5">
@@ -1266,14 +1266,14 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
               </div>
             </section>
 
-            <section className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+            <section className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                 Strategic Summary &amp; Course
               </span>
               <p className="text-xs leading-relaxed text-black dark:text-white">
                 {selectedWar.summary}
               </p>
-              <p className="text-xs leading-relaxed text-stone-700 dark:text-stone-300 pt-2 border-t border-stone-200 dark:border-stone-800">
+              <p className="text-xs leading-relaxed text-neutral-700 dark:text-neutral-300 pt-2 border-t border-neutral-200 dark:border-neutral-800">
                 {selectedWar.narrative}
               </p>
             </section>
@@ -1283,7 +1283,7 @@ export const ProphetsTimelineView: React.FC<ProphetsTimelineViewProps> = ({
             {renderHadithsList(selectedWar.hadiths, 'Sahih Hadith Records of This War')}
           </div>
 
-          <div className="px-4 py-3 border-t border-stone-200 dark:border-stone-800 grid grid-cols-2 gap-2 shrink-0 bg-white dark:bg-black">
+          <div className="px-4 py-3 border-t border-neutral-200 dark:border-neutral-800 grid grid-cols-2 gap-2 shrink-0 bg-white dark:bg-black">
             <button
               disabled={selectedWarIndex <= 0}
               onClick={() => {

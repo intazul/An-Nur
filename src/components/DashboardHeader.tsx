@@ -60,23 +60,23 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-stone-950/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 transition-colors">
+    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
         {/* Brand Zone */}
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-9 h-9 rounded-lg bg-stone-900 text-stone-100 dark:bg-stone-100 dark:text-stone-900 flex items-center justify-center font-cinzel font-bold text-lg shadow-sm">
+          <div className="w-9 h-9 rounded-lg bg-neutral-900 text-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 flex items-center justify-center font-cinzel font-bold text-lg shadow-sm">
             ن
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-cinzel font-bold text-lg sm:text-xl tracking-tight text-stone-900 dark:text-stone-100">
+              <span className="font-cinzel font-bold text-lg sm:text-xl tracking-tight text-neutral-900 dark:text-neutral-100">
                 An-Nur Quran
               </span>
               <span className="font-quran text-amber-600 dark:text-amber-400 text-base sm:text-lg select-none">
                 القرآن الكريم
               </span>
             </div>
-            <div className="text-[11px] text-stone-500 dark:text-stone-400 flex items-center gap-1.5">
+            <div className="text-[11px] text-neutral-500 dark:text-neutral-400 flex items-center gap-1.5">
               <span>Recitation</span>
               <span aria-hidden="true">·</span>
               <span>English & Urdu</span>
@@ -91,10 +91,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Quick Search */}
           <button
             onClick={onOpenSearch}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg transition-colors whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-colors whitespace-nowrap"
             title="Search Surahs and Verses (Ctrl+K)"
           >
-            <Search className="w-3.5 h-3.5 text-stone-500" />
+            <Search className="w-3.5 h-3.5 text-neutral-500" />
             <span className="hidden sm:inline">Search</span>
           </button>
 
@@ -104,7 +104,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-all whitespace-nowrap ${
               glowMode !== 'off'
                 ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30'
-                : 'text-stone-600 dark:text-stone-400 bg-stone-100 dark:bg-stone-900 border-stone-200 dark:border-stone-800 hover:bg-stone-200 dark:hover:bg-stone-800'
+                : 'text-neutral-600 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-800'
             }`}
             title="Toggle Arabic Word Glow for Night Reading"
           >
@@ -116,7 +116,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                   ? 'text-emerald-500 fill-emerald-500/20'
                   : glowMode === 'lunar'
                   ? 'text-cyan-400'
-                  : 'text-stone-400'
+                  : 'text-neutral-400'
               }`}
             />
             <span className="hidden md:inline">{getGlowLabel()}</span>
@@ -125,11 +125,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* High-Contrast Light / Night Mode Switch */}
           <button
             onClick={onToggleDarkMode}
-            className="p-2 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg transition-colors"
+            className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-colors"
             title={darkMode ? 'Switch to High-Contrast Light Mode' : 'Switch to High-Contrast Night Mode'}
             aria-label="Toggle Night Mode"
           >
-            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-stone-700" />}
+            {darkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-neutral-700" />}
           </button>
 
           {/* Iman Tracker Quick Access */}
@@ -148,7 +148,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Profile & Bookmarks */}
           <button
             onClick={onOpenProfile}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg transition-colors whitespace-nowrap"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-colors whitespace-nowrap"
             title="Profile, Audio Bookmarks & Spiritual Goals"
           >
             <Bookmark className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
@@ -163,7 +163,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Offline Downloads */}
           <button
             onClick={onOpenOfflineManager}
-            className="p-2 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg transition-colors relative"
+            className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-colors relative"
             title="Offline Downloads Manager"
           >
             <Download className="w-4 h-4" />
@@ -175,10 +175,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           {/* Reminders / Notifications */}
           <button
             onClick={onOpenNotifications}
-            className="p-2 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-800 rounded-lg transition-colors"
+            className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-lg transition-colors"
             title="Push Notification Reminders for Prayers & Reflection"
           >
-            <Bell className="w-4 h-4 text-stone-600 dark:text-stone-400" />
+            <Bell className="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
           </button>
         </div>
       </div>

@@ -40,11 +40,11 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in select-none">
       <div
-        className="w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between shrink-0 bg-stone-50 dark:bg-stone-900/80">
+        <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between shrink-0 bg-neutral-50 dark:bg-neutral-900/80">
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-8 h-8 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold shadow-xs">
               <ShieldCheck className="w-4 h-4 text-white dark:text-black" />
@@ -53,7 +53,7 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
               <h3 className="text-sm font-bold text-black dark:text-white font-cinzel truncate">
                 Authentic Reference Verification
               </h3>
-              <p className="text-[11px] text-stone-500 dark:text-stone-400 font-mono truncate">
+              <p className="text-[11px] text-neutral-500 dark:text-neutral-400 font-mono truncate">
                 {hadith.reference}
               </p>
             </div>
@@ -61,7 +61,7 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-500 hover:text-black dark:hover:text-white rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors"
+            className="p-1.5 text-neutral-500 hover:text-black dark:hover:text-white rounded-full hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors"
             title="Close"
           >
             <X className="w-4 h-4 stroke-[2.5]" />
@@ -71,7 +71,7 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
         {/* Modal Body */}
         <div className="p-4 overflow-y-auto space-y-3.5 text-xs">
           {/* Authenticity Grade Badge */}
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
+          <div className="flex items-center justify-between p-3 rounded-2xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-black dark:text-white" />
               <div>
@@ -89,71 +89,71 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
           </div>
 
           {/* Book & Chapter Details */}
-          <div className="p-3.5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2">
+          <div className="p-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 space-y-2">
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block mb-0.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
                 Collection & Book
               </span>
               <p className="font-bold text-black dark:text-white text-xs">
                 {hadith.collectionName} — #{hadith.hadithNumber}
               </p>
-              <p className="text-[11px] text-stone-600 dark:text-stone-300">
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-300">
                 {hadith.bookName}
               </p>
             </div>
 
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block mb-0.5">
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
                 Chapter
               </span>
-              <p className="font-medium text-stone-800 dark:text-stone-200 text-xs">
+              <p className="font-medium text-neutral-800 dark:text-neutral-200 text-xs">
                 {hadith.chapterName}
               </p>
             </div>
           </div>
 
           {/* Primary Narrator & Isnad */}
-          <div className="p-3.5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2">
+          <div className="p-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 space-y-2">
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block">
                   Companion Narrator (الصحابي)
                 </span>
                 <p className="font-bold text-black dark:text-white text-xs">
                   {hadith.narrator}
                 </p>
               </div>
-              <span className="font-quran text-xs text-stone-700 dark:text-stone-300 font-bold" dir="rtl">
+              <span className="font-quran text-xs text-neutral-700 dark:text-neutral-300 font-bold" dir="rtl">
                 {hadith.narratorArabic}
               </span>
             </div>
 
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 block mb-0.5">
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 block mb-0.5">
                 Chain of Transmission (الإسناد)
               </span>
-              <p className="font-mono text-[10.5px] text-stone-600 dark:text-stone-400 leading-relaxed">
+              <p className="font-mono text-[10.5px] text-neutral-600 dark:text-neutral-400 leading-relaxed">
                 {hadith.isnadBrief}
               </p>
             </div>
           </div>
 
           {/* Clean, Dark Arabic Text Preview */}
-          <div className="p-3.5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-950 text-right space-y-1.5" dir="rtl">
-            <span className="text-[10px] font-sans font-bold text-stone-500 block text-left" dir="ltr">
+          <div className="p-3.5 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-right space-y-1.5" dir="rtl">
+            <span className="text-[10px] font-sans font-bold text-neutral-500 block text-left" dir="ltr">
               Arabic Text (Clean Dark Font):
             </span>
-            <p className="font-quran text-sm sm:text-base text-stone-950 dark:text-stone-50 leading-[2.2] font-bold font-arabic-clean">
+            <p className="font-quran text-sm sm:text-base text-neutral-950 dark:text-neutral-50 leading-[2.2] font-bold font-arabic-clean">
               {hadith.textArabic}
             </p>
           </div>
         </div>
 
         {/* Footer Actions */}
-        <div className="p-3.5 border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center justify-between gap-2 shrink-0">
+        <div className="p-3.5 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center justify-between gap-2 shrink-0">
           <button
             onClick={handleCopyCitation}
-            className="flex-1 py-2 px-3 rounded-xl border border-stone-300 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all text-black dark:text-white"
+            className="flex-1 py-2 px-3 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-all text-black dark:text-white"
           >
             {copied ? (
               <>
@@ -170,7 +170,7 @@ export const HadithReferenceModal: React.FC<HadithReferenceModalProps> = ({
 
           <button
             onClick={onClose}
-            className="py-2 px-4 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs transition-all shadow-xs"
+            className="py-2 px-4 rounded-xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs transition-all shadow-xs"
           >
             Done
           </button>

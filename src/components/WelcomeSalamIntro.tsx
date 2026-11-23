@@ -110,7 +110,7 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
               ن
             </span>
           </div>
-          <span className="font-cinzel font-bold text-[11px] tracking-[0.26em] uppercase text-stone-700 dark:text-stone-300 mt-1.5">
+          <span className="font-semibold text-[11px] tracking-[0.26em] uppercase text-neutral-600 dark:text-neutral-400 mt-1.5">
             An-Nur · النور
           </span>
         </div>
@@ -127,18 +127,18 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
           <CalligraphicDivider />
 
           <div className="space-y-0.5 pt-0.5">
-            <p className="font-cinzel font-bold text-xs tracking-wider text-black dark:text-white">
+            <p className="font-semibold text-xs tracking-wide text-black dark:text-white">
               Assalamu ‘Alaykum wa Rahmatullahi wa Barakatuh
             </p>
-            <p className="font-book-serif italic text-[11px] text-stone-600 dark:text-stone-400">
+            <p className="text-[11px] font-medium text-neutral-600 dark:text-neutral-400">
               May Allah’s peace, mercy, and endless blessings encompass you
             </p>
           </div>
         </div>
 
         {/* 3. Illuminated Quran Ayah Block (No Scroll) */}
-        <section className="w-full px-4 py-3.5 sm:py-4 rounded-2xl bg-stone-50/90 dark:bg-stone-950/90 border border-black/15 dark:border-white/20 text-center space-y-2 shrink-0 animate-intro-quran">
-          <div className="flex items-center justify-center gap-2 text-[10px] font-cinzel font-bold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-400">
+        <section className="w-full px-4 py-3.5 sm:py-4 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-center space-y-2 shrink-0 animate-intro-quran">
+          <div className="flex items-center justify-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-neutral-500 dark:text-neutral-400">
             <span>۞</span>
             <span>Surah Ash-Sharh · 94:5–6</span>
             <span>۞</span>
@@ -151,7 +151,7 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
             فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ۝ إِنَّ مَعَ الْعُسْرِ يُسْرًا
           </p>
 
-          <p className="font-book-serif text-xs text-stone-800 dark:text-stone-200 leading-snug">
+          <p className="text-xs font-medium text-neutral-800 dark:text-neutral-200 leading-snug">
             “For indeed, with hardship comes ease. Indeed, with every hardship comes ease.”
           </p>
         </section>
@@ -160,13 +160,13 @@ export const WelcomeSalamIntro: React.FC<WelcomeSalamIntroProps> = ({ onContinue
         <div className="w-full pt-1 shrink-0 animate-intro-cta">
           <button
             onClick={onContinue}
-            className="min-h-[50px] w-full px-5 py-2.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-bold flex items-center justify-center gap-3 active:scale-[0.985] transition-transform shadow-sm border border-black dark:border-white"
+            className="min-h-[50px] w-full px-5 py-2.5 rounded-2xl bg-black text-white dark:bg-white dark:text-black font-semibold flex items-center justify-center gap-3 active:scale-[0.985] transition-transform border border-black dark:border-white"
           >
             <span dir="rtl" className="font-scheherazade text-xl font-bold leading-none">
               بِسْمِ اللَّهِ
             </span>
             <span className="h-4 w-[1px] bg-white/30 dark:bg-black/30" />
-            <span className="font-cinzel text-xs tracking-[0.18em] uppercase font-bold">
+            <span className="text-xs tracking-[0.18em] uppercase font-semibold">
               Bismillah
             </span>
           </button>

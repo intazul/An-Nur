@@ -248,8 +248,8 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
           <span className="text-[10px] uppercase tracking-[0.16em] text-black/60 dark:text-white/60 font-bold block leading-tight">
             Playing from Surah {surahNum}
           </span>
-          <span className="text-xs font-bold font-cinzel text-black dark:text-white truncate block">
-            {currentSurah?.nameEnglish || 'Holy Quran'} · Ayah {activeAyahNumber}/{totalAyahs}
+          <span className="text-[11px] font-semibold text-black dark:text-white truncate block tracking-tight">
+            {currentSurah?.nameEnglish || 'Holy Qur’an'} · Ayah {activeAyahNumber}/{totalAyahs}
           </span>
         </button>
 
@@ -265,7 +265,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
       </header>
 
       {/* 2. SPOTIFY LYRICS STAGE (ZERO OUTER VERTICAL SCROLL) */}
-      <section className="flex-1 min-h-0 my-2 rounded-3xl bg-stone-100 dark:bg-stone-950 border border-black/10 dark:border-white/15 flex flex-col overflow-hidden">
+      <section className="flex-1 min-h-0 my-2 rounded-3xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 flex flex-col overflow-hidden">
         {/* Lyrics Top Bar: Script Quick Switch (Arabic / English / Regional) */}
         <div className="shrink-0 px-4 py-2.5 border-b border-black/10 dark:border-white/10 flex items-center justify-between gap-2">
           <span className="text-[11px] font-bold tracking-wider uppercase text-black/60 dark:text-white/60">
@@ -454,10 +454,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             <SkipBack className="w-7 h-7 fill-current" />
           </button>
 
-          {/* 3. Primary Spotify Play / Pause Circle */}
+          {/* 3. Primary Play / Pause Circle */}
           <button
             onClick={onTogglePlayPause}
-            className="w-16 h-16 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shadow-lg active:scale-95 transition-transform"
+            className="w-16 h-16 rounded-full bg-black text-white dark:bg-white dark:text-black flex items-center justify-center ring-1 ring-black/10 dark:ring-white/15 active:scale-95 transition-transform"
             title={isPlaying ? 'Pause' : 'Play'}
             aria-label={isPlaying ? 'Pause' : 'Play'}
           >
@@ -557,17 +557,17 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
           onClick={() => setIsQuickSettingsOpen(false)}
         >
           <div
-            className="w-full max-w-md bg-white dark:bg-stone-950 rounded-t-3xl border-t border-black/15 dark:border-white/20 shadow-2xl max-h-[85vh] flex flex-col overflow-hidden"
+            className="w-full max-w-md bg-white dark:bg-black rounded-t-3xl border-t border-neutral-200 dark:border-neutral-800 max-h-[85vh] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Drag Handle */}
-            <div className="w-10 h-1 bg-black/20 dark:bg-white/25 rounded-full mx-auto mt-3 mb-1 shrink-0" />
+            <div className="w-10 h-1 bg-neutral-300 dark:bg-neutral-700 rounded-full mx-auto mt-3 mb-1 shrink-0" />
 
             {/* Sheet Header */}
-            <div className="px-5 py-3 border-b border-black/10 dark:border-white/15 flex items-center justify-between shrink-0">
+            <div className="px-5 py-3 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-black dark:text-white" />
-                <h3 className="text-sm font-bold font-cinzel text-black dark:text-white">
+                <h3 className="text-sm font-semibold tracking-tight text-black dark:text-white">
                   Player Settings
                 </h3>
               </div>
@@ -584,18 +584,18 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
               {/* A. Surah & Ayah Selector */}
               <div className="space-y-2.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-black/60 dark:text-white/60 block">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Surah & Ayah
                 </span>
                 <div className="grid grid-cols-1 gap-2.5">
                   <div>
-                    <label className="text-xs font-bold text-black dark:text-white block mb-1">
+                    <label className="text-xs font-semibold text-black dark:text-white block mb-1">
                       Select Surah
                     </label>
                     <select
                       value={surahNum}
                       onChange={(e) => onSelectSurah(Number(e.target.value))}
-                      className="w-full h-11 px-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/15 dark:border-white/15 text-xs font-bold text-black dark:text-white focus:outline-none"
+                      className="w-full h-11 px-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-black dark:text-white focus:outline-none"
                     >
                       {ALL_SURAHS.map((s) => (
                         <option key={s.number} value={s.number}>
@@ -622,7 +622,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                       <select
                         value={activeAyahNumber}
                         onChange={(e) => onSelectAyah(Number(e.target.value))}
-                        className="flex-1 h-11 px-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/15 dark:border-white/15 text-xs font-bold text-black dark:text-white focus:outline-none text-center"
+                        className="flex-1 h-11 px-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-black dark:text-white focus:outline-none text-center"
                       >
                         {ayahs.map((a) => (
                           <option key={a.numberInSurah} value={a.numberInSurah}>
@@ -670,11 +670,11 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                         onClick={() => handleLyricsSwitch(item.id)}
                         className={`py-2 px-1.5 rounded-xl border text-center transition-all ${
                           active
-                            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-bold shadow-xs'
-                            : 'bg-stone-100 dark:bg-stone-900 border-black/10 dark:border-white/15 text-black dark:text-white/80 font-medium'
+                            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-semibold'
+                            : 'bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-black dark:text-neutral-200 font-medium'
                         }`}
                       >
-                        <div className="text-xs font-bold leading-tight">{item.label}</div>
+                        <div className="text-xs font-semibold leading-tight">{item.label}</div>
                         <div className="text-[10px] opacity-75">{item.sub}</div>
                       </button>
                     );
@@ -684,7 +684,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
 
               {/* C. Recitation Audio Mode (Arabic, 100% Offline English & Urdu) */}
               <div className="space-y-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-black/60 dark:text-white/60 block">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Recitation Audio Mode
                 </span>
                 <div className="grid grid-cols-2 gap-2">
@@ -706,12 +706,12 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                         onClick={() => handleAudioModeSwitch(modeItem.id)}
                         className={`p-2.5 rounded-xl border text-left flex items-center justify-between gap-2 transition-all ${
                           isSelected
-                            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-bold shadow-xs'
-                            : 'bg-stone-100 dark:bg-stone-900 border-black/10 dark:border-white/15 text-black dark:text-white/85 font-medium'
+                            ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-semibold'
+                            : 'bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-black dark:text-neutral-200 font-medium'
                         }`}
                       >
                         <div className="min-w-0">
-                          <div className="text-xs font-bold truncate">{modeItem.title}</div>
+                          <div className="text-xs font-semibold truncate">{modeItem.title}</div>
                           <div className="text-[10px] opacity-75 truncate">{modeItem.desc}</div>
                         </div>
                         {isSelected && <Check className="w-3.5 h-3.5 stroke-[3] shrink-0" />}
@@ -723,7 +723,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
 
               {/* D. Voice / Reciter Selection */}
               <div className="space-y-2.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-black/60 dark:text-white/60 block">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Voice & Qari
                 </span>
 
@@ -732,13 +732,13 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                   recitationMode === 'arabic_english' ||
                   recitationMode === 'arabic_urdu') && (
                   <div>
-                    <label className="text-xs font-bold text-black dark:text-white block mb-1">
+                    <label className="text-xs font-semibold text-black dark:text-white block mb-1">
                       Arabic Qari
                     </label>
                     <select
                       value={profile.preferredReciter}
                       onChange={(e) => onUpdateProfile?.({ preferredReciter: e.target.value })}
-                      className="w-full h-11 px-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/15 dark:border-white/15 text-xs font-bold text-black dark:text-white focus:outline-none"
+                      className="w-full h-11 px-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-semibold text-black dark:text-white focus:outline-none"
                     >
                       {ARABIC_RECITERS.map((r) => (
                         <option key={r.id} value={r.id}>
@@ -752,12 +752,12 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                 {(recitationMode === 'urdu' ||
                   recitationMode === 'both' ||
                   recitationMode === 'arabic_urdu') && (
-                  <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-black/15 dark:border-white/15 space-y-1">
+                  <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-black dark:text-white">
+                      <span className="text-xs font-semibold text-black dark:text-white">
                         Urdu Reciter (Male Human Voice)
                       </span>
-                      <span className="text-[10px] font-mono font-bold text-black/70 dark:text-white/70">
+                      <span className="text-[10px] font-mono font-semibold text-neutral-600 dark:text-neutral-300">
                         {urduAudioSyncProgress?.isComplete
                           ? '114/114 Offline'
                           : urduAudioSyncProgress
@@ -765,10 +765,10 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                           : 'Offline Ready'}
                       </span>
                     </div>
-                    <div className="text-xs font-semibold text-black/85 dark:text-white/85">
+                    <div className="text-xs font-semibold text-neutral-800 dark:text-neutral-200">
                       {URDU_RECITERS[0].name}
                     </div>
-                    <div className="text-[10px] text-black/60 dark:text-white/60">
+                    <div className="text-[10px] text-neutral-500 dark:text-neutral-400">
                       {URDU_RECITERS[0].style}
                     </div>
                   </div>
@@ -777,7 +777,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
 
               {/* E. Pronunciation Clarity & Offline Audio */}
               <div className="space-y-2.5">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-black/60 dark:text-white/60 block">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Pronunciation Clarity & Offline Audio
                 </span>
 
@@ -789,20 +789,20 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                   }
                   className={`w-full p-3 rounded-xl border text-left flex items-center justify-between gap-2 transition-all ${
                     profile.vocalClarityEnhancer !== false
-                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-bold'
-                      : 'bg-stone-100 dark:bg-stone-900 border-black/10 dark:border-white/15 text-black dark:text-white/85 font-medium'
+                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-semibold'
+                      : 'bg-neutral-100 dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-black dark:text-neutral-200 font-medium'
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <Sparkles className="w-4 h-4 shrink-0" />
                     <div className="min-w-0">
-                      <div className="text-xs font-bold truncate">Clear Pronunciation & Vocal EQ</div>
+                      <div className="text-xs font-semibold truncate">Clear Pronunciation & Vocal EQ</div>
                       <div className="text-[10px] opacity-75 truncate">
                         Sharpens Arabic, English & Urdu Vocal Clarity
                       </div>
                     </div>
                   </div>
-                  <span className="text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded bg-white/15 dark:bg-black/15 shrink-0">
+                  <span className="text-[10px] font-mono uppercase font-semibold px-2 py-0.5 rounded bg-white/15 dark:bg-black/15 shrink-0">
                     {profile.vocalClarityEnhancer !== false ? 'ON' : 'OFF'}
                   </span>
                 </button>
@@ -813,8 +813,8 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                     disabled={Boolean(surahAudioDownloadProgress)}
                     className={`w-full p-3 rounded-xl border text-left flex items-center justify-between gap-2 transition-all ${
                       isCurrentSurahAudioOffline
-                        ? 'bg-stone-100 dark:bg-stone-900 border-black/25 dark:border-white/30 text-black dark:text-white'
-                        : 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-bold'
+                        ? 'bg-neutral-100 dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 text-black dark:text-white'
+                        : 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white font-semibold'
                     }`}
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -826,7 +826,7 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
                         <Download className="w-4 h-4 shrink-0" />
                       )}
                       <div className="min-w-0">
-                        <div className="text-xs font-bold truncate">
+                        <div className="text-xs font-semibold truncate">
                           {surahAudioDownloadProgress
                             ? `Saving ${currentSurah.nameEnglish} (${surahAudioDownloadProgress.current}/${surahAudioDownloadProgress.total})`
                             : isCurrentSurahAudioOffline
@@ -845,11 +845,11 @@ export const AndroidRecitationView: React.FC<AndroidRecitationViewProps> = ({
               {/* E2. Hifz Ayah Loop Range */}
               {currentSurah && ayahLoopRange && onUpdateAyahLoopRange && (
                 <div className="space-y-2.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-black/60 dark:text-white/60 block">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                     Hifz Memorization Loop
                   </span>
 
-                  <div className="p-3 rounded-xl border border-black/15 dark:border-white/15 bg-stone-50 dark:bg-stone-900 space-y-2.5">
+                  <div className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 space-y-2.5">
                     <button
                       onClick={() =>
                         onUpdateAyahLoopRange({

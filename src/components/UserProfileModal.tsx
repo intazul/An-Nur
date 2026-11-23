@@ -272,40 +272,40 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
       <div
-        className="w-full max-w-2xl bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+        className="w-full max-w-2xl bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-stone-900 text-stone-100 dark:bg-stone-100 dark:text-stone-900 flex items-center justify-center font-bold font-cinzel">
+            <div className="w-8 h-8 rounded-lg bg-neutral-900 text-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 flex items-center justify-center font-bold font-cinzel">
               ن
             </div>
             <div>
-              <h2 className="text-base font-semibold text-stone-900 dark:text-stone-100 font-cinzel">
+              <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 font-cinzel">
                 Profile, Goals & Audio Bookmarks
               </h2>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-neutral-500">
                 Personalized spiritual goals, offline cache, and notification alerts.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 rounded-lg"
+            className="p-1.5 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 rounded-lg"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Sub-navigation Controls */}
-        <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-stone-200 dark:border-stone-800 bg-stone-50/50 dark:bg-stone-950/40">
+        <div className="flex items-center gap-1 px-4 sm:px-6 pt-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-950/40">
           <button
             onClick={() => setActiveTab('profile')}
             className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap ${
               activeTab === 'profile'
                 ? 'border-black dark:border-white text-black dark:text-white'
-                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
+                : 'border-transparent text-neutral-500 hover:text-black dark:hover:text-white'
             }`}
           >
             Spiritual Goals & Streaks
@@ -315,7 +315,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1 ${
               activeTab === 'bookmarks'
                 ? 'border-black dark:border-white text-black dark:text-white'
-                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
+                : 'border-transparent text-neutral-500 hover:text-black dark:hover:text-white'
             }`}
           >
             <span>Audio Bookmarks</span>
@@ -328,11 +328,11 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-1 ${
               activeTab === 'offline'
                 ? 'border-black dark:border-white text-black dark:text-white'
-                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
+                : 'border-transparent text-neutral-500 hover:text-black dark:hover:text-white'
             }`}
           >
             <span>Offline Downloads</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-stone-200 dark:bg-stone-800 text-black dark:text-white text-[10px] font-bold">
+            <span className="px-1.5 py-0.2 rounded-full bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white text-[10px] font-bold">
               {downloadedSurahs.length}
             </span>
           </button>
@@ -341,7 +341,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             className={`px-3 py-2 text-xs font-bold border-b-2 transition-colors whitespace-nowrap ${
               activeTab === 'reminders'
                 ? 'border-black dark:border-white text-black dark:text-white'
-                : 'border-transparent text-stone-500 hover:text-black dark:hover:text-white'
+                : 'border-transparent text-neutral-500 hover:text-black dark:hover:text-white'
             }`}
           >
             Push Reminders
@@ -355,18 +355,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div className="space-y-6">
               {/* User Identity & Motto */}
               <div className="space-y-3">
-                <label className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                   Your Name or Spiritual Moniker
                 </label>
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 flex items-center justify-center text-stone-600 dark:text-stone-300">
+                  <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 flex items-center justify-center text-neutral-600 dark:text-neutral-300">
                     <User className="w-5 h-5" />
                   </div>
                   <input
                     type="text"
                     value={profile.name}
                     onChange={(e) => onUpdateProfile({ name: e.target.value })}
-                    className="flex-1 px-3 py-2 text-sm bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                    className="flex-1 px-3 py-2 text-sm bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                   />
                 </div>
               </div>
@@ -386,22 +386,22 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </p>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-stone-600 dark:text-stone-400">
+                <div className="p-4 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-neutral-600 dark:text-neutral-400">
                     <Sparkles className="w-4 h-4 text-black dark:text-white" />
                     <span>Best Record</span>
                   </div>
                   <div className="text-2xl sm:text-3xl font-bold font-cinzel text-black dark:text-white tabular-nums">
                     {bestStreak} Days
                   </div>
-                  <p className="text-[11px] text-stone-500">
+                  <p className="text-[11px] text-neutral-500">
                     Personal spiritual record
                   </p>
                 </div>
               </div>
 
               {/* Daily Quran Goal Setting */}
-              <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-3">
+              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/60 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-black dark:text-white" />
@@ -424,7 +424,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   className="w-full accent-black dark:accent-white cursor-pointer"
                 />
 
-                <div className="flex justify-between text-[11px] text-stone-400">
+                <div className="flex justify-between text-[11px] text-neutral-400">
                   <span>3 verses (Gentle)</span>
                   <span>10 verses (Balanced)</span>
                   <span>50 verses (Dedicated)</span>
@@ -432,7 +432,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </div>
 
               {/* Daily Dhikr Goal Setting */}
-              <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-3">
+              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/60 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-black dark:text-white" />
@@ -455,7 +455,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   className="w-full accent-black dark:accent-white cursor-pointer"
                 />
 
-                <div className="flex justify-between text-[11px] text-stone-400">
+                <div className="flex justify-between text-[11px] text-neutral-400">
                   <span>10 Dhikr</span>
                   <span>33 Tasbih (Balanced)</span>
                   <span>200 Dhikr</span>
@@ -463,7 +463,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </div>
 
               {/* Daily Hadith Study Goal Setting */}
-              <div className="p-4 rounded-xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/60 space-y-3">
+              <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/60 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Target className="w-4 h-4 text-black dark:text-white" />
@@ -486,7 +486,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   className="w-full accent-black dark:accent-white cursor-pointer"
                 />
 
-                <div className="flex justify-between text-[11px] text-stone-400">
+                <div className="flex justify-between text-[11px] text-neutral-400">
                   <span>1 Lesson</span>
                   <span>5 Lessons (Balanced)</span>
                   <span>20 Lessons</span>
@@ -499,7 +499,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           {activeTab === 'bookmarks' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs text-stone-500">
+                <span className="text-xs text-neutral-500">
                   {bookmarks.length === 0
                     ? 'No audio bookmarks saved yet. Use the bookmark icon on any verse while listening.'
                     : `Showing ${bookmarks.length} saved recitation moments:`}
@@ -507,9 +507,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               </div>
 
               {bookmarks.length === 0 ? (
-                <div className="py-12 text-center space-y-2 border border-dashed border-stone-200 dark:border-stone-800 rounded-xl">
-                  <Bookmark className="w-8 h-8 text-stone-300 dark:text-stone-600 mx-auto" />
-                  <p className="text-xs text-stone-500">
+                <div className="py-12 text-center space-y-2 border border-dashed border-neutral-200 dark:border-neutral-800 rounded-xl">
+                  <Bookmark className="w-8 h-8 text-neutral-300 dark:text-neutral-600 mx-auto" />
+                  <p className="text-xs text-neutral-500">
                     Bookmarks store the exact timestamp and verse so you can resume listening instantly.
                   </p>
                 </div>
@@ -518,23 +518,23 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   {bookmarks.map((bm) => (
                     <div
                       key={bm.id}
-                      className="p-3.5 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center justify-between gap-3 group hover:border-black dark:hover:border-white transition-colors"
+                      className="p-3.5 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center justify-between gap-3 group hover:border-black dark:hover:border-white transition-colors"
                     >
                       <div className="min-w-0 flex-1 space-y-1">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-black dark:text-white text-sm">
                             Surah {bm.surahName} : Ayah {bm.ayahNumber}
                           </span>
-                          <span className="text-[11px] text-stone-700 dark:text-stone-300 font-bold">
+                          <span className="text-[11px] text-neutral-700 dark:text-neutral-300 font-bold">
                             at {Math.floor(bm.timestampSeconds)}s
                           </span>
                         </div>
                         {bm.note && (
-                          <p className="text-xs text-stone-600 dark:text-stone-300 italic">
+                          <p className="text-xs text-neutral-600 dark:text-neutral-300 italic">
                             "{bm.note}"
                           </p>
                         )}
-                        <div className="text-[11px] text-stone-400 flex items-center gap-2">
+                        <div className="text-[11px] text-neutral-400 flex items-center gap-2">
                           <span>Reciter: {bm.reciterName}</span>
                           <span>·</span>
                           <span>{new Date(bm.createdAt).toLocaleDateString()}</span>
@@ -555,7 +555,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         </button>
                         <button
                           onClick={() => onDeleteBookmark(bm.id)}
-                          className="p-1.5 text-stone-500 hover:text-black dark:hover:text-white rounded-lg transition-colors"
+                          className="p-1.5 text-neutral-500 hover:text-black dark:hover:text-white rounded-lg transition-colors"
                           title="Delete bookmark"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -572,7 +572,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           {activeTab === 'offline' && (
             <div className="space-y-4">
               {/* Storage Overview Banner */}
-              <div className="p-4 rounded-2xl bg-stone-100 dark:bg-stone-900 border border-black/10 dark:border-stone-800 space-y-3">
+              <div className="p-4 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-black/10 dark:border-neutral-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Database className="w-4 h-4 text-black dark:text-white" />
@@ -587,27 +587,27 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 text-center">
-                  <div className="p-2.5 rounded-xl bg-white dark:bg-stone-950 border border-black/10 dark:border-stone-800">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-neutral-950 border border-black/10 dark:border-neutral-800">
                     <div className="text-lg font-bold font-cinzel text-black dark:text-white tabular-nums">
                       {cacheStats ? cacheStats.surahsCount : downloadedSurahs.length} / 114
                     </div>
-                    <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                    <div className="text-[10px] text-neutral-600 dark:text-neutral-400 font-medium">
                       Surahs Saved
                     </div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-white dark:bg-stone-950 border border-black/10 dark:border-stone-800">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-neutral-950 border border-black/10 dark:border-neutral-800">
                     <div className="text-lg font-bold font-cinzel text-black dark:text-white tabular-nums">
                       {cacheStats ? cacheStats.audioFilesCount : 0}
                     </div>
-                    <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                    <div className="text-[10px] text-neutral-600 dark:text-neutral-400 font-medium">
                       Audio Files Cached
                     </div>
                   </div>
-                  <div className="p-2.5 rounded-xl bg-white dark:bg-stone-950 border border-black/10 dark:border-stone-800">
+                  <div className="p-2.5 rounded-xl bg-white dark:bg-neutral-950 border border-black/10 dark:border-neutral-800">
                     <div className="text-lg font-bold font-cinzel text-black dark:text-white tabular-nums">
                       ~{Math.round(((cacheStats ? cacheStats.totalKb : totalOfflineKb) / 1024) * 10) / 10} MB
                     </div>
-                    <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                    <div className="text-[10px] text-neutral-600 dark:text-neutral-400 font-medium">
                       Local Footprint
                     </div>
                   </div>
@@ -624,7 +624,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     </span>
                     <span className="tabular-nums font-mono">{downloadProgress.percent}%</span>
                   </div>
-                  <div className="w-full h-2 rounded-full bg-stone-800 dark:bg-stone-200 overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-neutral-800 dark:bg-neutral-200 overflow-hidden">
                     <div
                       className="h-full bg-white dark:bg-black transition-all duration-300 rounded-full"
                       style={{ width: `${downloadProgress.percent}%` }}
@@ -651,19 +651,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
 
                 {/* 1. Download All 114 Surahs (Text, Translations & All Tafsirs) */}
-                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
+                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
                       Sync All 114 Surahs & Tafsirs Offline
                     </div>
-                    <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium leading-tight">
                       Stores Arabic, English, Urdu & Assamese Quran plus complete English Ibn Kathir, Urdu & Assamese Tafsirs in IndexedDB for all 6,236 verses.
                     </p>
                   </div>
                   <button
                     onClick={handleDownloadAllText}
                     disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
-                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingAllText ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -675,7 +675,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
 
                 {/* 1b. All 114 Surahs Male Human Urdu Recitation MP3s (Shamshad Ali Khan) */}
-                <div className="p-3.5 rounded-2xl border border-black/25 dark:border-white/25 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
+                <div className="p-3.5 rounded-2xl border border-black/25 dark:border-white/25 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 flex-wrap">
                       <span>All 114 Urdu Recitation MP3s (Shamshad Ali Khan · Male)</span>
@@ -687,14 +687,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight mt-0.5">
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium leading-tight mt-0.5">
                       Natural male human Urdu voice (Fateh Muhammad Jalandhri) cached locally for all 6,236 verses — zero robotic voice.
                     </p>
                   </div>
                   <button
                     onClick={handleDownloadAllUrduAudio}
                     disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
-                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingUrduAudio ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -714,19 +714,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
 
                 {/* 2. Download Core Arabic + Translation Recitations Audio */}
-                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
+                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
                       Core & Favorites Audio (Arabic + English + Urdu MP3s)
                     </div>
-                    <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium leading-tight">
                       Caches studio Arabic Qari, English & Urdu MP3s for Al-Fatihah, Yasin, Ar-Rahman, Al-Waqi'ah, Al-Mulk, Last Surahs & Favorites.
                     </p>
                   </div>
                   <button
                     onClick={handleDownloadCoreAudio}
                     disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
-                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingCoreAudio ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -738,19 +738,19 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
 
                 {/* 3. Download Complete Quran Audio (All 114 Surahs) */}
-                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between gap-3">
+                <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-bold text-black dark:text-white">
                       Complete Quran Audio (All 114 Surahs · Ar + En + Ur)
                     </div>
-                    <p className="text-[11px] text-stone-700 dark:text-stone-400 font-medium leading-tight">
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium leading-tight">
                       Caches studio Arabic Qari, English & Urdu translation MP3s locally for every Surah across the entire Quran.
                     </p>
                   </div>
                   <button
                     onClick={handleDownloadAllAudio}
                     disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
-                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-stone-900 dark:hover:bg-stone-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingAllAudio ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -768,7 +768,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   <span>Saved Chapters ({downloadedSurahs.length})</span>
                   <button
                     onClick={refreshStats}
-                    className="text-[11px] font-semibold text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white flex items-center gap-1"
+                    className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white flex items-center gap-1"
                   >
                     <RefreshCw className="w-3 h-3" />
                     <span>Refresh</span>
@@ -776,9 +776,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
 
                 {downloadedSurahs.length === 0 ? (
-                  <div className="py-10 text-center space-y-2 border border-dashed border-stone-300 dark:border-stone-800 rounded-2xl bg-stone-50/50 dark:bg-stone-900/30">
-                    <Download className="w-8 h-8 text-stone-400 dark:text-stone-600 mx-auto" />
-                    <p className="text-xs text-stone-600 dark:text-stone-400 font-medium">
+                  <div className="py-10 text-center space-y-2 border border-dashed border-neutral-300 dark:border-neutral-800 rounded-2xl bg-neutral-50/50 dark:bg-neutral-900/30">
+                    <Download className="w-8 h-8 text-neutral-400 dark:text-neutral-600 mx-auto" />
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">
                       No Surahs downloaded yet. Tap "Download Text" above or save individual Surahs while reading.
                     </p>
                   </div>
@@ -787,7 +787,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     {downloadedSurahs.map((s) => (
                       <div
                         key={s.surahNumber}
-                        className="p-3 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex items-center justify-between"
+                        className="p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center justify-between"
                       >
                         <div>
                           <div className="text-xs font-bold text-black dark:text-white flex items-center gap-2">
@@ -801,14 +801,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                               </span>
                             )}
                           </div>
-                          <div className="text-[10px] text-stone-500 font-medium">
+                          <div className="text-[10px] text-neutral-500 font-medium">
                             {s.ayahCount} Verses · ~{s.sizeKb} KB · Saved {new Date(s.downloadedAt).toLocaleDateString()}
                           </div>
                         </div>
 
                         <button
                           onClick={() => onDeleteDownloadedSurah(s.surahNumber)}
-                          className="p-1.5 text-stone-400 hover:text-black dark:hover:text-white rounded-lg transition-colors"
+                          className="p-1.5 text-neutral-400 hover:text-black dark:hover:text-white rounded-lg transition-colors"
                           title="Remove from offline cache"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -824,13 +824,13 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           {/* TAB 4: Push Notifications & Gentle Reminders */}
           {activeTab === 'reminders' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-3">
+              <div className="p-4 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <span className="text-xs font-semibold text-stone-900 dark:text-stone-100">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
                       Gentle Push Notifications
                     </span>
-                    <p className="text-xs text-stone-500">
+                    <p className="text-xs text-neutral-500">
                       Receive calming alerts for prayer times and your evening Quran reflection.
                     </p>
                   </div>
@@ -850,8 +850,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   )}
                 </div>
 
-                <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between">
-                  <span className="text-xs text-stone-600 dark:text-stone-400">
+                <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+                  <span className="text-xs text-neutral-600 dark:text-neutral-400">
                     Test how gentle reminders feel:
                   </span>
                   <button
@@ -866,7 +866,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
               {/* Notification Schedule */}
               <div className="space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                   Notification Schedule Times
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
@@ -880,12 +880,12 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   ].map((item) => (
                     <div
                       key={item.key}
-                      className="p-3 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 flex justify-between items-center"
+                      className="p-3 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex justify-between items-center"
                     >
-                      <span className="text-stone-700 dark:text-stone-300 font-medium">
+                      <span className="text-neutral-700 dark:text-neutral-300 font-medium">
                         {item.label}
                       </span>
-                      <span className="font-mono text-stone-500 tabular-nums">{item.time}</span>
+                      <span className="font-mono text-neutral-500 tabular-nums">{item.time}</span>
                     </div>
                   ))}
                 </div>

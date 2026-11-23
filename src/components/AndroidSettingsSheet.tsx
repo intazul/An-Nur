@@ -16,11 +16,13 @@ import {
   WifiOff,
   HardDrive,
   Upload,
+  Eye,
 } from 'lucide-react';
 import { UserProfileData } from '../types/quran';
 import { ARABIC_RECITERS, URDU_RECITERS, RECITERS } from '../data/reciters';
 import { useOnlineStatus, usePWAInstall } from '../hooks/usePWA';
 import { exportOfflineBackupJson, importOfflineBackupJson } from '../utils/backupAndHifz';
+import { getHijriDateSnapshot } from '../utils/hijriCalendar';
 
 interface AndroidSettingsSheetProps {
   isOpen: boolean;
@@ -32,6 +34,7 @@ interface AndroidSettingsSheetProps {
   onOpenBookmarks: () => void;
   onOpenOfflineManager: () => void;
   onBackupRestored?: () => void;
+  onOpenRamadanSanctuary?: () => void;
 }
 
 export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
@@ -44,7 +47,10 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
   onOpenBookmarks,
   onOpenOfflineManager,
   onBackupRestored,
+  onOpenRamadanSanctuary,
 }) => {
+  const hijriToday = React.useMemo(() => getHijriDateSnapshot(new Date()), []);
+  const isActualRamadan = hijriToday.month === 9;
   const isOnline = useOnlineStatus();
   const { isInstallable, isInstalled, install } = usePWAInstall();
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -137,7 +143,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                 !darkMode
                   ? 'border-black bg-black text-white shadow-sm font-bold'
-                  : 'border-stone-800 bg-stone-950 text-stone-300 hover:border-white'
+                  : 'border-neutral-800 bg-neutral-950 text-neutral-300 hover:border-white'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
@@ -162,7 +168,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               className={`p-3.5 rounded-2xl border-2 text-left transition-all ${
                 darkMode
                   ? 'border-white bg-white text-black shadow-sm font-bold'
-                  : 'border-stone-200 bg-white text-stone-800 hover:border-black'
+                  : 'border-neutral-200 bg-white text-neutral-800 hover:border-black'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
@@ -181,6 +187,108 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           </div>
         </div>
 
+        {/* SECTION 1B: Ramadan Exclusive Mode & Preview Toggle */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-black dark:text-white">
+            <span className="flex items-center gap-2">
+              <Moon className="w-3.5 h-3.5" />
+              <span>Ramadan Special Mode</span>
+            </span>
+            <span className="text-[10px] font-semibold opacity-70 tabular-nums">
+              {hijriToday.hijriFormatted}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl border-[1.5px] border-black dark:border-white bg-white dark:bg-black space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-black dark:text-white flex items-center gap-1.5">
+                  <Eye className="w-3.5 h-3.5 shrink-0" />
+                  <span>
+                    {isActualRamadan ? 'Ramadan Active Automatically' : 'Ramadan Preview Mode'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-black/75 dark:text-white/75 font-medium leading-snug mt-0.5">
+                  {isActualRamadan
+                    ? 'Ramadan features are automatically unlocked and counting during this blessed month.'
+                    : 'Unlocks Sahoor/Iftar clock, 30-day Fast & Qada ledger, 30-Juz matrix, 3 Ashras & Laylatul Qadr before Ramadan begins.'}
+                </p>
+              </div>
+
+              {!isActualRamadan && (
+                <button
+                  onClick={() =>
+                    onUpdateProfile({ ramadanPreviewMode: !profile.ramadanPreviewMode })
+                  }
+                  className={`w-12 h-7 rounded-full transition-colors relative p-0.5 shrink-0 border border-black dark:border-white ${
+                    profile.ramadanPreviewMode
+                      ? 'bg-black dark:bg-white'
+                      : 'bg-neutral-200 dark:bg-neutral-800'
+                  }`}
+                  aria-label="Toggle Ramadan Preview Mode"
+                >
+                  <div
+                    className={`w-5.5 h-5.5 rounded-full shadow-md transform transition-transform ${
+                      profile.ramadanPreviewMode
+                        ? 'translate-x-5 bg-white dark:bg-black'
+                        : 'translate-x-0 bg-black dark:bg-white'
+                    }`}
+                  />
+                </button>
+              )}
+            </div>
+
+            {(profile.ramadanPreviewMode || isActualRamadan) && (
+              <div className="pt-2.5 border-t border-black/15 dark:border-white/15 space-y-2.5">
+                {!isActualRamadan && (
+                  <div className="space-y-1.5">
+                    <span className="text-[10.5px] font-bold uppercase tracking-wider text-black/70 dark:text-white/75 block">
+                      Preview Day Selector (Currently Day {profile.ramadanPreviewDay || 27})
+                    </span>
+                    <div className="grid grid-cols-5 gap-1.5">
+                      {[
+                        { d: 1, label: 'Day 1' },
+                        { d: 10, label: 'Day 10' },
+                        { d: 17, label: 'Badr 17' },
+                        { d: 21, label: 'Odd 21' },
+                        { d: 27, label: 'Qadr 27' },
+                      ].map((p) => {
+                        const active = (profile.ramadanPreviewDay || 27) === p.d;
+                        return (
+                          <button
+                            key={p.d}
+                            onClick={() => onUpdateProfile({ ramadanPreviewDay: p.d })}
+                            className={`py-1.5 px-1 rounded-xl text-[10px] font-bold border transition-all ${
+                              active
+                                ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+                                : 'bg-white text-black border-black/35 dark:bg-black dark:text-white dark:border-white/35'
+                            }`}
+                          >
+                            {p.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {onOpenRamadanSanctuary && (
+                  <button
+                    onClick={() => {
+                      onClose();
+                      onOpenRamadanSanctuary();
+                    }}
+                    className="w-full py-2.5 px-3 rounded-xl bg-black text-white dark:bg-white dark:text-black text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition-transform"
+                  >
+                    <Moon className="w-3.5 h-3.5" />
+                    <span>Open Ramadan Sanctuary</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* SECTION 2: Reading Format Layout (Mushaf Flow vs Verse Cards) */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
@@ -195,26 +303,26 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               className={`p-3 rounded-2xl border-2 text-left transition-all ${
                 profile.readingLayout === 'paragraph'
                   ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-md font-bold'
-                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium hover:border-black'
+                  : 'border-neutral-300 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-black dark:text-neutral-300 font-medium hover:border-black'
               }`}
             >
-              <div className="font-bold text-sm mb-1">📖 Mushaf Pages</div>
-              <div className="text-[11px] opacity-90 leading-tight">
+              <div className="font-bold text-sm mb-1">Mushaf Pages</div>
+              <div className="text-[11px] opacity-85 leading-tight">
                 Pure Arabic calligraphy page-by-page sliding with Tajweed signs
               </div>
             </button>
 
-            {/* 2. Thematic Paragraph Study Mode (Reference Image Style) */}
+            {/* 2. Thematic Paragraph Study Mode */}
             <button
               onClick={() => onUpdateProfile({ readingLayout: 'thematic' })}
               className={`p-3 rounded-2xl border-2 text-left transition-all ${
                 profile.readingLayout === 'thematic'
-                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-md font-bold'
-                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium hover:border-black'
+                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold'
+                  : 'border-neutral-300 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-black dark:text-neutral-300 font-medium hover:border-black'
               }`}
             >
-              <div className="font-bold text-sm mb-1">📚 Thematic Study</div>
-              <div className="text-[11px] opacity-90 leading-tight">
+              <div className="font-bold text-sm mb-1">Thematic Study</div>
+              <div className="text-[11px] opacity-85 leading-tight">
                 One paragraph per slide with specific topic name, questions & small noticeable text
               </div>
             </button>
@@ -224,12 +332,12 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               onClick={() => onUpdateProfile({ readingLayout: 'cards' })}
               className={`p-3 rounded-2xl border-2 text-left transition-all ${
                 profile.readingLayout === 'cards'
-                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black shadow-md font-bold'
-                  : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium hover:border-black'
+                  ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold'
+                  : 'border-neutral-300 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-black dark:text-neutral-300 font-medium hover:border-black'
               }`}
             >
-              <div className="font-bold text-sm mb-1">📑 Verse Slides</div>
-              <div className="text-[11px] opacity-90 leading-tight">
+              <div className="font-bold text-sm mb-1">Verse Slides</div>
+              <div className="text-[11px] opacity-85 leading-tight">
                 Verse-by-verse sliding with large translations & related Hadith
               </div>
             </button>
@@ -237,14 +345,14 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
           {/* Thematic Study Layout Indicator */}
           {profile.readingLayout === 'thematic' && (
-            <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+            <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                 <span>Thematic Study Style</span>
                 <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
                   Zero Vertical Scroll Active
                 </span>
               </div>
-              <div className="text-[11px] text-stone-700 dark:text-stone-300 font-medium">
+              <div className="text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
                 One paragraph per slide with specific topic headings, reflective questions, and small noticeable letters.
               </div>
             </div>
@@ -252,14 +360,14 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
           {/* Cards Layout Indicator */}
           {profile.readingLayout === 'cards' && (
-            <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+            <div className="space-y-2 p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                 <span>Verse Slides Style</span>
                 <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
                   Zero Vertical Scroll Active
                 </span>
               </div>
-              <div className="text-[11px] text-stone-700 dark:text-stone-300 font-medium">
+              <div className="text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
                 Horizontal sliding verse cards with translations, Tafsir and authenticated Hadith.
               </div>
             </div>
@@ -267,20 +375,20 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
           {/* Mushaf Page Turn Style Indicator */}
           {profile.readingLayout === 'paragraph' && (
-            <div className="space-y-3 p-4 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+            <div className="space-y-3 p-4 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60">
               <div className="flex items-center justify-between text-xs font-bold text-black dark:text-white">
                 <span>Page Turn Style</span>
                 <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
                   Horizontal Page Sliding Active
                 </span>
               </div>
-              <div className="text-[11px] text-stone-700 dark:text-stone-300 font-medium">
+              <div className="text-[11px] text-neutral-700 dark:text-neutral-300 font-medium">
                 Vertical scrolling is replaced with smooth horizontal page slides and swipe gestures like a real physical book.
               </div>
 
               {/* Small & Readable Mushaf Font Size */}
-              <div className="pt-2 border-t border-black/10 dark:border-stone-800 space-y-2">
-                <div className="flex justify-between text-xs text-stone-900 dark:text-stone-300 font-semibold">
+              <div className="pt-2 border-t border-black/10 dark:border-neutral-800 space-y-2">
+                <div className="flex justify-between text-xs text-neutral-900 dark:text-neutral-300 font-semibold">
                   <span>Mushaf Arabic Size (Small & Crisp)</span>
                   <span className="font-bold tabular-nums text-black dark:text-white">
                     {profile.mushafFontSize || 21}px
@@ -298,7 +406,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                       className={`py-2 rounded-xl text-xs font-bold border transition-all ${
                         (profile.mushafFontSize || 21) === opt.size
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
-                          : 'bg-white dark:bg-stone-800 text-black dark:text-stone-300 border-stone-300 dark:border-stone-700'
+                          : 'bg-white dark:bg-neutral-800 text-black dark:text-neutral-300 border-neutral-300 dark:border-neutral-700'
                       }`}
                     >
                       {opt.label} ({opt.size}px)
@@ -310,12 +418,12 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           )}
 
           {/* Tajweed Stopping Signs Guidance Toggle */}
-          <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+          <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60">
             <div className="pr-2">
               <div className="text-sm font-bold text-black dark:text-white">
                 Highlight Stopping Rules (مـ, قلى, ج, لا, ۩)
               </div>
-              <div className="text-xs text-stone-800 dark:text-stone-400 font-medium">
+              <div className="text-xs text-neutral-800 dark:text-neutral-400 font-medium">
                 Highlights where to stop or pause; tap any mark for simple guidance
               </div>
             </div>
@@ -324,7 +432,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               className={`w-12 h-7 rounded-full transition-colors relative p-0.5 shrink-0 ${
                 profile.showTajweedSigns
                   ? 'bg-black dark:bg-white'
-                  : 'bg-stone-300 dark:bg-stone-700'
+                  : 'bg-neutral-300 dark:bg-neutral-700'
               }`}
               aria-label="Toggle Tajweed Stopping Signs"
             >
@@ -348,12 +456,12 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
           <div className="space-y-2.5">
             {/* Regional Language Mutually Exclusive Selector (Urdu OR Assamese, Never Both) */}
-            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2.5">
+            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 space-y-2.5">
               <div>
                 <div className="text-sm font-bold text-black dark:text-white">
                   Regional Translation & Tafseer
                 </div>
-                <div className="text-[11px] text-stone-700 dark:text-stone-400 font-medium">
+                <div className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium">
                   Select either Urdu or Assamese (only one can be active at a time)
                 </div>
               </div>
@@ -365,7 +473,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   className={`p-2.5 rounded-xl border-2 text-center transition-all ${
                     !profile.showUrdu && !profile.showAssamese
                       ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                      : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+                      : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-black dark:text-neutral-300 font-medium'
                   }`}
                 >
                   <div className="font-bold text-xs">Off</div>
@@ -378,7 +486,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   className={`p-2.5 rounded-xl border-2 text-center transition-all ${
                     profile.showUrdu && !profile.showAssamese
                       ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                      : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+                      : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-black dark:text-neutral-300 font-medium'
                   }`}
                 >
                   <div className="font-bold text-xs leading-normal">Urdu (Roman)</div>
@@ -391,7 +499,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   className={`p-2.5 rounded-xl border-2 text-center transition-all ${
                     profile.showAssamese && !profile.showUrdu
                       ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                      : 'border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+                      : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 text-black dark:text-neutral-300 font-medium'
                   }`}
                 >
                   <div className="font-assamese font-bold text-xs leading-normal">অসমীয়া</div>
@@ -400,31 +508,31 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               </div>
 
               {profile.showAssamese && !profile.showUrdu && (
-                <div className="text-[11px] font-medium text-stone-800 dark:text-stone-300 pt-0.5">
+                <div className="text-[11px] font-medium text-neutral-800 dark:text-neutral-300 pt-0.5">
                   Active: Shaykh Rafeequl Islam Habibur-Rahman Assamese Translation & Tafseer (Urdu disabled)
                 </div>
               )}
               {profile.showUrdu && !profile.showAssamese && (
-                <div className="text-[11px] font-medium text-stone-800 dark:text-stone-300 pt-0.5">
+                <div className="text-[11px] font-medium text-neutral-800 dark:text-neutral-300 pt-0.5">
                   Active: Fateh Muhammad Jalandhri Urdu (Roman Transliteration in English) & Tafseer (Assamese disabled)
                 </div>
               )}
             </div>
 
             {/* English Translation Toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60">
               <div className="pr-2">
                 <div className="text-sm font-bold text-black dark:text-white">
                   English Translation
                 </div>
-                <div className="text-xs text-stone-800 dark:text-stone-400 font-medium">
+                <div className="text-xs text-neutral-800 dark:text-neutral-400 font-medium">
                   Saheeh International clear contemporary translation
                 </div>
               </div>
               <button
                 onClick={() => onUpdateProfile({ showEnglish: !profile.showEnglish })}
                 className={`w-12 h-7 rounded-full transition-colors relative p-0.5 shrink-0 ${
-                  profile.showEnglish ? 'bg-black dark:bg-white' : 'bg-stone-300 dark:bg-stone-700'
+                  profile.showEnglish ? 'bg-black dark:bg-white' : 'bg-neutral-300 dark:bg-neutral-700'
                 }`}
                 aria-label="Toggle English Translation"
               >
@@ -439,19 +547,19 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             </div>
 
             {/* Tafsir Commentary Toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60">
               <div className="pr-2">
                 <div className="text-sm font-bold text-black dark:text-white">
                   Tafsir Commentary Preview
                 </div>
-                <div className="text-xs text-stone-800 dark:text-stone-400 font-medium">
+                <div className="text-xs text-neutral-800 dark:text-neutral-400 font-medium">
                   Show exegesis summary in English & selected regional language
                 </div>
               </div>
               <button
                 onClick={() => onUpdateProfile({ showTafsir: !profile.showTafsir })}
                 className={`w-12 h-7 rounded-full transition-colors relative p-0.5 shrink-0 ${
-                  profile.showTafsir ? 'bg-black dark:bg-white' : 'bg-stone-300 dark:bg-stone-700'
+                  profile.showTafsir ? 'bg-black dark:bg-white' : 'bg-neutral-300 dark:bg-neutral-700'
                 }`}
                 aria-label="Toggle Tafsir Preview"
               >
@@ -467,27 +575,27 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           </div>
         </div>
 
-        {/* SECTION 4: Arabic Word Glow (for Low Light & Night Reading) */}
+        {/* SECTION 4: Ink Rendering Profile */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-black dark:text-white">
             <Sparkles className="w-3.5 h-3.5 text-black dark:text-white" />
-            <span>Arabic Word Glow (Night Reading)</span>
+            <span>Calligraphy Ink Contrast</span>
           </div>
 
           <div className="grid grid-cols-4 gap-2">
             {[
-              { id: 'gold', label: 'Gold' },
-              { id: 'emerald', label: 'Emerald' },
-              { id: 'lunar', label: 'Lunar' },
-              { id: 'off', label: 'No Glow' },
+              { id: 'gold', label: 'Deep Noir' },
+              { id: 'emerald', label: 'Stark' },
+              { id: 'lunar', label: 'Soft' },
+              { id: 'off', label: 'Default' },
             ].map((m) => (
               <button
                 key={m.id}
                 onClick={() => onUpdateProfile({ arabicGlowMode: m.id as any })}
-                className={`py-2 px-1 rounded-xl text-xs font-bold border transition-all text-center ${
+                className={`py-2 px-1 rounded-xl text-xs font-semibold border transition-all text-center ${
                   profile.arabicGlowMode === m.id
-                    ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-black dark:text-stone-300 border-stone-300 dark:border-stone-700'
+                    ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
+                    : 'bg-neutral-100 dark:bg-neutral-900 text-black dark:text-neutral-300 border-neutral-300 dark:border-neutral-700'
                 }`}
               >
                 {m.label}
@@ -502,10 +610,10 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             Font Sizing & Traditional Script
           </div>
 
-          <div className="p-4 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-4 text-xs">
+          <div className="p-4 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 space-y-4 text-xs">
             {/* Arabic Size Slider */}
             <div className="space-y-1.5">
-              <div className="flex justify-between font-bold text-black dark:text-stone-200">
+              <div className="flex justify-between font-bold text-black dark:text-neutral-200">
                 <span>Arabic Font Size</span>
                 <span className="tabular-nums font-bold text-black dark:text-white">
                   {profile.arabicFontSize}px
@@ -524,7 +632,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
             {/* Translation Size Slider */}
             <div className="space-y-1.5">
-              <div className="flex justify-between font-bold text-black dark:text-stone-200">
+              <div className="flex justify-between font-bold text-black dark:text-neutral-200">
                 <span>Translation Font Size</span>
                 <span className="tabular-nums font-bold text-black dark:text-white">
                   {profile.translationFontSize}px
@@ -542,7 +650,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             </div>
 
             {/* Calligraphy Script Selection */}
-            <div className="pt-2 border-t border-black/10 dark:border-stone-800">
+            <div className="pt-2 border-t border-black/10 dark:border-neutral-800">
               <div className="font-bold text-black dark:text-white mb-2">
                 Calligraphy Style
               </div>
@@ -552,7 +660,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
                     profile.calligraphyFont === 'amiri'
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
-                      : 'bg-white dark:bg-stone-800 text-black dark:text-stone-300 border-stone-300 dark:border-stone-700'
+                      : 'bg-white dark:bg-neutral-800 text-black dark:text-neutral-300 border-neutral-300 dark:border-neutral-700'
                   }`}
                 >
                   Amiri Quran
@@ -562,7 +670,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   className={`py-2 px-3 rounded-xl text-xs font-bold border transition-colors ${
                     profile.calligraphyFont === 'scheherazade'
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
-                      : 'bg-white dark:bg-stone-800 text-black dark:text-stone-300 border-stone-300 dark:border-stone-700'
+                      : 'bg-white dark:bg-neutral-800 text-black dark:text-neutral-300 border-neutral-300 dark:border-neutral-700'
                   }`}
                 >
                   Scheherazade New
@@ -609,7 +717,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                   className={`p-3 rounded-2xl border-2 text-left transition-all ${
                     active
                       ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                      : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-semibold hover:border-black/50'
+                      : 'border-neutral-300 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-black dark:text-neutral-300 font-semibold hover:border-black/50'
                   }`}
                 >
                   <div className="text-xs font-bold mb-0.5">{opt.title}</div>
@@ -623,10 +731,10 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           {(profile.recitationLanguageMode === 'urdu' ||
             profile.recitationLanguageMode === 'both' ||
             profile.recitationLanguageMode === 'arabic_urdu') && (
-            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2">
+            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 space-y-2">
               <div className="text-xs font-bold text-black dark:text-white flex items-center justify-between">
                 <span>Urdu Translation Reciter (Male)</span>
-                <span className="text-[10px] font-mono font-semibold text-stone-700 dark:text-stone-300">
+                <span className="text-[10px] font-mono font-semibold text-neutral-700 dark:text-neutral-300">
                   Offline MP3s
                 </span>
               </div>
@@ -641,12 +749,12 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                       className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between transition-colors ${
                         isSelected
                           ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black font-bold shadow-xs'
-                          : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-800 text-black dark:text-stone-300'
+                          : 'border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-800 text-black dark:text-neutral-300'
                       }`}
                     >
                       <div>
                         <div className="text-xs font-bold">{r.name}</div>
-                        <div className={`text-[10px] font-medium ${isSelected ? 'opacity-90' : 'text-stone-700 dark:text-stone-400'}`}>
+                        <div className={`text-[10px] font-medium ${isSelected ? 'opacity-90' : 'text-neutral-700 dark:text-neutral-400'}`}>
                           {r.style}
                         </div>
                       </div>
@@ -681,13 +789,13 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                       onClick={() => onUpdateProfile({ preferredReciter: r.id })}
                       className={`w-full p-3 rounded-xl border-2 text-left flex items-center justify-between transition-colors ${
                         isSelected
-                          ? 'border-black bg-stone-100 dark:border-white dark:bg-stone-900 text-black dark:text-white font-bold'
-                          : 'border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/60 text-stone-900 dark:text-stone-300 font-medium hover:border-black/50'
+                          ? 'border-black bg-neutral-100 dark:border-white dark:bg-neutral-900 text-black dark:text-white font-bold'
+                          : 'border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/60 text-neutral-900 dark:text-neutral-300 font-medium hover:border-black/50'
                       }`}
                     >
                       <div>
                         <div className="text-xs font-bold text-black dark:text-white">{r.name}</div>
-                        <div className="text-[11px] text-stone-700 dark:text-stone-400 font-medium">
+                        <div className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium">
                           {r.style}
                         </div>
                       </div>
@@ -713,7 +821,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
             className={`w-full p-3.5 rounded-2xl border-2 text-left flex items-center justify-between gap-2 transition-all ${
               profile.vocalClarityEnhancer !== false
                 ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold shadow-xs'
-                : 'border-stone-300 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 text-black dark:text-stone-300 font-medium'
+                : 'border-neutral-300 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 text-black dark:text-neutral-300 font-medium'
             }`}
           >
             <div className="min-w-0">
@@ -736,7 +844,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           </div>
 
           {/* Network Status Badge */}
-          <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isOnline ? (
                 <Wifi className="w-4 h-4 text-black dark:text-white" />
@@ -747,7 +855,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
                 <div className="text-xs font-bold text-black dark:text-white">
                   {isOnline ? 'Online (Ready to sync & cache)' : 'Offline Mode Active'}
                 </div>
-                <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                <div className="text-[10px] text-neutral-600 dark:text-neutral-400 font-medium">
                   {isOnline
                     ? 'All downloaded chapters & recitations play without network'
                     : 'Running 100% from local device cache'}
@@ -758,13 +866,13 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
 
           {/* PWA App Install Button (if browser supports install prompt or standalone) */}
           {isInstallable && (
-            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 flex items-center justify-between gap-3">
+            <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 flex items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
                 <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5">
                   <Smartphone className="w-3.5 h-3.5 text-black dark:text-white" />
                   <span>Install as Native Android App</span>
                 </div>
-                <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+                <div className="text-[10px] text-neutral-600 dark:text-neutral-400 font-medium">
                   Add to home screen for fullscreen offline experience.
                 </div>
               </div>
@@ -778,19 +886,19 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
           )}
 
           {isInstalled && (
-            <div className="p-3 rounded-2xl border border-black/20 dark:border-white/20 bg-stone-100 dark:bg-stone-900 flex items-center gap-2 text-xs font-bold text-black dark:text-white">
+            <div className="p-3 rounded-2xl border border-black/20 dark:border-white/20 bg-neutral-100 dark:bg-neutral-900 flex items-center gap-2 text-xs font-bold text-black dark:text-white">
               <Check className="w-4 h-4 stroke-[3]" />
               <span>Installed as Standalone Native PWA</span>
             </div>
           )}
 
           {/* One-Tap Backup & Restore (.json) */}
-          <div className="p-3.5 rounded-2xl border border-black/15 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/60 space-y-2.5">
+          <div className="p-3.5 rounded-2xl border border-black/15 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/60 space-y-2.5">
             <div>
               <div className="text-xs font-bold text-black dark:text-white">
                 Portable Backup & Restore (.json)
               </div>
-              <div className="text-[10px] text-stone-600 dark:text-stone-400 font-medium">
+              <div className="text-[10px] text-neutral-600 dark:text-neutral-400 font-medium">
                 Export or restore your Hifz, Iman records, bookmarks & Khatmah 100% offline
               </div>
             </div>
@@ -824,8 +932,8 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
               <div
                 className={`p-2 rounded-xl text-[10.5px] font-bold border ${
                   backupNotice.type === 'ok'
-                    ? 'bg-stone-100 dark:bg-stone-800 border-black/20 dark:border-white/25 text-black dark:text-white'
-                    : 'bg-stone-200 dark:bg-stone-900 border-black dark:border-white text-black dark:text-white'
+                    ? 'bg-neutral-100 dark:bg-neutral-800 border-black/20 dark:border-white/25 text-black dark:text-white'
+                    : 'bg-neutral-200 dark:bg-neutral-900 border-black dark:border-white text-black dark:text-white'
                 }`}
               >
                 {backupNotice.text}
@@ -863,7 +971,7 @@ export const AndroidSettingsSheet: React.FC<AndroidSettingsSheetProps> = ({
       <div className="p-4 border-t border-black/10 dark:border-white/15 bg-white dark:bg-black shrink-0">
         <button
           onClick={onClose}
-          className="w-full h-14 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-sm shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+          className="w-full h-14 rounded-2xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-sm shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
         >
           <Check className="w-4 h-4 stroke-[3]" />
           <span>Apply & Save Preferences</span>

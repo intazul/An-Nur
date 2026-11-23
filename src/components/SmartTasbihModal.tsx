@@ -222,11 +222,11 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in select-none">
       <div
-        className="w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold text-sm">
               📿
@@ -235,7 +235,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
               <h2 className="text-base font-bold text-black dark:text-white font-cinzel">
                 Smart Digital Tasbih
               </h2>
-              <span className="text-xs text-stone-500">
+              <span className="text-xs text-neutral-500">
                 Lifetime: <strong className="font-bold text-black dark:text-white">{lifetimeCount}</strong> beads
               </span>
             </div>
@@ -248,7 +248,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
               className={`p-2 rounded-xl transition-all ${
                 soundEnabled
                   ? 'bg-black text-white dark:bg-white dark:text-black'
-                  : 'text-stone-400 hover:text-black dark:hover:text-white'
+                  : 'text-neutral-400 hover:text-black dark:hover:text-white'
               }`}
               title={soundEnabled ? 'Bead click sound enabled' : 'Sound muted'}
             >
@@ -261,7 +261,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
               className={`p-2 rounded-xl transition-all ${
                 hapticEnabled
                   ? 'bg-black text-white dark:bg-white dark:text-black'
-                  : 'text-stone-400 hover:text-black dark:hover:text-white'
+                  : 'text-neutral-400 hover:text-black dark:hover:text-white'
               }`}
               title={hapticEnabled ? 'Haptic feedback on' : 'Haptic feedback off'}
             >
@@ -270,7 +270,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 text-stone-400 hover:text-black dark:hover:text-white rounded-xl"
+              className="p-2 text-neutral-400 hover:text-black dark:hover:text-white rounded-xl"
             >
               <X className="w-5 h-5" />
             </button>
@@ -278,7 +278,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
         </div>
 
         {/* Preset Selector Carousel */}
-        <div className="p-3 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/40">
+        <div className="p-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/40">
           <div className="flex gap-1.5 overflow-x-auto pb-1 text-xs">
             {PRESETS.map((p, idx) => (
               <button
@@ -290,7 +290,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
                 className={`px-3 py-2 rounded-xl border whitespace-nowrap font-bold transition-all text-xs active:scale-95 ${
                   selectedPresetIndex === idx
                     ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
-                    : 'bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                    : 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                 }`}
               >
                 {p.transliteration.split('(')[0].trim()}
@@ -316,7 +316,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
               {stageArabic}
             </div>
 
-            <div className="text-xs font-semibold text-stone-600 dark:text-stone-300 max-w-sm mx-auto">
+            <div className="text-xs font-semibold text-neutral-600 dark:text-neutral-300 max-w-sm mx-auto">
               {activePreset.meaning}
             </div>
           </div>
@@ -329,7 +329,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
               onMouseUp={() => setIsPressing(false)}
               onTouchStart={() => setIsPressing(true)}
               onTouchEnd={() => setIsPressing(false)}
-              className={`w-44 h-44 sm:w-48 sm:h-48 rounded-full border-4 border-black dark:border-amber-400/60 bg-linear-to-b from-stone-900 to-black text-white shadow-2xl flex flex-col items-center justify-center relative transition-transform ${
+              className={`w-44 h-44 sm:w-48 sm:h-48 rounded-full border-4 border-black dark:border-amber-400/60 bg-linear-to-b from-neutral-900 to-black text-white shadow-2xl flex flex-col items-center justify-center relative transition-transform ${
                 isPressing ? 'scale-95' : 'hover:scale-[1.02] active:scale-95'
               }`}
             >
@@ -342,7 +342,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="3"
-                  className="text-stone-700 opacity-30"
+                  className="text-neutral-700 opacity-30"
                 />
                 <circle
                   cx="50%"
@@ -366,7 +366,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
                 Target: {activePreset.target}
               </span>
 
-              <span className="text-[9px] text-stone-400 mt-1">Tap anywhere</span>
+              <span className="text-[9px] text-neutral-400 mt-1">Tap anywhere</span>
             </button>
           </div>
 
@@ -381,7 +381,7 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
 
             <button
               onClick={handleReset}
-              className="flex items-center gap-1 text-stone-500 hover:text-black dark:hover:text-white font-bold transition-colors"
+              className="flex items-center gap-1 text-neutral-500 hover:text-black dark:hover:text-white font-bold transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reset</span>
@@ -389,12 +389,12 @@ export const SmartTasbihModal: React.FC<SmartTasbihModalProps> = ({
           </div>
 
           {/* Authentic Hadith Virtue Footer */}
-          <div className="w-full p-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-left space-y-1">
+          <div className="w-full p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-left space-y-1">
             <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
               <span>Hadith Virtue</span>
               <span>{activePreset.source}</span>
             </div>
-            <p className="text-xs text-stone-600 dark:text-stone-300 italic leading-relaxed">
+            <p className="text-xs text-neutral-600 dark:text-neutral-300 italic leading-relaxed">
               "{activePreset.virtue}"
             </p>
           </div>

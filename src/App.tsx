@@ -22,6 +22,10 @@ import { PrayerTimesModal } from './components/PrayerTimesModal';
 import { ProphetsTimelineView } from './components/ProphetsTimelineView';
 import { WelcomeSalamIntro } from './components/WelcomeSalamIntro';
 import { SacredCompanionsView } from './components/SacredCompanionsView';
+import { IslamChronicleView } from './components/IslamChronicleView';
+import { IslamicCalendarView } from './components/IslamicCalendarView';
+import { IslamicDayDetailView } from './components/IslamicDayDetailView';
+import { RamadanSanctuaryView } from './components/RamadanSanctuaryView';
 import { ALL_SURAHS } from './data/surahList';
 import {
   AudioBookmark,
@@ -85,7 +89,11 @@ type ActiveView =
   | 'iman'
   | 'favorites'
   | 'timeline'
-  | 'sacred_hub';
+  | 'sacred_hub'
+  | 'islam_chronicle'
+  | 'islamic_calendar'
+  | 'islamic_day_detail'
+  | 'ramadan_sanctuary';
 
 export default function App() {
   // Active Screen
@@ -96,6 +104,19 @@ export default function App() {
   const [initialHifzMaskOverride, setInitialHifzMaskOverride] = useState<boolean>(false);
   const [timelineJumpActive, setTimelineJumpActive] = useState<boolean>(false);
   const [hubJumpActive, setHubJumpActive] = useState<boolean>(false);
+  const [chronicleJumpActive, setChronicleJumpActive] = useState<boolean>(false);
+  const [calendarJumpActive, setCalendarJumpActive] = useState<boolean>(false);
+  const [dayDetailJumpActive, setDayDetailJumpActive] = useState<boolean>(false);
+  const [ramadanJumpActive, setRamadanJumpActive] = useState<boolean>(false);
+  const [selectedCalendarDay, setSelectedCalendarDay] = useState<{
+    year: number;
+    month: number;
+    day: number;
+  } | null>(null);
+  const [calendarViewState, setCalendarViewState] = useState<{
+    year: number;
+    month: number;
+  } | null>(null);
   const [selectedHadithTopicId, setSelectedHadithTopicId] = useState<string | undefined>(undefined);
   const [showIntro, setShowIntro] = useState<boolean>(true);
   const previousViewRef = useRef<ActiveView>('dashboard');
@@ -979,17 +1000,14 @@ export default function App() {
   const isFavorite = (profile.favoriteSurahs || []).includes(currentSurahNumber);
 
   return (
-    <div className="h-screen sm:min-h-screen bg-stone-100 dark:bg-black flex flex-col items-center justify-start sm:p-4 transition-colors overflow-hidden">
+    <div className="h-screen sm:min-h-screen bg-neutral-100 dark:bg-black flex flex-col items-center justify-start sm:p-4 transition-colors overflow-hidden">
       {/* Android Device Portrait Frame */}
-      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-white text-black dark:bg-black dark:text-white flex flex-col overflow-hidden shadow-2xl relative sm:border border-stone-200 dark:border-stone-800 safe-top-zone safe-bottom-zone">
+      <div className="w-full max-w-md h-full sm:min-h-[92vh] sm:max-h-[96vh] sm:rounded-3xl bg-white text-black dark:bg-black dark:text-white flex flex-col overflow-hidden shadow-lg relative sm:border border-neutral-200 dark:border-neutral-800 safe-top-zone safe-bottom-zone">
         {/* Offline Mode Status Banner (visible when disconnected from network) */}
         {!isOnline && (
-          <div className="w-full bg-black text-white dark:bg-white dark:text-black px-4 py-1.5 text-[11px] font-bold flex items-center justify-between border-b border-black/20 dark:border-white/20 shrink-0 select-none z-50">
-            <span className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-white dark:bg-black animate-pulse" />
-              <span>Offline Mode Active • Saved Quran & Recitations Ready</span>
-            </span>
-            <span className="text-[10px] opacity-80 font-mono">100% Offline</span>
+          <div className="w-full bg-black text-white dark:bg-white dark:text-black px-4 py-1.5 text-[11px] font-semibold flex items-center justify-between border-b border-black/15 dark:border-white/15 shrink-0 select-none z-50">
+            <span>Offline Mode Active · Saved Qur’an & Recitations Ready</span>
+            <span className="text-[10px] opacity-80 tabular-nums">Offline</span>
           </div>
         )}
 
@@ -1057,6 +1075,10 @@ export default function App() {
               setIsFavoriteReading(false);
               setTimelineJumpActive(false);
               setHubJumpActive(false);
+              setChronicleJumpActive(false);
+              setDayDetailJumpActive(false);
+              setCalendarJumpActive(false);
+              setRamadanJumpActive(false);
               setInitialHifzMaskOverride(false);
               setTargetAyahOverride(null);
               if (profile.lastRead?.surahNumber) {
@@ -1073,6 +1095,10 @@ export default function App() {
               setIsFavoriteReading(false);
               setTimelineJumpActive(false);
               setHubJumpActive(false);
+              setChronicleJumpActive(false);
+              setDayDetailJumpActive(false);
+              setCalendarJumpActive(false);
+              setRamadanJumpActive(false);
               setInitialHifzMaskOverride(false);
               setTargetAyahOverride(null);
               setCurrentSurahNumber(profile.lastRead?.surahNumber || 1);
@@ -1092,6 +1118,10 @@ export default function App() {
               setIsFavoriteReading(true);
               setTimelineJumpActive(false);
               setHubJumpActive(false);
+              setChronicleJumpActive(false);
+              setDayDetailJumpActive(false);
+              setCalendarJumpActive(false);
+              setRamadanJumpActive(false);
               setInitialHifzMaskOverride(false);
               setTargetAyahOverride(null);
               setCurrentSurahNumber(sNum);
@@ -1107,6 +1137,9 @@ export default function App() {
             onOpenKhatmahPlanner={() => setActiveView('khatmah')}
             onOpenProphetsTimeline={() => setActiveView('timeline')}
             onOpenSacredHub={() => setActiveView('sacred_hub')}
+            onOpenIslamChronicle={() => setActiveView('islam_chronicle')}
+            onOpenIslamicCalendar={() => setActiveView('islamic_calendar')}
+            onOpenRamadanSanctuary={() => setActiveView('ramadan_sanctuary')}
           />
         )}
 
@@ -1142,7 +1175,23 @@ export default function App() {
             onBackToDashboard={() => {
               setTargetAyahOverride(null);
               setInitialHifzMaskOverride(false);
-              if (hubJumpActive) {
+              if (dayDetailJumpActive) {
+                setDayDetailJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('islamic_day_detail');
+              } else if (ramadanJumpActive) {
+                setRamadanJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('ramadan_sanctuary');
+              } else if (calendarJumpActive) {
+                setCalendarJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('islamic_calendar');
+              } else if (chronicleJumpActive) {
+                setChronicleJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('islam_chronicle');
+              } else if (hubJumpActive) {
                 setHubJumpActive(false);
                 setIsFavoriteReading(false);
                 setActiveView('sacred_hub');
@@ -1202,7 +1251,11 @@ export default function App() {
             playbackSpeed={playbackSpeed}
             repeatVerse={repeatVerse}
             onBackToDashboard={() => {
-              if (hubJumpActive) {
+              if (chronicleJumpActive) {
+                setChronicleJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('islam_chronicle');
+              } else if (hubJumpActive) {
                 setHubJumpActive(false);
                 setIsFavoriteReading(false);
                 setActiveView('sacred_hub');
@@ -1279,6 +1332,7 @@ export default function App() {
               setIsProfileOpen(true);
             }}
             onBackupRestored={handleBackupRestored}
+            onOpenRamadanSanctuary={() => setActiveView('ramadan_sanctuary')}
           />
         )}
 
@@ -1385,6 +1439,7 @@ export default function App() {
             onOpenAyahInReader={(surahNum, ayahNum) => {
               setTimelineJumpActive(true);
               setHubJumpActive(false);
+              setChronicleJumpActive(false);
               setInitialHifzMaskOverride(false);
               setIsFavoriteReading(true);
               setCurrentSurahNumber(surahNum);
@@ -1396,6 +1451,7 @@ export default function App() {
             onPlayAyahInReciter={(surahNum, ayahNum) => {
               setTimelineJumpActive(true);
               setHubJumpActive(false);
+              setChronicleJumpActive(false);
               setIsFavoriteReading(true);
               setCurrentSurahNumber(surahNum);
               setTargetAyahOverride(ayahNum);
@@ -1413,6 +1469,7 @@ export default function App() {
             onOpenAyahInReader={(surahNum, ayahNum, opts) => {
               setHubJumpActive(true);
               setTimelineJumpActive(false);
+              setChronicleJumpActive(false);
               setInitialHifzMaskOverride(Boolean(opts?.enableHifzMask));
               setIsFavoriteReading(true);
               setCurrentSurahNumber(surahNum);
@@ -1424,11 +1481,117 @@ export default function App() {
             onPlayAyahInReciter={(surahNum, ayahNum) => {
               setHubJumpActive(true);
               setTimelineJumpActive(false);
+              setChronicleJumpActive(false);
               setIsFavoriteReading(true);
               setCurrentSurahNumber(surahNum);
               setTargetAyahOverride(ayahNum);
               setActiveView('recitation');
               handlePlayAyahInReciter(ayahNum);
+            }}
+          />
+        )}
+
+        {/* 15. Chronicle of Islam — Origins, How Quran Came Down, Wars & Sahih Hadiths (100% Offline) */}
+        {activeView === 'islam_chronicle' && (
+          <IslamChronicleView
+            profile={profile}
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onOpenProphetsTimeline={() => setActiveView('timeline')}
+            onChapterStudied={handleHadithStudied}
+            onOpenAyahInReader={(surahNum, ayahNum) => {
+              setChronicleJumpActive(true);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveAyahNumber(ayahNum);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+            onPlayAyahInReciter={(surahNum, ayahNum) => {
+              setChronicleJumpActive(true);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveView('recitation');
+              handlePlayAyahInReciter(ayahNum);
+            }}
+          />
+        )}
+
+        {/* 16. Islamic Hijri Calendar & Sacred Events Explorer (100% Offline) */}
+        {activeView === 'islamic_calendar' && (
+          <IslamicCalendarView
+            onBackToDashboard={() => setActiveView('dashboard')}
+            initialYear={calendarViewState?.year}
+            initialMonth={calendarViewState?.month}
+            onViewMonthChange={(year, month) => setCalendarViewState({ year, month })}
+            onOpenDayDetail={(year, month, day) => {
+              setSelectedCalendarDay({ year, month, day });
+              setCalendarViewState({ year, month });
+              setActiveView('islamic_day_detail');
+            }}
+            onOpenRamadanSanctuary={() => setActiveView('ramadan_sanctuary')}
+            isRamadanPreviewMode={Boolean(profile.ramadanPreviewMode)}
+            onToggleRamadanPreview={(enabled) =>
+              handleUpdateProfile({ ramadanPreviewMode: enabled })
+            }
+          />
+        )}
+
+        {/* 16b. Dedicated Important Day Detail View (What Happened, Qur'an Verses & Hadith Actions) */}
+        {activeView === 'islamic_day_detail' && selectedCalendarDay && (
+          <IslamicDayDetailView
+            hijriYear={selectedCalendarDay.year}
+            hijriMonth={selectedCalendarDay.month}
+            hijriDay={selectedCalendarDay.day}
+            onBackToCalendar={() => setActiveView('islamic_calendar')}
+            onSelectDay={(year, month, day) =>
+              setSelectedCalendarDay({ year, month, day })
+            }
+            onOpenAyahInReader={(surahNum, ayahNum) => {
+              setDayDetailJumpActive(true);
+              setCalendarJumpActive(false);
+              setRamadanJumpActive(false);
+              setChronicleJumpActive(false);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveAyahNumber(ayahNum);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+            onOpenRamadanSanctuary={() => setActiveView('ramadan_sanctuary')}
+          />
+        )}
+
+        {/* 17. Ramadan-Exclusive Sanctuary (Sahoor/Iftar Clock, 30-Day Fast & Qada, 30 Juz, 3 Ashras & Odd Nights) */}
+        {activeView === 'ramadan_sanctuary' && (
+          <RamadanSanctuaryView
+            profile={profile}
+            prayerStatus={prayerStatus}
+            onUpdateProfile={handleUpdateProfile}
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onOpenAyahInReader={(surahNum, ayahNum) => {
+              setRamadanJumpActive(true);
+              setCalendarJumpActive(false);
+              setChronicleJumpActive(false);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveAyahNumber(ayahNum);
+              setStartInFullScreen(true);
+              setActiveView('reading');
             }}
           />
         )}
@@ -1452,6 +1615,7 @@ export default function App() {
             setIsProfileOpen(true);
           }}
           onBackupRestored={handleBackupRestored}
+          onOpenRamadanSanctuary={() => setActiveView('ramadan_sanctuary')}
         />
       )}
 

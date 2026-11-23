@@ -154,7 +154,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
       style={{ touchAction: 'pan-x', overscrollBehavior: 'none' }}
     >
       {/* 1. App Bar Header */}
-      <header className="shrink-0 bg-white dark:bg-black border-b border-stone-200 dark:border-stone-800 px-3.5 py-2.5 flex items-center justify-between gap-2 shadow-2xs">
+      <header className="shrink-0 bg-white dark:bg-black border-b border-neutral-200 dark:border-neutral-800 px-3.5 py-2.5 flex items-center justify-between gap-2 shadow-2xs">
         <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={onBackToDashboard}
@@ -168,7 +168,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             <h1 className="text-base font-bold text-black dark:text-white font-cinzel leading-none truncate">
               {activeBook.nameEnglish}
             </h1>
-            <p className="text-[11px] text-stone-500 dark:text-stone-400 font-semibold truncate mt-0.5">
+            <p className="text-[11px] text-neutral-500 dark:text-neutral-400 font-semibold truncate mt-0.5">
               Hadith {slideIndex + 1} of {bookHadiths.length} in this Book
             </p>
           </div>
@@ -186,14 +186,14 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
       </header>
 
       {/* 2. Canonical Book Selector Shelf (Horizontal Book Tabs with Authentic Covers) */}
-      <div className="shrink-0 px-3 py-2 bg-stone-100 dark:bg-stone-900/90 border-b border-stone-200 dark:border-stone-800">
+      <div className="shrink-0 px-3 py-2 bg-neutral-100 dark:bg-neutral-900/90 border-b border-neutral-200 dark:border-neutral-800">
         <div className="flex items-center justify-between pb-1.5 px-0.5 text-[10.5px]">
-          <span className="font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+          <span className="font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
             Choose Hadith Book:
           </span>
           <button
             onClick={() => setShowBookCoverModal(true)}
-            className="text-stone-700 dark:text-stone-300 font-bold hover:underline flex items-center gap-1 text-[10.5px]"
+            className="text-neutral-700 dark:text-neutral-300 font-bold hover:underline flex items-center gap-1 text-[10.5px]"
           >
             <Info className="w-3 h-3 text-black dark:text-white" />
             <span>Book Cover & Info</span>
@@ -210,7 +210,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
                 className={`snap-start shrink-0 px-3 py-1.5 rounded-xl border text-left transition-all active:scale-95 flex items-center gap-2 ${
                   isSelected
                     ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-xs font-bold'
-                    : 'bg-white dark:bg-stone-800 text-stone-800 dark:text-stone-300 border-stone-200 dark:border-stone-700 font-medium hover:border-stone-400'
+                    : 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700 font-medium hover:border-neutral-400'
                 }`}
               >
                 <div
@@ -238,7 +238,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
           {/* Physical Book Page Slide Card */}
           <div
             onAnimationEnd={() => setSlideAnimation('none')}
-            className={`flex-1 min-h-0 flex flex-col justify-between p-4 sm:p-5 rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-800 shadow-md text-left overflow-hidden ${
+            className={`flex-1 min-h-0 flex flex-col justify-between p-4 sm:p-5 rounded-3xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 text-left overflow-hidden ${
               slideAnimation === 'next'
                 ? 'animate-slide-next'
                 : slideAnimation === 'prev'
@@ -247,12 +247,12 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             }`}
           >
             {/* Slide Top Bar: Book Chapter & Clickable Reference Badge */}
-            <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-stone-200 dark:border-stone-800 text-xs shrink-0">
+            <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-neutral-200 dark:border-neutral-800 text-xs shrink-0">
               <div className="flex items-center gap-1.5 min-w-0 pr-2">
-                <span className="font-cinzel text-xs font-bold text-stone-900 dark:text-stone-100 truncate">
+                <span className="font-cinzel text-xs font-bold text-neutral-900 dark:text-neutral-100 truncate">
                   {currentHadith.bookName}
                 </span>
-                <span className="text-stone-400">·</span>
+                <span className="text-neutral-400">·</span>
                 <span className="text-[11px] font-bold text-black dark:text-white truncate">
                   {currentHadith.categoryLabel}
                 </span>
@@ -272,7 +272,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             {/* Slide Body (Scrollable if needed, zero clipping of letters) */}
             <div className="flex-1 min-h-0 flex flex-col justify-start py-1 overflow-y-auto overscroll-contain space-y-3.5 pr-1 scrollbar-thin">
               {/* Primary Narrator Introduction */}
-              <div className="text-xs font-semibold text-stone-600 dark:text-stone-400 flex items-center justify-between shrink-0">
+              <div className="text-xs font-semibold text-neutral-600 dark:text-neutral-400 flex items-center justify-between shrink-0">
                 <span>
                   Narrated by: <strong className="text-black dark:text-white font-bold">{currentHadith.narrator}</strong>
                 </span>
@@ -283,14 +283,14 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
               {/* Clean Dark Arabic Calligraphy (Glowing effect removed for pure clarity) */}
               <div className="pt-1 text-right select-text leading-[2.3]" dir="rtl">
-                <p className="font-quran text-base sm:text-lg text-stone-950 dark:text-stone-50 leading-[2.4] font-bold font-arabic-clean select-text">
+                <p className="font-quran text-base sm:text-lg text-neutral-950 dark:text-neutral-50 leading-[2.4] font-bold font-arabic-clean select-text">
                   {currentHadith.textArabic}
                 </p>
               </div>
 
               {/* Classical Book-Serif English Translation (Lora / Crimson Pro) */}
-              <div className="pt-2.5 border-t border-stone-200 dark:border-stone-800 text-left select-text">
-                <p className="font-book-serif text-[14px] sm:text-[15.5px] leading-[1.8] text-stone-900 dark:text-stone-100">
+              <div className="pt-2.5 border-t border-neutral-200 dark:border-neutral-800 text-left select-text">
+                <p className="font-book-serif text-[14px] sm:text-[15.5px] leading-[1.8] text-neutral-900 dark:text-neutral-100">
                   "{currentHadith.textEnglish}"
                 </p>
               </div>
@@ -299,11 +299,11 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
               {/* Core Lesson Takeaway */}
               {currentHadith.keyLesson && (
-                <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-0.5">
+                <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-xs">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block mb-0.5">
                     Key Lesson to Remember
                   </span>
-                  <p className="text-stone-900 dark:text-stone-100 font-medium leading-snug">
+                  <p className="text-neutral-900 dark:text-neutral-100 font-medium leading-snug">
                     {currentHadith.keyLesson}
                   </p>
                 </div>
@@ -322,8 +322,8 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             </div>
 
             {/* Quick Slider Scrubber for this Book */}
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2 shrink-0">
-              <span className="text-[10px] font-bold text-stone-700 dark:text-stone-300 shrink-0 font-mono">
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 flex items-center gap-2 shrink-0">
+              <span className="text-[10px] font-bold text-neutral-700 dark:text-neutral-300 shrink-0 font-mono">
                 {slideIndex + 1} / {bookHadiths.length}
               </span>
               <input
@@ -332,7 +332,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
                 max={bookHadiths.length}
                 value={slideIndex + 1}
                 onChange={(e) => setSlideIndex(Number(e.target.value) - 1)}
-                className="w-full h-1.5 bg-stone-300 dark:bg-stone-700 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
+                className="w-full h-1.5 bg-neutral-300 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-black dark:accent-white"
               />
             </div>
           </div>
@@ -341,7 +341,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
           <div className="mt-2 flex items-center justify-between gap-2 shrink-0">
             <button
               onClick={goToPrevSlide}
-              className="py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Previous Hadith Slide (or swipe right)"
             >
               <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
@@ -352,7 +352,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
               onClick={handleToggleStudied}
               className={`flex-1 py-2.5 px-3 rounded-2xl font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5 border ${
                 isCurrentLearned
-                  ? 'bg-stone-200 dark:bg-stone-800 text-black dark:text-white border-black dark:border-white'
+                  ? 'bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white border-black dark:border-white'
                   : 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
               }`}
               title="Mark Hadith studied to count toward your daily Iman level"
@@ -363,7 +363,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
             <button
               onClick={handleCopy}
-              className="p-2.5 rounded-2xl bg-stone-200 dark:bg-stone-800 text-black dark:text-white font-bold transition-all active:scale-95 shadow-2xs"
+              className="p-2.5 rounded-2xl bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white font-bold transition-all active:scale-95 shadow-2xs"
               title="Copy Hadith"
             >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -371,7 +371,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
 
             <button
               onClick={goToNextSlide}
-              className="py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="py-2.5 px-3 rounded-2xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-1"
               title="Next Hadith Slide (or swipe left)"
             >
               <span className="hidden sm:inline">{slideIndex === bookHadiths.length - 1 ? 'Next Book' : 'Next'}</span>
@@ -385,7 +385,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
       {showBookCoverModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in select-none">
           <div
-            className="w-full max-w-sm rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden flex flex-col"
+            className="w-full max-w-sm rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Book Cover Design */}
@@ -399,7 +399,7 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
               <p className="font-quran text-lg text-white font-bold" dir="rtl">
                 {activeBook.nameArabic}
               </p>
-              <p className="text-xs text-stone-300 font-medium pt-1">
+              <p className="text-xs text-neutral-300 font-medium pt-1">
                 Compiled by: {activeBook.authorEnglish}
               </p>
             </div>
@@ -407,20 +407,20 @@ export const HadithLibraryView: React.FC<HadithLibraryViewProps> = ({
             <div className="p-4 space-y-3 text-xs">
               <div>
                 <strong className="text-black dark:text-white block font-bold mb-0.5">About this Collection:</strong>
-                <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
+                <p className="text-neutral-600 dark:text-neutral-300 leading-relaxed">
                   {activeBook.description}
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-stone-100 dark:bg-stone-800 flex items-center justify-between text-xs">
-                <span className="text-stone-500">Total Canonical Hadiths:</span>
+              <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-between text-xs">
+                <span className="text-neutral-500">Total Canonical Hadiths:</span>
                 <span className="font-mono font-bold text-black dark:text-white">
                   {activeBook.totalHadiths.toLocaleString()}
                 </span>
               </div>
             </div>
 
-            <div className="p-3.5 border-t border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 flex items-center justify-end">
+            <div className="p-3.5 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 flex items-center justify-end">
               <button
                 onClick={() => setShowBookCoverModal(false)}
                 className="py-2 px-5 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs"

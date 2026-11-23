@@ -321,11 +321,11 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between shrink-0">
+        <div className="p-4 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-8 h-8 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shrink-0">
               <Clock className="w-4 h-4" />
@@ -334,7 +334,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
               <h2 className="text-sm sm:text-base font-bold text-black dark:text-white font-cinzel leading-tight">
                 Namaz Times &amp; Seasons
               </h2>
-              <div className="flex items-center gap-1.5 text-[11px] text-stone-500 dark:text-stone-400">
+              <div className="flex items-center gap-1.5 text-[11px] text-neutral-500 dark:text-neutral-400">
                 <MapPin className="w-3 h-3 text-black dark:text-white shrink-0" />
                 <span className="truncate">{displayedStatus.locationName}</span>
               </div>
@@ -349,8 +349,8 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
               }}
               className={`p-2 rounded-xl transition-all ${
                 showSettings
-                  ? 'bg-black text-white dark:bg-white dark:text-black ring-2 ring-stone-400'
-                  : 'bg-stone-100 text-black dark:bg-stone-800 dark:text-white hover:bg-stone-200 dark:hover:bg-stone-700'
+                  ? 'bg-black text-white dark:bg-white dark:text-black ring-2 ring-neutral-400'
+                  : 'bg-neutral-100 text-black dark:bg-neutral-800 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700'
               }`}
               title="Calculation Settings"
               aria-label="Calculation Settings"
@@ -399,7 +399,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-black dark:bg-black dark:text-white text-xs font-bold transition-all active:scale-95"
                 title="Preview gentle Adhan chime"
               >
-                <Volume2 className={`w-3.5 h-3.5 ${isPlayingAdhan ? 'animate-pulse' : ''}`} />
+                <Volume2 className="w-3.5 h-3.5" />
                 <span>{isPlayingAdhan ? 'Playing…' : 'Adhan Tone'}</span>
               </button>
 
@@ -419,7 +419,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
           </div>
 
           {/* Location Bar: Choose Any Country/City or Sync GPS */}
-          <div className="p-3 rounded-2xl bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-2">
+          <div className="p-3 rounded-2xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-2">
             <div className="flex items-center justify-between gap-2">
               <button
                 onClick={() => {
@@ -428,14 +428,14 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                 }}
                 className="flex items-center gap-2 min-w-0 text-left flex-1 group"
               >
-                <div className="w-8 h-8 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 flex items-center justify-center shrink-0">
                   <Globe2 className="w-4 h-4 text-black dark:text-white" />
                 </div>
                 <div className="min-w-0">
                   <span className="text-xs font-bold text-black dark:text-white truncate block group-hover:underline">
                     {savedLoc.name}
                   </span>
-                  <span className="text-[10px] text-stone-500 dark:text-stone-400 block">
+                  <span className="text-[10px] text-neutral-500 dark:text-neutral-400 block">
                     {showLocationPicker
                       ? 'Hide country & city selector'
                       : `Change city (${ALL_QIBLA_CITIES.length}+ India & global cities)`}
@@ -452,7 +452,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                   className={`px-2.5 py-1.5 rounded-xl text-[11px] font-bold border transition-all ${
                     showLocationPicker
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                      : 'bg-white text-black border-stone-300 dark:bg-stone-900 dark:text-white dark:border-stone-700'
+                      : 'bg-white text-black border-neutral-300 dark:bg-neutral-900 dark:text-white dark:border-neutral-700'
                   }`}
                 >
                   Cities
@@ -460,7 +460,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                 <button
                   onClick={handleGetGPS}
                   disabled={isLocating}
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-black text-white hover:bg-stone-800 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-[11px] shrink-0 active:scale-95 transition-all"
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-[11px] shrink-0 active:scale-95 transition-all"
                   title="Use Live Device GPS"
                 >
                   <RefreshCw className={`w-3 h-3 ${isLocating ? 'animate-spin' : ''}`} />
@@ -470,7 +470,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
             </div>
 
             {statusMessage && (
-              <p className="text-[11px] text-stone-600 dark:text-stone-400 px-0.5 leading-snug">
+              <p className="text-[11px] text-neutral-600 dark:text-neutral-400 px-0.5 leading-snug">
                 {statusMessage}
               </p>
             )}
@@ -478,31 +478,31 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
 
           {/* Interactive Global & India City Selector Drawer */}
           {showLocationPicker && (
-            <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-300 dark:border-stone-700 space-y-2.5 animate-in fade-in">
+            <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 space-y-2.5 animate-in fade-in">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-black dark:text-white">
                   Choose Country, State or City
                 </span>
-                <span className="text-[10px] font-mono text-stone-500">
+                <span className="text-[10px] font-mono text-neutral-500">
                   {filteredCities.length} cities
                 </span>
               </div>
 
               {/* Search Input */}
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={citySearch}
                   onChange={(e) => setCitySearch(e.target.value)}
                   placeholder="Search city, Indian state, or country..."
-                  className="w-full pl-8 pr-8 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-xs text-black dark:text-white placeholder:text-stone-400 focus:outline-none focus:border-black dark:focus:border-white"
+                  className="w-full pl-8 pr-8 py-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs text-black dark:text-white placeholder:text-neutral-400 focus:outline-none focus:border-black dark:focus:border-white"
                   autoFocus
                 />
                 {citySearch && (
                   <button
                     onClick={() => setCitySearch('')}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-black dark:hover:text-white"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-black dark:hover:text-white"
                     aria-label="Clear search"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -522,7 +522,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     className={`shrink-0 px-2.5 py-1 rounded-lg text-[10.5px] font-bold border transition-all ${
                       selectedRegion === reg
                         ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                        : 'bg-white text-stone-700 border-stone-300 dark:bg-stone-900 dark:text-stone-300 dark:border-stone-700'
+                        : 'bg-white text-neutral-700 border-neutral-300 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-700'
                     }`}
                   >
                     {reg}
@@ -535,7 +535,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                 <select
                   value={selectedCountryFilter}
                   onChange={(e) => setSelectedCountryFilter(e.target.value)}
-                  className="w-full px-2.5 py-1.5 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-xs font-semibold text-black dark:text-white focus:outline-none"
+                  className="w-full px-2.5 py-1.5 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-xs font-semibold text-black dark:text-white focus:outline-none"
                 >
                   {availableCountries.map((country) => (
                     <option key={country} value={country}>
@@ -558,7 +558,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                       className={`w-full p-2.5 rounded-xl border text-left flex items-center justify-between gap-2 transition-all active:scale-[0.99] ${
                         isActive
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                          : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-black dark:text-white hover:border-black dark:hover:border-white'
+                          : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-black dark:text-white hover:border-black dark:hover:border-white'
                       }`}
                     >
                       <div className="min-w-0">
@@ -579,7 +579,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                   );
                 })}
                 {filteredCities.length === 0 && (
-                  <p className="py-6 text-center text-xs text-stone-500">
+                  <p className="py-6 text-center text-xs text-neutral-500">
                     No matching city found. Try another city, state, or country name.
                   </p>
                 )}
@@ -589,19 +589,19 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
 
           {/* Calculation Settings Drawer */}
           {showSettings && (
-            <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-3 animate-in fade-in">
+            <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-3 animate-in fade-in">
               <h3 className="text-xs font-bold uppercase tracking-wider text-black dark:text-white">
                 Calculation &amp; Asr Settings
               </h3>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400">
+                <label className="text-[11px] font-bold text-neutral-600 dark:text-neutral-400">
                   Calculation Method:
                 </label>
                 <select
                   value={method}
                   onChange={(e) => handleMethodChange(e.target.value as CalculationMethod)}
-                  className="w-full p-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-800 text-xs font-bold text-black dark:text-white focus:outline-none"
+                  className="w-full p-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-800 text-xs font-bold text-black dark:text-white focus:outline-none"
                 >
                   <option value="Karachi">Univ. of Islamic Sciences, Karachi (India/S. Asia 18°/18°)</option>
                   <option value="MWL">Muslim World League (MWL - 18°/17°)</option>
@@ -612,7 +612,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-stone-600 dark:text-stone-400">
+                <label className="text-[11px] font-bold text-neutral-600 dark:text-neutral-400">
                   Asr Juristic Method:
                 </label>
                 <div className="grid grid-cols-2 gap-2 text-xs">
@@ -621,7 +621,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     className={`p-2 rounded-xl border text-center font-bold transition-all ${
                       asrMethod === 'Standard'
                         ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
-                        : 'bg-white dark:bg-stone-900 border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300'
+                        : 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300'
                     }`}
                   >
                     Standard (Shafi/Maliki/Hanbali)
@@ -631,7 +631,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     className={`p-2 rounded-xl border text-center font-bold transition-all ${
                       asrMethod === 'Hanafi'
                         ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
-                        : 'bg-white dark:bg-stone-900 border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300'
+                        : 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300'
                     }`}
                   >
                     Hanafi (Later Asr)
@@ -642,13 +642,13 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
           )}
 
           {/* Mode Tabs: Daily Schedule vs Year-Round Distribution */}
-          <div className="grid grid-cols-2 gap-1 p-1 rounded-2xl bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800">
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-2xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800">
             <button
               onClick={() => setActiveTab('daily')}
               className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
                 activeTab === 'daily'
                   ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                  : 'text-stone-600 dark:text-stone-400'
+                  : 'text-neutral-600 dark:text-neutral-400'
               }`}
             >
               Daily Distribution
@@ -658,7 +658,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
               className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
                 activeTab === 'yearly'
                   ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                  : 'text-stone-600 dark:text-stone-400'
+                  : 'text-neutral-600 dark:text-neutral-400'
               }`}
             >
               Year-Round Shift
@@ -668,7 +668,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
           {activeTab === 'daily' ? (
             <>
               {/* Date Inspector Row + Daylight / Fasting Span */}
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-2.5">
+              <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-2.5">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-black dark:text-white">
                     <Calendar className="w-3.5 h-3.5" />
@@ -687,7 +687,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                       type="date"
                       value={selectedDateISO || todayISO}
                       onChange={(e) => setSelectedDateISO(e.target.value)}
-                      className="px-2 py-1 rounded-lg bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-[11px] font-mono font-bold text-black dark:text-white"
+                      className="px-2 py-1 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-[11px] font-mono font-bold text-black dark:text-white"
                       aria-label="Inspect prayer distribution for any date of the year"
                     />
                   </div>
@@ -696,38 +696,38 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                 {/* 24-Hour Solar Prayer Distribution Bar */}
                 {fajrItem && sunriseItem && maghribItem && ishaItem && (
                   <div className="space-y-1.5">
-                    <div className="relative h-2.5 w-full rounded-full bg-stone-200 dark:bg-stone-800 overflow-hidden flex">
+                    <div className="relative h-2.5 w-full rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden flex">
                       {/* Night -> Fajr */}
                       <div
-                        className="h-full bg-stone-800 dark:bg-stone-700"
+                        className="h-full bg-neutral-800 dark:bg-neutral-700"
                         style={{ width: `${toPct(fajrItem.timeMinutes)}%` }}
                       />
                       {/* Fajr -> Sunrise */}
                       <div
-                        className="h-full bg-stone-400 dark:bg-stone-500"
+                        className="h-full bg-neutral-400 dark:bg-neutral-500"
                         style={{
                           width: `${Math.max(0, toPct(sunriseItem.timeMinutes) - toPct(fajrItem.timeMinutes))}%`,
                         }}
                       />
                       {/* Sunrise -> Maghrib (Daylight) */}
                       <div
-                        className="h-full bg-white dark:bg-stone-200 border-x border-stone-300"
+                        className="h-full bg-white dark:bg-neutral-200 border-x border-neutral-300"
                         style={{
                           width: `${Math.max(0, toPct(maghribItem.timeMinutes) - toPct(sunriseItem.timeMinutes))}%`,
                         }}
                       />
                       {/* Maghrib -> Isha */}
                       <div
-                        className="h-full bg-stone-400 dark:bg-stone-500"
+                        className="h-full bg-neutral-400 dark:bg-neutral-500"
                         style={{
                           width: `${Math.max(0, toPct(ishaItem.timeMinutes) - toPct(maghribItem.timeMinutes))}%`,
                         }}
                       />
                       {/* Isha -> Midnight */}
-                      <div className="flex-1 h-full bg-stone-800 dark:bg-stone-700" />
+                      <div className="flex-1 h-full bg-neutral-800 dark:bg-neutral-700" />
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] text-stone-500 dark:text-stone-400 font-mono">
+                    <div className="flex items-center justify-between text-[10px] text-neutral-500 dark:text-neutral-400 font-mono">
                       <span>Fajr {fajrItem.timeString}</span>
                       <span>
                         Daylight{' '}
@@ -735,7 +735,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                       </span>
                       <span>Maghrib {maghribItem.timeString}</span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px] text-stone-500 dark:text-stone-400">
+                    <div className="flex items-center justify-between text-[10px] text-neutral-500 dark:text-neutral-400">
                       <span>
                         Fajr → Maghrib:{' '}
                         <strong className="text-black dark:text-white font-mono">
@@ -767,10 +767,10 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                         isHighlighted
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-md font-bold'
                           : prayer.isVoluntary
-                          ? 'bg-stone-50 dark:bg-stone-950/40 border-stone-200 dark:border-stone-800/60 opacity-85'
+                          ? 'bg-neutral-50 dark:bg-neutral-950/40 border-neutral-200 dark:border-neutral-800/60 opacity-85'
                           : isDone
-                          ? 'bg-stone-100 dark:bg-stone-900/50 border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300'
-                          : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-black dark:text-white'
+                          ? 'bg-neutral-100 dark:bg-neutral-900/50 border-neutral-300 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300'
+                          : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-black dark:text-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -797,12 +797,12 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                               </span>
                             )}
                             {prayer.isVoluntary && (
-                              <span className="text-[9px] text-stone-400 font-medium">
+                              <span className="text-[9px] text-neutral-400 font-medium">
                                 (Sunnah / Solar)
                               </span>
                             )}
                           </div>
-                          <span className="font-quran text-xs text-stone-500 dark:text-stone-400">
+                          <span className="font-quran text-xs text-neutral-500 dark:text-neutral-400">
                             {prayer.arabicName}
                           </span>
                         </div>
@@ -821,7 +821,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
           ) : (
             /* Year-Round Seasonal & Monthly Distribution View */
             <div className="space-y-3">
-              <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-2">
+              <div className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-black dark:text-white">
                     <Sun className="w-3.5 h-3.5" />
@@ -833,7 +833,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                       className={`px-2 py-1 rounded-lg text-[10px] font-bold border ${
                         yearlySubTab === 'months'
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                          : 'bg-white text-stone-600 border-stone-300 dark:bg-stone-900 dark:text-stone-300 dark:border-stone-700'
+                          : 'bg-white text-neutral-600 border-neutral-300 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-700'
                       }`}
                     >
                       12 Months
@@ -843,14 +843,14 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                       className={`px-2 py-1 rounded-lg text-[10px] font-bold border ${
                         yearlySubTab === 'seasons'
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                          : 'bg-white text-stone-600 border-stone-300 dark:bg-stone-900 dark:text-stone-300 dark:border-stone-700'
+                          : 'bg-white text-neutral-600 border-neutral-300 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-700'
                       }`}
                     >
                       4 Seasons
                     </button>
                   </div>
                 </div>
-                <p className="text-[11px] text-stone-500 dark:text-stone-400 leading-snug">
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 leading-snug">
                   Prayer times shift continuously as solar declination and DST change through the year. Tap any row to open that date’s full schedule.
                 </p>
               </div>
@@ -873,7 +873,7 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                       className={`w-full text-left p-2.5 rounded-2xl border transition-all active:scale-[0.99] space-y-1.5 ${
                         isCurrentMonth
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                          : 'bg-white dark:bg-stone-900 border-stone-200 dark:border-stone-800 text-black dark:text-white hover:border-black dark:hover:border-white'
+                          : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 text-black dark:text-white hover:border-black dark:hover:border-white'
                       }`}
                     >
                       <div className="flex items-center justify-between text-xs">

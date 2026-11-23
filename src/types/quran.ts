@@ -128,6 +128,8 @@ export interface UserProfileData {
   recitationLyricsLanguage?: RecitationLyricsLanguage;
   preferredUrduReciter?: string; // 'shamshad' | 'farhat'
   vocalClarityEnhancer?: boolean;
+  ramadanPreviewMode?: boolean;
+  ramadanPreviewDay?: number; // 1 to 30 when previewing Ramadan
 }
 
 export type RecitationLanguageMode =

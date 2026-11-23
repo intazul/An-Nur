@@ -50,18 +50,18 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
   const dateFormatted = today.toLocaleDateString('en-US', dateOptions);
 
   return (
-    <div className="w-full bg-stone-100/70 dark:bg-stone-900/50 border-b border-stone-200 dark:border-stone-800 transition-colors">
+    <div className="w-full bg-neutral-100/70 dark:bg-neutral-900/50 border-b border-neutral-200 dark:border-neutral-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 space-y-3">
         {/* Row 1: Today's Status Visuals & Metrics */}
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
           {/* Left: Date & Spiritual State */}
           <div className="flex items-center gap-3">
-            <span className="font-semibold text-stone-900 dark:text-stone-100 font-cinzel text-sm">
+            <span className="font-semibold text-neutral-900 dark:text-neutral-100 font-cinzel text-sm">
               Today's Sanctuary
             </span>
-            <span className="text-stone-500 dark:text-stone-400">·</span>
-            <span className="text-stone-600 dark:text-stone-400">{dateFormatted}</span>
-            <span className="text-stone-500 dark:text-stone-400">·</span>
+            <span className="text-neutral-500 dark:text-neutral-400">·</span>
+            <span className="text-neutral-600 dark:text-neutral-400">{dateFormatted}</span>
+            <span className="text-neutral-500 dark:text-neutral-400">·</span>
             <span className="flex items-center gap-1 font-medium text-amber-700 dark:text-amber-400">
               <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
               <span>{streak} Day Streak</span>
@@ -73,14 +73,14 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
             {/* Daily Prayers Completed Pill */}
             <button
               onClick={onOpenImanTracker}
-              className="flex items-center gap-2 px-2.5 py-1 bg-white dark:bg-stone-800 rounded-md border border-stone-200 dark:border-stone-700 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors shadow-2xs"
+              className="flex items-center gap-2 px-2.5 py-1 bg-white dark:bg-neutral-800 rounded-md border border-neutral-200 dark:border-neutral-700 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors shadow-2xs"
               title="Click to open full Iman Tracker"
             >
-              <span className="text-stone-500 dark:text-stone-400">Prayers:</span>
+              <span className="text-neutral-500 dark:text-neutral-400">Prayers:</span>
               <span className="font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">
                 {completedCount}/5
               </span>
-              <div className="w-12 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
+              <div className="w-12 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-emerald-500 transition-all duration-300 rounded-full"
                   style={{ width: `${prayerPercentage}%` }}
@@ -89,13 +89,13 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
             </button>
 
             {/* Daily Verses Read Pill */}
-            <div className="flex items-center gap-2 px-2.5 py-1 bg-white dark:bg-stone-800 rounded-md border border-stone-200 dark:border-stone-700 shadow-2xs">
+            <div className="flex items-center gap-2 px-2.5 py-1 bg-white dark:bg-neutral-800 rounded-md border border-neutral-200 dark:border-neutral-700 shadow-2xs">
               <BookOpen className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span className="text-stone-500 dark:text-stone-400">Verses:</span>
-              <span className="font-semibold text-stone-900 dark:text-stone-100 tabular-nums">
+              <span className="text-neutral-500 dark:text-neutral-400">Verses:</span>
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100 tabular-nums">
                 {imanRecord.versesRead}/{verseGoal}
               </span>
-              <div className="w-12 h-1.5 bg-stone-200 dark:bg-stone-700 rounded-full overflow-hidden">
+              <div className="w-12 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-amber-500 transition-all duration-300 rounded-full"
                   style={{ width: `${versePercentage}%` }}
@@ -142,21 +142,21 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
                   isCompleted
                     ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800/60'
                     : isNext
-                    ? 'bg-white dark:bg-stone-800 border-amber-500 dark:border-amber-400 shadow-xs'
-                    : 'bg-white dark:bg-stone-900/90 border-stone-200 dark:border-stone-800 hover:border-stone-300 dark:hover:border-stone-700'
+                    ? 'bg-white dark:bg-neutral-800 border-amber-500 dark:border-amber-400 shadow-xs'
+                    : 'bg-white dark:bg-neutral-900/90 border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700'
                 }`}
               >
                 {/* Left Prayer Info */}
                 <div className="min-w-0 pr-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-semibold text-stone-900 dark:text-stone-100 truncate">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 truncate">
                       {prayer.name}
                     </span>
-                    <span className="font-quran text-[13px] text-stone-400 dark:text-stone-500 select-none">
+                    <span className="font-quran text-[13px] text-neutral-400 dark:text-neutral-500 select-none">
                       {prayer.arabicName}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-[11px] text-stone-500 dark:text-stone-400 tabular-nums">
+                  <div className="flex items-center gap-1 text-[11px] text-neutral-500 dark:text-neutral-400 tabular-nums">
                     <Clock className="w-3 h-3 opacity-70" />
                     <span>{prayer.timeString}</span>
                   </div>
@@ -175,13 +175,13 @@ export const TopStatusBar: React.FC<TopStatusBarProps> = ({
                   className={`p-1 rounded-md transition-colors shrink-0 ${
                     isCompleted
                       ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/50'
-                      : 'text-stone-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-stone-100 dark:hover:bg-stone-800'
+                      : 'text-neutral-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                   }`}
                   title={isCompleted ? `Mark ${prayer.name} uncompleted` : `Quick-log ${prayer.name} prayer`}
                   aria-label={`Mark ${prayer.name} as ${isCompleted ? 'uncompleted' : 'completed'}`}
                 >
                   {isCompleted ? (
-                    <CheckCircle2 className="w-5 h-5 fill-emerald-500 text-white dark:text-stone-900" />
+                    <CheckCircle2 className="w-5 h-5 fill-emerald-500 text-white dark:text-neutral-900" />
                   ) : (
                     <Circle className="w-5 h-5 hover:stroke-emerald-500" />
                   )}

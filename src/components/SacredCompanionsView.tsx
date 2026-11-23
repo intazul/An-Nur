@@ -221,11 +221,11 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
   return (
     <div className="flex-1 h-full flex flex-col bg-white text-black dark:bg-black dark:text-white overflow-hidden">
       {/* 1. Monochrome Top Header */}
-      <header className="shrink-0 px-3.5 py-2.5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2 bg-white dark:bg-black">
+      <header className="shrink-0 px-3.5 py-2.5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2 bg-white dark:bg-black">
         <div className="flex items-center gap-2.5 min-w-0">
           <button
             onClick={onBackToDashboard}
-            className="w-10 h-10 -ml-1 rounded-full flex items-center justify-center hover:bg-stone-100 dark:hover:bg-stone-900 active:scale-95 transition-all"
+            className="w-10 h-10 -ml-1 rounded-full flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-neutral-900 active:scale-95 transition-all"
             title="Back to Dashboard"
             aria-label="Back to Dashboard"
           >
@@ -235,18 +235,18 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             <h1 className="text-sm font-bold font-cinzel truncate">
               Companions & Guides
             </h1>
-            <p className="text-[10.5px] text-stone-500 dark:text-stone-400 truncate font-medium">
+            <p className="text-[10.5px] text-neutral-500 dark:text-neutral-400 truncate font-medium">
               Adhkar · Duas · 99 Names · Tajweed · Hifz · Hijri
             </p>
           </div>
         </div>
-        <span className="px-2 py-1 rounded-lg border border-stone-300 dark:border-stone-700 text-[9.5px] font-mono font-bold uppercase tracking-wider shrink-0">
+        <span className="px-2 py-1 rounded-lg border border-neutral-300 dark:border-neutral-700 text-[9.5px] font-mono font-bold uppercase tracking-wider shrink-0">
           Offline
         </span>
       </header>
 
       {/* 2. Compact Monochrome 7-Tab Selector */}
-      <div className="shrink-0 px-3 py-2 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 overflow-x-auto scrollbar-none">
+      <div className="shrink-0 px-3 py-2 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 overflow-x-auto scrollbar-none">
         <div className="flex items-center gap-1.5 min-w-max">
           {HUB_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -260,7 +260,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                 className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all whitespace-nowrap ${
                   isActive
                     ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
-                    : 'bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-800 hover:border-black dark:hover:border-white'
+                    : 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white'
                 }`}
               >
                 {tab.label}
@@ -289,7 +289,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   className={`py-2 px-1 rounded-xl text-[11px] font-bold border transition-all ${
                     active
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                      : 'bg-stone-50 dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                      : 'bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                   }`}
                 >
                   {cat.label}
@@ -299,11 +299,11 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
           </div>
 
           {/* Main Dhikr Slide Card */}
-          <div className="flex-1 min-h-0 flex flex-col justify-between p-4 rounded-3xl bg-[#fdfbf7] dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-800 shadow-sm overflow-hidden">
+          <div className="flex-1 min-h-0 flex flex-col justify-between p-4 rounded-3xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 overflow-hidden">
             {/* Card Header */}
-            <div className="flex items-center justify-between gap-2 pb-2 border-b border-stone-200 dark:border-stone-800 shrink-0">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
               <div className="min-w-0">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500 dark:text-stone-400 block">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block">
                   Card {adhkarSlideIdx + 1} of {filteredAdhkar.length} · {currentDhikr.source}
                 </span>
                 <h2 className="text-xs font-bold font-cinzel truncate mt-0.5">{currentDhikr.title}</h2>
@@ -312,7 +312,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                 {currentDhikr.surahNumber && currentDhikr.ayahNumber && (
                   <button
                     onClick={() => onOpenAyahInReader(currentDhikr.surahNumber!, currentDhikr.ayahNumber!)}
-                    className="p-2 rounded-xl border border-stone-300 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800"
+                    className="p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                     title="Read in Quran"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
@@ -320,7 +320,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                 )}
                 <button
                   onClick={() => handleResetDhikr(currentDhikr.id)}
-                  className="p-2 rounded-xl border border-stone-300 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800"
+                  className="p-2 rounded-xl border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                   title="Reset counter"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -337,27 +337,27 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                 {currentDhikr.arabic}
               </p>
 
-              <p className="text-[11px] font-mono text-stone-600 dark:text-stone-400 italic leading-relaxed">
+              <p className="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 italic leading-relaxed">
                 {currentDhikr.transliteration}
               </p>
 
-              <p className="text-[13px] font-book-serif text-stone-900 dark:text-stone-200 leading-relaxed">
+              <p className="text-[13px] font-book-serif text-neutral-900 dark:text-neutral-200 leading-relaxed">
                 {currentDhikr.english}
               </p>
 
-              <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-[11px] text-stone-800 dark:text-stone-200">
+              <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-800/80 border border-neutral-200 dark:border-neutral-700 text-[11px] text-neutral-800 dark:text-neutral-200">
                 <strong className="font-bold">Authentic Virtue:</strong> {currentDhikr.virtue}
               </div>
             </div>
 
             {/* Tap-to-Count Action Bar */}
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 shrink-0">
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 shrink-0">
               <button
                 onClick={handleTapDhikr}
                 className={`w-full min-h-[48px] rounded-2xl font-bold text-xs flex items-center justify-between px-4 transition-all active:scale-[0.98] ${
                   currentDhikrDoneCount >= currentDhikr.targetCount
                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                    : 'bg-stone-900 text-white dark:bg-stone-100 dark:text-black'
+                    : 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-black'
                 }`}
               >
                 <span className="flex items-center gap-2">
@@ -384,7 +384,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             <button
               onClick={() => setAdhkarSlideIdx((prev) => Math.max(0, prev - 1))}
               disabled={adhkarSlideIdx === 0}
-              className="flex-1 min-h-[44px] rounded-xl border border-stone-300 dark:border-stone-700 font-bold text-xs flex items-center justify-center gap-1 disabled:opacity-35 active:scale-95 transition-all"
+              className="flex-1 min-h-[44px] rounded-xl border border-neutral-300 dark:border-neutral-700 font-bold text-xs flex items-center justify-center gap-1 disabled:opacity-35 active:scale-95 transition-all"
             >
               <ChevronLeft className="w-4 h-4" />
               <span>Previous</span>
@@ -404,15 +404,15 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
       {/* TAB 2: 40 RABBANA QURANIC DUAS */}
       {activeTab === 'rabbana' && (
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <div className="p-3 border-b border-stone-200 dark:border-stone-800 shrink-0">
+          <div className="p-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search 40 Rabbana Duas by theme, verse, or text..."
-                className="w-full h-11 pl-9 pr-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-medium focus:outline-none focus:border-black dark:focus:border-white"
+                className="w-full h-11 pl-9 pr-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-medium focus:outline-none focus:border-black dark:focus:border-white"
               />
             </div>
           </div>
@@ -421,11 +421,11 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             {filteredRabbana.map((dua) => (
               <div
                 key={dua.number}
-                className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2.5"
+                className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2.5"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-stone-500">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
                       #{dua.number} · {dua.refLabel}
                     </span>
                     <h3 className="text-xs font-bold font-cinzel text-black dark:text-white truncate">
@@ -435,7 +435,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={() => onOpenAyahInReader(dua.surahNumber, dua.ayahNumber)}
-                      className="px-2.5 py-1.5 rounded-lg border border-stone-300 dark:border-stone-700 text-[10.5px] font-bold flex items-center gap-1 hover:bg-stone-200 dark:hover:bg-stone-800"
+                      className="px-2.5 py-1.5 rounded-lg border border-neutral-300 dark:border-neutral-700 text-[10.5px] font-bold flex items-center gap-1 hover:bg-neutral-200 dark:hover:bg-neutral-800"
                     >
                       <BookOpen className="w-3 h-3" />
                       <span>Read</span>
@@ -453,10 +453,10 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                 <p className="font-quran text-right text-xl leading-[2.2] font-bold" dir="rtl">
                   {dua.arabic}
                 </p>
-                <p className="text-[11px] font-mono text-stone-600 dark:text-stone-400 italic">
+                <p className="text-[11px] font-mono text-neutral-600 dark:text-neutral-400 italic">
                   {dua.transliteration}
                 </p>
-                <p className="text-xs font-book-serif text-stone-900 dark:text-stone-200 leading-relaxed">
+                <p className="text-xs font-book-serif text-neutral-900 dark:text-neutral-200 leading-relaxed">
                   {dua.english}
                 </p>
               </div>
@@ -468,18 +468,18 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
       {/* TAB 3: 99 NAMES OF ALLAH (ASMA AL-HUSNA) */}
       {activeTab === 'names' && (
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <div className="p-3 border-b border-stone-200 dark:border-stone-800 shrink-0 space-y-2">
+          <div className="p-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0 space-y-2">
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search 99 Names by Arabic, transliteration, or meaning..."
-                className="w-full h-11 pl-9 pr-3 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs font-medium focus:outline-none focus:border-black dark:focus:border-white"
+                className="w-full h-11 pl-9 pr-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs font-medium focus:outline-none focus:border-black dark:focus:border-white"
               />
             </div>
-            <p className="text-[10.5px] text-stone-500 font-medium px-1">
+            <p className="text-[10.5px] text-neutral-500 font-medium px-1">
               “Allah has ninety-nine Names; whoever preserves and lives by them will enter Paradise.” — Sahih al-Bukhari 2736
             </p>
           </div>
@@ -488,7 +488,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             {filteredNames.map((name) => (
               <div
                 key={name.number}
-                className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 flex items-center justify-between gap-3"
+                className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-3"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-mono text-xs font-bold shrink-0">
@@ -497,9 +497,9 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       <h3 className="text-xs font-bold font-cinzel truncate">{name.transliteration}</h3>
-                      <span className="text-[10px] font-mono text-stone-500">({name.quranRef})</span>
+                      <span className="text-[10px] font-mono text-neutral-500">({name.quranRef})</span>
                     </div>
-                    <p className="text-xs text-stone-700 dark:text-stone-300 leading-snug">
+                    <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-snug">
                       {name.meaning}
                     </p>
                   </div>
@@ -516,7 +516,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
       {/* TAB 4: MONOCHROME TAJWEED & WAQF TEACHER */}
       {activeTab === 'tajweed' && (
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <div className="px-3 py-2 border-b border-stone-200 dark:border-stone-800 overflow-x-auto scrollbar-none shrink-0">
+          <div className="px-3 py-2 border-b border-neutral-200 dark:border-neutral-800 overflow-x-auto scrollbar-none shrink-0">
             <div className="flex items-center gap-1.5 min-w-max">
               {['All', 'Noon & Tanween', 'Qalqalah & Ghunnah', 'Madd (Elongation)', 'Waqf (Stopping Signs)'].map(
                 (cat) => (
@@ -526,7 +526,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                     className={`px-2.5 py-1.5 rounded-xl text-[10.5px] font-bold border ${
                       tajweedFilter === cat
                         ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                        : 'bg-stone-50 dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                        : 'bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                     }`}
                   >
                     {cat}
@@ -540,27 +540,27 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             {filteredTajweed.map((rule) => (
               <div
                 key={rule.id}
-                className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2"
+                className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500">
                       {rule.category}
                     </span>
                     <h3 className="text-xs font-bold font-cinzel mt-0.5">{rule.title}</h3>
                   </div>
                 </div>
 
-                <div className="px-3 py-2 rounded-xl bg-white dark:bg-black border border-stone-300 dark:border-stone-700 font-quran text-sm font-bold text-center">
+                <div className="px-3 py-2 rounded-xl bg-white dark:bg-black border border-neutral-300 dark:border-neutral-700 font-quran text-sm font-bold text-center">
                   {rule.symbolOrLetters}
                 </div>
 
-                <p className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
+                <p className="text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
                   {rule.howToRecite}
                 </p>
 
-                <div className="p-3 rounded-xl bg-[#fdfbf7] dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-2">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-stone-500">
+                <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-2">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-neutral-500">
                     <span>Live Example: {rule.exampleRef}</span>
                   </div>
                   <p className="font-quran text-right text-xl leading-[2.1] font-bold" dir="rtl">
@@ -569,7 +569,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   <div className="flex items-center gap-2 pt-1">
                     <button
                       onClick={() => onOpenAyahInReader(rule.surahNumber, rule.ayahNumber)}
-                      className="flex-1 min-h-[38px] rounded-xl border border-stone-300 dark:border-stone-700 text-[11px] font-bold flex items-center justify-center gap-1.5"
+                      className="flex-1 min-h-[38px] rounded-xl border border-neutral-300 dark:border-neutral-700 text-[11px] font-bold flex items-center justify-center gap-1.5"
                     >
                       <BookOpen className="w-3.5 h-3.5" />
                       <span>Open Ayah</span>
@@ -592,7 +592,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
       {/* TAB 5: LIFE-SITUATIONS TOPIC FINDER (100% OFFLINE) */}
       {activeTab === 'topics' && (
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <div className="p-3 border-b border-stone-200 dark:border-stone-800 shrink-0 overflow-x-auto scrollbar-none">
+          <div className="p-3 border-b border-neutral-200 dark:border-neutral-800 shrink-0 overflow-x-auto scrollbar-none">
             <div className="flex items-center gap-1.5 min-w-max">
               {LIFE_TOPICS.map((topic) => (
                 <button
@@ -601,7 +601,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   className={`px-3 py-2 rounded-xl text-[11px] font-bold border transition-all ${
                     selectedTopic.id === topic.id
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                      : 'bg-stone-50 dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                      : 'bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                   }`}
                 >
                   {topic.title.split('&')[0].trim()}
@@ -619,16 +619,16 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             {selectedTopic.verses.map((v, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 space-y-2.5"
+                className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 space-y-2.5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-[10.5px] font-mono font-bold text-stone-600 dark:text-stone-400">
+                  <span className="text-[10.5px] font-mono font-bold text-neutral-600 dark:text-neutral-400">
                     Quran {v.ref}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => onOpenAyahInReader(v.surahNumber, v.ayahNumber)}
-                      className="px-2.5 py-1 rounded-lg border border-stone-300 dark:border-stone-700 text-[10.5px] font-bold flex items-center gap-1"
+                      className="px-2.5 py-1 rounded-lg border border-neutral-300 dark:border-neutral-700 text-[10.5px] font-bold flex items-center gap-1"
                     >
                       <BookOpen className="w-3 h-3" />
                       <span>Read</span>
@@ -645,14 +645,14 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                 <p className="font-quran text-right text-xl leading-[2.2] font-bold" dir="rtl">
                   {v.arabic}
                 </p>
-                <p className="text-xs font-book-serif text-stone-900 dark:text-stone-200 leading-relaxed">
+                <p className="text-xs font-book-serif text-neutral-900 dark:text-neutral-200 leading-relaxed">
                   {v.english}
                 </p>
               </div>
             ))}
 
-            <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-900 border-2 border-stone-300 dark:border-stone-700 space-y-1.5">
-              <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-stone-600 dark:text-stone-400">
+            <div className="p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border-2 border-neutral-300 dark:border-neutral-700 space-y-1.5">
+              <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
                 <span>Prophetic Guidance · {selectedTopic.hadith.narrator}</span>
                 <span>{selectedTopic.hadith.source}</span>
               </div>
@@ -667,21 +667,21 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
       {/* TAB 6: HIFZ MEMORIZATION & REVISION COACH */}
       {activeTab === 'hifz' && (
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <div className="p-3 border-b border-stone-200 dark:border-stone-800 space-y-2.5 shrink-0">
+          <div className="p-3 border-b border-neutral-200 dark:border-neutral-800 space-y-2.5 shrink-0">
             <div className="grid grid-cols-3 gap-2">
               <div className="p-2.5 rounded-xl bg-black text-white dark:bg-white dark:text-black text-center">
                 <div className="text-base font-extrabold font-mono">{hifzStats.mastered}</div>
                 <div className="text-[10px] font-bold uppercase tracking-wider opacity-80">Mastered</div>
               </div>
-              <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-center">
+              <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-center">
                 <div className="text-base font-extrabold font-mono">{hifzStats.review_due}</div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
                   Review Due
                 </div>
               </div>
-              <div className="p-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-300 dark:border-stone-700 text-center">
+              <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 text-center">
                 <div className="text-base font-extrabold font-mono">{hifzStats.learning}</div>
-                <div className="text-[10px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-400">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
                   Learning
                 </div>
               </div>
@@ -689,13 +689,13 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
 
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   type="text"
                   value={hifzSearch}
                   onChange={(e) => setHifzSearch(e.target.value)}
                   placeholder="Find Surah to track or test memory..."
-                  className="w-full h-10 pl-8 pr-2.5 rounded-xl bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs focus:outline-none"
+                  className="w-full h-10 pl-8 pr-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-xs focus:outline-none"
                 />
               </div>
             </div>
@@ -708,7 +708,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   className={`px-2.5 py-1 rounded-lg text-[10.5px] font-bold border whitespace-nowrap ${
                     hifzFilter === st
                       ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                      : 'bg-white dark:bg-stone-900 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                      : 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                   }`}
                 >
                   {st === 'all' ? 'All 114' : HIFZ_STATUS_LABEL[st]}
@@ -724,16 +724,16 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
               return (
                 <div
                   key={s.number}
-                  className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 flex items-center justify-between gap-2"
+                  className="p-3 rounded-2xl bg-neutral-50 dark:bg-neutral-900/70 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between gap-2"
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       <span className="text-xs font-bold font-cinzel truncate">
                         {s.number}. {s.nameEnglish}
                       </span>
-                      <span className="text-[10px] text-stone-500 font-mono">({s.numberOfAyahs}v)</span>
+                      <span className="text-[10px] text-neutral-500 font-mono">({s.numberOfAyahs}v)</span>
                     </div>
-                    <p className="text-[10.5px] text-stone-500 truncate">{s.englishTranslation}</p>
+                    <p className="text-[10.5px] text-neutral-500 truncate">{s.englishTranslation}</p>
                   </div>
 
                   <div className="flex items-center gap-1.5 shrink-0">
@@ -743,8 +743,8 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                         status === 'mastered'
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
                           : status === 'review_due'
-                          ? 'bg-stone-200 dark:bg-stone-800 text-black dark:text-white border-black dark:border-white'
-                          : 'bg-white dark:bg-stone-950 text-stone-700 dark:text-stone-300 border-stone-300 dark:border-stone-700'
+                          ? 'bg-neutral-200 dark:bg-neutral-800 text-black dark:text-white border-black dark:border-white'
+                          : 'bg-white dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700'
                       }`}
                       title="Tap to cycle status: New → Learning → Review Due → Mastered"
                     >
@@ -803,14 +803,14 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
           </div>
 
           {/* 1-Tap Surah Al-Kahf Launcher */}
-          <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-2.5">
+          <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2.5">
             <div className="flex items-center justify-between gap-2">
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500">
                   Jumu‘ah Illumination · Surah 18
                 </span>
                 <h3 className="text-sm font-bold font-cinzel">Surah Al-Kahf</h3>
-                <p className="text-[11px] text-stone-600 dark:text-stone-400">
+                <p className="text-[11px] text-neutral-600 dark:text-neutral-400">
                   “Whoever reads Surah Al-Kahf on Friday will have a light shining between the two Fridays.” — Sahih al-Jami‘
                 </p>
               </div>
@@ -819,7 +819,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => onOpenAyahInReader(18, 1)}
-                className="min-h-[44px] rounded-xl border border-stone-300 dark:border-stone-700 font-bold text-xs flex items-center justify-center gap-1.5"
+                className="min-h-[44px] rounded-xl border border-neutral-300 dark:border-neutral-700 font-bold text-xs flex items-center justify-center gap-1.5"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Read Al-Kahf</span>
@@ -835,17 +835,17 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
           </div>
 
           {/* Salawat Counter */}
-          <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-2.5">
+          <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2.5">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-xs font-bold font-cinzel">Daily & Jumu‘ah Salawat</h3>
-                <p className="text-[11px] text-stone-500" dir="rtl">
+                <p className="text-[11px] text-neutral-500" dir="rtl">
                   اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ
                 </p>
               </div>
               <button
                 onClick={handleResetSalawat}
-                className="p-2 rounded-lg border border-stone-300 dark:border-stone-700"
+                className="p-2 rounded-lg border border-neutral-300 dark:border-neutral-700"
                 title="Reset today's Salawat count"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -862,7 +862,7 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
           </div>
 
           {/* Jumuah Sunnah Checklist */}
-          <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-2">
+          <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2">
             <h3 className="text-xs font-bold font-cinzel">Jumu‘ah Sunnah Etiquettes</h3>
             {[
               { id: 'ghusl', label: 'Perform Ghusl (Ritual Purification Bath)' },
@@ -878,14 +878,14 @@ export const SacredCompanionsView: React.FC<SacredCompanionsViewProps> = ({
                   onClick={() =>
                     setJumuahChecklist((prev) => ({ ...prev, [item.id]: !prev[item.id] }))
                   }
-                  className="w-full min-h-[42px] px-3 py-2 rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-black flex items-center justify-between text-left text-xs font-medium"
+                  className="w-full min-h-[42px] px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black flex items-center justify-between text-left text-xs font-medium"
                 >
                   <span className={checked ? 'line-through opacity-60' : ''}>{item.label}</span>
                   <span
                     className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
                       checked
                         ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white'
-                        : 'border-stone-400 dark:border-stone-600'
+                        : 'border-neutral-400 dark:border-neutral-600'
                     }`}
                   >
                     {checked && <Check className="w-3 h-3 stroke-[3]" />}

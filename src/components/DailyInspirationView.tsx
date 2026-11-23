@@ -260,48 +260,48 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto min-h-screen bg-stone-50 dark:bg-stone-950 px-5 py-3 overflow-y-auto select-none">
+    <div className="flex-1 flex flex-col justify-between max-w-md w-full mx-auto min-h-screen bg-white dark:bg-black px-5 py-3 overflow-y-auto select-none">
       {/* 1. Header Bar */}
-      <div className="flex items-center justify-between py-2 border-b border-stone-200 dark:border-stone-800">
+      <div className="flex items-center justify-between py-2 border-b border-neutral-200 dark:border-neutral-800">
         <button
           onClick={onBackToDashboard}
-          className="p-2 -ml-2 text-black dark:text-white hover:bg-stone-200 dark:hover:bg-stone-900 rounded-full transition-colors active:scale-95"
+          className="min-h-[44px] min-w-[44px] -ml-2 flex items-center justify-center text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-xl transition-colors active:scale-95"
           title="Back to Dashboard"
           aria-label="Back"
         >
-          <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+          <ArrowLeft className="w-5 h-5 stroke-[2.2]" />
         </button>
 
         <div className="text-center">
-          <span className="text-[10px] uppercase tracking-widest text-stone-500 font-cinzel font-bold block">
+          <span className="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold block">
             {todayDateString}
           </span>
-          <h1 className="text-base font-bold text-black dark:text-white font-cinzel">
-            Daily Divine Inspiration
+          <h1 className="text-base font-bold text-black dark:text-white">
+            Daily Inspiration
           </h1>
         </div>
 
         <button
           onClick={() => handleCopyWisdom(inspirations.ayah)}
-          className="p-2 -mr-1 rounded-xl bg-black text-white dark:bg-white dark:text-black transition-all active:scale-95 shadow-2xs"
+          className="min-h-[40px] min-w-[40px] flex items-center justify-center rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black text-black dark:text-white hover:border-black dark:hover:border-white transition-all active:scale-95"
           title="Copy Today's Wisdom"
         >
-          {copied ? <Check className="w-4 h-4 text-black dark:text-white" /> : <Copy className="w-4 h-4" />}
+          {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
         </button>
       </div>
 
-      {/* 2. Well-Animated Spiritual Reflection Progress Ring Banner */}
-      <div className="my-3 p-4 rounded-3xl bg-black text-white dark:bg-white dark:text-black border-2 border-black dark:border-white shadow-xl flex items-center justify-between gap-3">
+      {/* 2. Reflection Progress Ring Banner */}
+      <div className="my-3 p-4 rounded-2xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-between gap-3">
         <div className="space-y-1">
-          <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">
+          <span className="text-[10px] uppercase font-semibold tracking-widest opacity-75">
             Contemplation Radiance
           </span>
-          <h3 className="text-lg font-bold font-cinzel">
+          <h3 className="text-base font-bold">
             {reflectionPercent === 100
               ? 'Heart Fully Illuminated'
               : 'Daily Spiritual Reflection'}
           </h3>
-          <p className="text-xs opacity-90">
+          <p className="text-xs opacity-85 font-medium">
             {reflectionPercent === 100
               ? 'All daily reflections and journal thoughts recorded.'
               : 'Complete reading the Ayah, Hadith & write your insight.'}
@@ -317,7 +317,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               r={ringRadius}
               fill="none"
               stroke="currentColor"
-              strokeWidth="7"
+              strokeWidth="6"
               className="opacity-20"
             />
             <circle
@@ -326,61 +326,61 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               r={ringRadius}
               fill="none"
               stroke="currentColor"
-              strokeWidth="8"
+              strokeWidth="7"
               strokeDasharray={ringCircumference}
               strokeDashoffset={ringOffset}
               strokeLinecap="round"
               className="transition-all duration-500 ease-out"
             />
           </svg>
-          <span className="absolute font-bold text-sm font-cinzel tabular-nums">
+          <span className="absolute font-bold text-sm tabular-nums">
             {reflectionPercent}%
           </span>
         </div>
       </div>
 
       {/* 3. View Switcher Tabs */}
-      <div className="grid grid-cols-3 gap-1.5 p-1 bg-stone-200/80 dark:bg-stone-900 rounded-2xl text-xs font-bold mb-3">
+      <div className="grid grid-cols-3 gap-1 p-1 bg-neutral-100 dark:bg-neutral-900 rounded-xl text-xs font-semibold mb-3">
         <button
           onClick={() => setActiveTab('wisdom')}
-          className={`py-2 rounded-xl transition-all text-center ${
+          className={`py-2 rounded-lg transition-all text-center ${
             activeTab === 'wisdom'
-              ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
+              ? 'bg-black text-white dark:bg-white dark:text-black'
+              : 'text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
           }`}
         >
-          ✨ Today's Wisdom
+          Today’s Wisdom
         </button>
         <button
           onClick={() => setActiveTab('exegesis')}
-          className={`py-2 rounded-xl transition-all text-center ${
+          className={`py-2 rounded-lg transition-all text-center ${
             activeTab === 'exegesis'
-              ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
+              ? 'bg-black text-white dark:bg-white dark:text-black'
+              : 'text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
           }`}
         >
-          📖 Linguistic Exegesis
+          Exegesis
         </button>
         <button
           onClick={() => setActiveTab('journal')}
-          className={`py-2 rounded-xl transition-all text-center ${
+          className={`py-2 rounded-lg transition-all text-center ${
             activeTab === 'journal'
-              ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-              : 'text-stone-600 dark:text-stone-400 hover:text-black dark:hover:text-white'
+              ? 'bg-black text-white dark:bg-white dark:text-black'
+              : 'text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
           }`}
         >
-          ✍️ My Journal
+          Journal
         </button>
       </div>
 
       {activeTab === 'wisdom' && (
         <div className="space-y-4 flex-1">
           {/* Card 1: Ayah of the Day */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-800 shadow-md space-y-3">
+          <div className="p-5 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-black dark:text-white text-[10px]">
+              <span className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-black dark:text-white text-[10px]">
                 <BookOpen className="w-3.5 h-3.5" />
-                <span>Ayah of the Day • {inspirations.ayah.theme}</span>
+                <span>Ayah · {inspirations.ayah.theme}</span>
               </span>
               <button
                 onClick={() => {
@@ -390,10 +390,10 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                   } catch {}
                   playGentleChime();
                 }}
-                className={`flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full transition-all ${
+                className={`flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full transition-all ${
                   readAyah
                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:text-black dark:hover:text-white'
+                    : 'border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white'
                 }`}
               >
                 <BookmarkCheck className="w-3 h-3" />
@@ -408,17 +408,17 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               {inspirations.ayah.arabicText}
             </p>
 
-            <p className="text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-medium">
+            <p className="text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-medium">
               "{inspirations.ayah.englishText}"
             </p>
 
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
-              <span className="font-bold text-black dark:text-white">
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+              <span className="font-semibold text-black dark:text-white">
                 {inspirations.ayah.reference}
               </span>
               <button
                 onClick={() => handleExportCard(inspirations.ayah, 'Ayah')}
-                className="flex items-center gap-1 text-xs font-bold text-black dark:text-white hover:underline"
+                className="flex items-center gap-1 text-xs font-semibold text-black dark:text-white hover:underline"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 <span>Export Story Card</span>
@@ -427,7 +427,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
           </div>
 
           {/* Card 2: Hadith of the Day */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border-2 border-stone-200 dark:border-stone-800 shadow-md space-y-3">
+          <div className="p-5 rounded-3xl bg-white dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-black dark:text-white text-[10px]">
                 <Quote className="w-3.5 h-3.5" />
@@ -444,7 +444,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                 className={`flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full transition-all ${
                   readHadith
                     ? 'bg-black text-white dark:bg-white dark:text-black'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-500 hover:text-black dark:hover:text-white'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 hover:text-black dark:hover:text-white'
                 }`}
               >
                 <BookmarkCheck className="w-3 h-3" />
@@ -459,11 +459,11 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               {inspirations.hadith.arabicText}
             </p>
 
-            <p className="text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-medium">
+            <p className="text-sm text-neutral-800 dark:text-neutral-200 leading-relaxed font-medium">
               "{inspirations.hadith.englishText}"
             </p>
 
-            <div className="pt-2 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between text-xs">
+            <div className="pt-2 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
               <span className="font-bold text-black dark:text-white">
                 {inspirations.hadith.reference}
               </span>
@@ -482,27 +482,27 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
       {activeTab === 'exegesis' && (
         <div className="space-y-4 flex-1">
           {/* Detailed Exegesis Breakdown */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+          <div className="p-5 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3">
             <h3 className="text-sm font-bold text-black dark:text-white font-cinzel flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-black dark:text-white" />
               <span>Deep Linguistic Exegesis</span>
             </h3>
-            <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
+            <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed">
               {inspirations.ayah.reflection}
             </p>
 
-            <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 space-y-2 text-xs">
+            <div className="p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 space-y-2 text-xs">
               <span className="font-bold uppercase tracking-wider text-[10px] text-black dark:text-white block">
                 Quranic Linguistic Nuance
               </span>
-              <p className="text-stone-700 dark:text-stone-300 leading-relaxed">
+              <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
                 In classical Arabic grammar, notice how hardship (*الْعُسْرِ*) is preceded by the definite article *Al-*, denoting a specific and finite difficulty, whereas ease (*يُسْرًا*) is indefinite, denoting boundless, multiplied divine relief.
               </p>
             </div>
           </div>
 
           {/* Social Story Card Theme Picker */}
-          <div className="p-4 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-2">
+          <div className="p-4 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-2">
             <span className="text-xs font-bold text-black dark:text-white block">
               Story Card Theme Style
             </span>
@@ -518,7 +518,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                   className={`py-2 px-1 rounded-xl border text-center font-bold transition-all ${
                     exportTheme === th.id
                       ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white shadow-2xs'
-                      : 'bg-stone-50 dark:bg-stone-950 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-800'
+                      : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-700 dark:text-neutral-300 border-neutral-200 dark:border-neutral-800'
                   }`}
                 >
                   {th.label}
@@ -532,7 +532,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
       {activeTab === 'journal' && (
         <div className="space-y-4 flex-1">
           {/* Note Input */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-3">
+          <div className="p-5 rounded-3xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-3">
             <h3 className="text-sm font-bold text-black dark:text-white font-cinzel flex items-center gap-2">
               <PenLine className="w-4 h-4 text-black dark:text-white" />
               <span>Record Personal Spiritual Insight</span>
@@ -547,7 +547,7 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                   className={`px-3 py-1.5 rounded-xl border whitespace-nowrap font-bold transition-all ${
                     selectedMood === m
                       ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                      : 'bg-stone-50 dark:bg-stone-950 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-800'
+                      : 'bg-neutral-50 dark:bg-neutral-950 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800'
                   }`}
                 >
                   {m}
@@ -559,13 +559,13 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
               value={journalNote}
               onChange={(e) => setJournalNote(e.target.value)}
               placeholder="What did today's verse awaken in your soul? Note a moment of gratitude or a private prayer..."
-              className="w-full h-28 p-3 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950 text-black dark:text-white placeholder:text-stone-400 text-xs focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+              className="w-full h-28 p-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-black dark:text-white placeholder:text-neutral-400 text-xs focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
             />
 
             <button
               onClick={handleSaveJournalNote}
               disabled={!journalNote.trim()}
-              className="w-full py-3 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-40 transition-all"
+              className="w-full py-3 rounded-2xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-40 transition-all"
             >
               <Check className="w-4 h-4" />
               <span>Save to Reflection Journal</span>
@@ -582,15 +582,15 @@ export const DailyInspirationView: React.FC<DailyInspirationViewProps> = ({
                 {savedEntries.map((e) => (
                   <div
                     key={e.id}
-                    className="p-3.5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 space-y-1 text-xs"
+                    className="p-3.5 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 space-y-1 text-xs"
                   >
-                    <div className="flex items-center justify-between text-[10px] text-stone-400 font-bold">
+                    <div className="flex items-center justify-between text-[10px] text-neutral-400 font-bold">
                       <span>{e.date}</span>
                       <span className="px-2 py-0.5 rounded-full bg-black text-white dark:bg-white dark:text-black font-bold">
                         {e.mood}
                       </span>
                     </div>
-                    <p className="text-stone-800 dark:text-stone-200 font-medium leading-relaxed">
+                    <p className="text-neutral-800 dark:text-neutral-200 font-medium leading-relaxed">
                       "{e.text}"
                     </p>
                   </div>

@@ -18,11 +18,11 @@ export const TajweedSignHelpDialog: React.FC<TajweedSignHelpDialogProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
       <div
-        className="w-full max-w-sm bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden"
+        className="w-full max-w-sm bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Drag Handle */}
-        <div className="w-10 h-1.5 bg-stone-300 dark:bg-stone-700 rounded-full mx-auto mt-3 mb-1 sm:hidden" />
+        <div className="w-10 h-1.5 bg-neutral-300 dark:bg-neutral-700 rounded-full mx-auto mt-3 mb-1 sm:hidden" />
 
         <div className="p-4 sm:p-5 text-center space-y-4">
           {/* Symbol Emblem */}
@@ -33,7 +33,7 @@ export const TajweedSignHelpDialog: React.FC<TajweedSignHelpDialogProps> = ({
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">
               {sign.name} · {sign.arabicName}
             </span>
             <h3 className="text-base font-bold text-black dark:text-white font-cinzel">
@@ -42,19 +42,19 @@ export const TajweedSignHelpDialog: React.FC<TajweedSignHelpDialogProps> = ({
           </div>
 
           {/* Simple Explanation Card */}
-          <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-950/70 border border-stone-200 dark:border-stone-800 text-left space-y-2">
+          <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-950/70 border border-neutral-200 dark:border-neutral-800 text-left space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-black dark:text-white">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>What To Do When Reading:</span>
             </div>
-            <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed font-sans-ui">
+            <p className="text-xs text-neutral-700 dark:text-neutral-300 leading-relaxed font-sans-ui">
               {sign.instruction}
             </p>
           </div>
 
           <button
             onClick={onClose}
-            className="w-full h-11 rounded-xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs shadow-md transition-all active:scale-[0.98]"
+            className="w-full h-11 rounded-xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs shadow-md transition-all active:scale-[0.98]"
           >
             Understood, Continue Reading
           </button>

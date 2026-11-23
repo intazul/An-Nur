@@ -198,11 +198,11 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in select-none">
       <div
-        className="w-full max-w-md bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        className="w-full max-w-md bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center font-bold text-sm">
               ✨
@@ -211,7 +211,7 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
               <h2 className="text-base font-bold text-black dark:text-white font-cinzel">
                 Daily Inspiration
               </h2>
-              <span className="text-xs text-stone-500">
+              <span className="text-xs text-neutral-500">
                 Rotates fresh every dawn • Ready to share
               </span>
             </div>
@@ -219,21 +219,21 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 text-stone-400 hover:text-black dark:hover:text-white rounded-xl"
+            className="p-2 text-neutral-400 hover:text-black dark:hover:text-white rounded-xl"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Switcher: Ayah vs Hadith */}
-        <div className="p-3 border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/40">
+        <div className="p-3 border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950/40">
           <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               onClick={() => setActiveTab('ayah')}
               className={`flex items-center justify-center gap-2 py-2 rounded-xl font-bold transition-all ${
                 activeTab === 'ayah'
                   ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800'
               }`}
             >
               <BookOpen className="w-4 h-4" />
@@ -244,7 +244,7 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
               className={`flex items-center justify-center gap-2 py-2 rounded-xl font-bold transition-all ${
                 activeTab === 'hadith'
                   ? 'bg-black text-white dark:bg-white dark:text-black shadow-xs'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-800'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-800'
               }`}
             >
               <Quote className="w-4 h-4" />
@@ -255,7 +255,7 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
 
         {/* Center Display Card */}
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
-          <div className="p-5 rounded-3xl bg-linear-to-b from-stone-900 to-black text-white border-2 border-amber-500/30 shadow-xl space-y-4 text-center">
+          <div className="p-5 rounded-3xl bg-linear-to-b from-neutral-900 to-black text-white border-2 border-amber-500/30 shadow-xl space-y-4 text-center">
             <span className="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[11px] uppercase tracking-wider">
               {activeItem.theme}
             </span>
@@ -269,19 +269,19 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
             </p>
 
             {/* English */}
-            <p className="text-sm text-stone-200 leading-relaxed font-medium">
+            <p className="text-sm text-neutral-200 leading-relaxed font-medium">
               "{activeItem.englishText}"
             </p>
 
             {/* Reference */}
             <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
               <span className="font-bold text-amber-400">{activeItem.reference}</span>
-              <span className="text-[10px] text-stone-400">An-Nur Companion</span>
+              <span className="text-[10px] text-neutral-400">An-Nur Companion</span>
             </div>
           </div>
 
           {/* Spiritual Reflection Takeaway */}
-          <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 text-xs text-stone-600 dark:text-stone-300 space-y-1">
+          <div className="p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 text-xs text-neutral-600 dark:text-neutral-300 space-y-1">
             <span className="font-bold text-black dark:text-white uppercase tracking-wider text-[10px] block">
               Spiritual Reflection
             </span>
@@ -290,10 +290,10 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
         </div>
 
         {/* Action Buttons: Export Card / Copy */}
-        <div className="p-4 border-t border-stone-200 dark:border-stone-800 flex items-center gap-2.5">
+        <div className="p-4 border-t border-neutral-200 dark:border-neutral-800 flex items-center gap-2.5">
           <button
             onClick={handleCopy}
-            className="flex-1 h-12 rounded-2xl bg-stone-100 dark:bg-stone-800 text-black dark:text-white hover:bg-stone-200 dark:hover:bg-stone-700 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
+            className="flex-1 h-12 rounded-2xl bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
           >
             {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
             <span>{copied ? 'Copied to Clipboard!' : 'Copy Text'}</span>
@@ -302,7 +302,7 @@ export const DailyInspirationModal: React.FC<DailyInspirationModalProps> = ({
           <button
             onClick={handleExportCard}
             disabled={isExporting}
-            className="flex-1 h-12 rounded-2xl bg-black text-white hover:bg-stone-900 dark:bg-white dark:text-black dark:hover:bg-stone-100 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md"
+            className="flex-1 h-12 rounded-2xl bg-black text-white hover:bg-neutral-900 dark:bg-white dark:text-black dark:hover:bg-neutral-100 font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md"
           >
             {isExporting ? (
               <span className="animate-spin">⏳</span>

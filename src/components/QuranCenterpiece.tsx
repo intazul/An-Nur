@@ -240,13 +240,13 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
       />
 
       {/* Centerpiece Top Controls Bar: Surah Picker & Jumper */}
-      <div className="bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 p-4 shadow-sm transition-colors">
+      <div className="bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 shadow-sm transition-colors">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Previous / Next Surah Arrows & Selector */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => onSelectSurah(prevSurahNum)}
-              className="p-2 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white bg-stone-100 dark:bg-stone-800 rounded-lg transition-colors border border-stone-200 dark:border-stone-700"
+              className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 rounded-lg transition-colors border border-neutral-200 dark:border-neutral-700"
               title="Previous Surah"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -256,7 +256,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
             <select
               value={surahNum}
               onChange={(e) => onSelectSurah(Number(e.target.value))}
-              className="bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-sm font-semibold py-2 px-3 rounded-lg border border-stone-200 dark:border-stone-700 focus:outline-none focus:ring-2 focus:ring-amber-500 max-w-[220px] sm:max-w-[280px]"
+              className="bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 text-sm font-semibold py-2 px-3 rounded-lg border border-neutral-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-amber-500 max-w-[220px] sm:max-w-[280px]"
             >
               {ALL_SURAHS.map((s) => (
                 <option key={s.number} value={s.number}>
@@ -267,7 +267,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
             <button
               onClick={() => onSelectSurah(nextSurahNum)}
-              className="p-2 text-stone-600 dark:text-stone-300 hover:text-stone-900 dark:hover:text-white bg-stone-100 dark:bg-stone-800 rounded-lg transition-colors border border-stone-200 dark:border-stone-700"
+              className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 rounded-lg transition-colors border border-neutral-200 dark:border-neutral-700"
               title="Next Surah"
             >
               <ChevronRight className="w-4 h-4" />
@@ -277,7 +277,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
           {/* Jump to Verse Selector */}
           {currentSurah && currentSurah.ayahs.length > 0 && (
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-stone-500 dark:text-stone-400 hidden sm:inline">Jump to:</span>
+              <span className="text-neutral-500 dark:text-neutral-400 hidden sm:inline">Jump to:</span>
               <select
                 value={activeAyahNumber}
                 onChange={(e) => {
@@ -285,7 +285,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                   setActiveAyahNumber(num);
                   scrollToAyah(num);
                 }}
-                className="bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-medium py-1.5 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700"
+                className="bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs font-medium py-1.5 px-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700"
               >
                 {currentSurah.ayahs.map((a) => (
                   <option key={a.numberInSurah} value={a.numberInSurah}>
@@ -302,7 +302,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
             <select
               value={profile.preferredReciter}
               onChange={(e) => onUpdateProfile({ preferredReciter: e.target.value })}
-              className="bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 text-xs font-medium py-1.5 px-2.5 rounded-lg border border-stone-200 dark:border-stone-700"
+              className="bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 text-xs font-medium py-1.5 px-2.5 rounded-lg border border-neutral-200 dark:border-neutral-700"
               title="Select Reciter"
             >
               {RECITERS.map((r) => (
@@ -319,7 +319,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors whitespace-nowrap ${
                 isDownloaded
                   ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700 border-stone-200 dark:border-stone-700'
+                  : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 border-neutral-200 dark:border-neutral-700'
               }`}
               title={isDownloaded ? 'Downloaded for offline reading & recitation' : 'Download Surah for 100% offline access'}
             >
@@ -347,7 +347,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
               className={`p-2 rounded-lg border transition-colors ${
                 showDisplaySettings
                   ? 'bg-amber-500 text-white border-amber-600'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700'
               }`}
               title="Adjust Font Size, Glow & Translations"
             >
@@ -358,13 +358,13 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
         {/* Collapsible Display & Typography Settings Drawer */}
         {showDisplaySettings && (
-          <div className="mt-4 pt-4 border-t border-stone-200 dark:border-stone-800 space-y-4">
+          <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs">
               {/* Arabic Font Size Slider */}
               <div className="space-y-1.5">
-                <div className="flex justify-between text-stone-600 dark:text-stone-400">
+                <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
                   <span className="font-medium">Arabic Font Size</span>
-                  <span className="tabular-nums font-semibold text-stone-900 dark:text-stone-100">
+                  <span className="tabular-nums font-semibold text-neutral-900 dark:text-neutral-100">
                     {profile.arabicFontSize}px
                   </span>
                 </div>
@@ -381,9 +381,9 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
               {/* Translation Font Size Slider */}
               <div className="space-y-1.5">
-                <div className="flex justify-between text-stone-600 dark:text-stone-400">
+                <div className="flex justify-between text-neutral-600 dark:text-neutral-400">
                   <span className="font-medium">Translation Size</span>
-                  <span className="tabular-nums font-semibold text-stone-900 dark:text-stone-100">
+                  <span className="tabular-nums font-semibold text-neutral-900 dark:text-neutral-100">
                     {profile.translationFontSize}px
                   </span>
                 </div>
@@ -400,16 +400,16 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
               {/* Arabic Calligraphy Style */}
               <div className="space-y-1.5">
-                <span className="font-medium text-stone-600 dark:text-stone-400 block">
+                <span className="font-medium text-neutral-600 dark:text-neutral-400 block">
                   Calligraphy Script
                 </span>
-                <div className="flex rounded-lg overflow-hidden border border-stone-200 dark:border-stone-700 p-0.5 bg-stone-100 dark:bg-stone-800">
+                <div className="flex rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 p-0.5 bg-neutral-100 dark:bg-neutral-800">
                   <button
                     onClick={() => onUpdateProfile({ calligraphyFont: 'amiri' })}
                     className={`flex-1 py-1 rounded text-xs font-medium transition-colors ${
                       profile.calligraphyFont === 'amiri'
-                        ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-2xs'
-                        : 'text-stone-600 dark:text-stone-400'
+                        ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xs'
+                        : 'text-neutral-600 dark:text-neutral-400'
                     }`}
                   >
                     Amiri Quran
@@ -418,8 +418,8 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                     onClick={() => onUpdateProfile({ calligraphyFont: 'scheherazade' })}
                     className={`flex-1 py-1 rounded text-xs font-medium transition-colors ${
                       profile.calligraphyFont === 'scheherazade'
-                        ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-2xs'
-                        : 'text-stone-600 dark:text-stone-400'
+                        ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xs'
+                        : 'text-neutral-600 dark:text-neutral-400'
                     }`}
                   >
                     Scheherazade
@@ -429,16 +429,16 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
               {/* Glow Intensity */}
               <div className="space-y-1.5">
-                <span className="font-medium text-stone-600 dark:text-stone-400 block">
+                <span className="font-medium text-neutral-600 dark:text-neutral-400 block">
                   Night Glow Aura
                 </span>
-                <div className="flex rounded-lg overflow-hidden border border-stone-200 dark:border-stone-700 p-0.5 bg-stone-100 dark:bg-stone-800">
+                <div className="flex rounded-lg overflow-hidden border border-neutral-200 dark:border-neutral-700 p-0.5 bg-neutral-100 dark:bg-neutral-800">
                   <button
                     onClick={() => onUpdateProfile({ glowIntensity: 'subtle' })}
                     className={`flex-1 py-1 rounded text-xs font-medium transition-colors ${
                       profile.glowIntensity === 'subtle'
-                        ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-2xs'
-                        : 'text-stone-600 dark:text-stone-400'
+                        ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xs'
+                        : 'text-neutral-600 dark:text-neutral-400'
                     }`}
                   >
                     Subtle
@@ -447,8 +447,8 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                     onClick={() => onUpdateProfile({ glowIntensity: 'intense' })}
                     className={`flex-1 py-1 rounded text-xs font-medium transition-colors ${
                       profile.glowIntensity === 'intense'
-                        ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-2xs'
-                        : 'text-stone-600 dark:text-stone-400'
+                        ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xs'
+                        : 'text-neutral-600 dark:text-neutral-400'
                     }`}
                   >
                     Radiant
@@ -458,14 +458,14 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
             </div>
 
             {/* Translation Display Toggles */}
-            <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-stone-100 dark:border-stone-800/60">
-              <span className="text-xs font-medium text-stone-500">Show Text:</span>
+            <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-neutral-100 dark:border-neutral-800/60">
+              <span className="text-xs font-medium text-neutral-500">Show Text:</span>
               <button
                 onClick={() => onUpdateProfile({ showEnglish: !profile.showEnglish })}
                 className={`px-3 py-1 rounded-md text-xs font-medium border transition-colors ${
                   profile.showEnglish
-                    ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 border-transparent'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700'
+                    ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 border-transparent'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700'
                 }`}
               >
                 English Translation
@@ -474,8 +474,8 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 onClick={() => onUpdateProfile({ showUrdu: !profile.showUrdu })}
                 className={`px-3 py-1 rounded-md text-xs font-medium border transition-colors ${
                   profile.showUrdu
-                    ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900 border-transparent'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700'
+                    ? 'bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 border-transparent'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700'
                 }`}
               >
                 Urdu (Roman)
@@ -485,7 +485,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 className={`px-3 py-1 rounded-md text-xs font-medium border transition-colors ${
                   profile.showTafsir
                     ? 'bg-amber-600 text-white border-amber-700'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700'
+                    : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700'
                 }`}
               >
                 Tafsir Commentary Panels
@@ -497,7 +497,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
       {/* Surah Marquee Header Card */}
       {currentSurah && (
-        <div className="relative rounded-2xl p-6 sm:p-8 bg-linear-to-b from-stone-900 to-stone-950 text-white shadow-xl overflow-hidden text-center border border-stone-800">
+        <div className="relative rounded-2xl p-6 sm:p-8 bg-linear-to-b from-neutral-900 to-neutral-950 text-white shadow-xl overflow-hidden text-center border border-neutral-800">
           {/* Subtle Islamic geometric ornamental ambient glow */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.12),transparent_70%)] pointer-events-none" />
 
@@ -510,7 +510,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
               سُورَةُ {currentSurah.nameArabic}
             </h1>
 
-            <div className="flex items-center justify-center gap-2 text-stone-300 text-base sm:text-lg">
+            <div className="flex items-center justify-center gap-2 text-neutral-300 text-base sm:text-lg">
               <span className="font-semibold text-white">{currentSurah.nameEnglish}</span>
               <span>—</span>
               <span className="text-amber-300 font-cinzel">{currentSurah.englishTranslation}</span>
@@ -526,7 +526,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 >
                   بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
-                <p className="text-xs text-stone-400 italic pt-1">
+                <p className="text-xs text-neutral-400 italic pt-1">
                   In the name of Allah, the Entirely Merciful, the Especially Merciful
                 </p>
               </div>
@@ -552,7 +552,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
       {isLoadingSurah && (
         <div className="py-20 text-center space-y-3">
           <Loader2 className="w-8 h-8 animate-spin mx-auto text-amber-500" />
-          <p className="text-sm text-stone-500 font-medium">Loading Sacred Verses...</p>
+          <p className="text-sm text-neutral-500 font-medium">Loading Sacred Verses...</p>
         </div>
       )}
 
@@ -571,20 +571,20 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 }}
                 className={`group rounded-xl p-5 sm:p-7 border transition-all duration-300 ${
                   isPlayingThis
-                    ? 'bg-amber-50/50 dark:bg-stone-900 border-amber-500/70 dark:border-amber-500/80 shadow-md ring-1 ring-amber-500/40'
+                    ? 'bg-amber-50/50 dark:bg-neutral-900 border-amber-500/70 dark:border-amber-500/80 shadow-md ring-1 ring-amber-500/40'
                     : isSelected
-                    ? 'bg-white dark:bg-stone-900 border-stone-300 dark:border-stone-700 shadow-xs'
-                    : 'bg-white dark:bg-stone-900/80 border-stone-200 dark:border-stone-800/80 hover:border-stone-300 dark:hover:border-stone-700'
+                    ? 'bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-700 shadow-xs'
+                    : 'bg-white dark:bg-neutral-900/80 border-neutral-200 dark:border-neutral-800/80 hover:border-neutral-300 dark:hover:border-neutral-700'
                 }`}
               >
                 {/* Verse Top Bar: Verse Emblem & Interactive Actions */}
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-stone-100 dark:border-stone-800/60">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-neutral-100 dark:border-neutral-800/60">
                   {/* Verse Number Emblem */}
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 font-cinzel font-bold text-xs flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 font-cinzel font-bold text-xs flex items-center justify-center">
                       {ayah.numberInSurah}
                     </div>
-                    <span className="text-[11px] text-stone-400 uppercase tracking-wider font-cinzel">
+                    <span className="text-[11px] text-neutral-400 uppercase tracking-wider font-cinzel">
                       {currentSurah.nameEnglish} : {ayah.numberInSurah}
                     </span>
                   </div>
@@ -597,7 +597,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                       className={`p-2 rounded-lg transition-colors ${
                         isPlayingThis
                           ? 'bg-amber-500 text-white'
-                          : 'text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800'
+                          : 'text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800'
                       }`}
                       title={isPlayingThis ? 'Pause Recitation' : 'Listen to this Verse'}
                     >
@@ -607,7 +607,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                     {/* Bookmark Audio at this Ayah */}
                     <button
                       onClick={() => onAddBookmark(ayah.numberInSurah, currentTime)}
-                      className="p-2 text-stone-600 dark:text-stone-300 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                      className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                       title="Bookmark audio at this verse"
                     >
                       <Bookmark className="w-4 h-4" />
@@ -616,7 +616,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                     {/* Tafsir Commentary button */}
                     <button
                       onClick={() => onOpenTafsir(ayah)}
-                      className="p-2 text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                      className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                       title="View Detailed Tafsir Commentary"
                     >
                       <BookOpen className="w-4 h-4" />
@@ -625,7 +625,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                     {/* Copy text */}
                     <button
                       onClick={() => handleCopyAyah(ayah)}
-                      className="p-2 text-stone-600 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg transition-colors"
+                      className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
                       title="Copy Arabic & Translations"
                     >
                       {copiedAyah === ayah.numberInSurah ? (
@@ -642,7 +642,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                   <p
                     className={`${
                       profile.calligraphyFont === 'scheherazade' ? 'font-scheherazade' : 'font-quran'
-                    } text-stone-950 dark:text-stone-100 font-normal leading-[2.3] select-text transition-all ${getArabicGlowClass()}`}
+                    } text-neutral-950 dark:text-neutral-100 font-normal leading-[2.3] select-text transition-all ${getArabicGlowClass()}`}
                     style={{ fontSize: `${profile.arabicFontSize}px` }}
                   >
                     {ayah.textArabic}
@@ -654,7 +654,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
                 {/* English Translation */}
                 {profile.showEnglish && ayah.textEnglish && (
-                  <div className="pt-3 pb-2 text-stone-700 dark:text-stone-300 leading-relaxed font-sans-ui">
+                  <div className="pt-3 pb-2 text-neutral-700 dark:text-neutral-300 leading-relaxed font-sans-ui">
                     <p style={{ fontSize: `${profile.translationFontSize}px` }}>
                       {ayah.textEnglish}
                     </p>
@@ -663,12 +663,12 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
                 {/* Urdu Translation in Roman English Transliteration */}
                 {profile.showUrdu && ayah.textUrdu && (
-                  <div className="pt-2 pb-2 text-left border-t border-stone-100 dark:border-stone-800/40" dir="ltr">
-                    <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-0.5">
+                  <div className="pt-2 pb-2 text-left border-t border-neutral-100 dark:border-neutral-800/40" dir="ltr">
+                    <span className="text-[10px] font-sans-ui font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 block mb-0.5">
                       Urdu (Roman Transliteration):
                     </span>
                     <p
-                      className="font-book-serif text-stone-800 dark:text-stone-200 leading-relaxed"
+                      className="font-book-serif text-neutral-800 dark:text-neutral-200 leading-relaxed"
                       style={{ fontSize: `${Math.max(14, profile.translationFontSize)}px` }}
                     >
                       {transliterateUrduToRoman(ayah.textUrdu)}
@@ -678,7 +678,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
                 {/* Inline Tafsir Summary Commentary */}
                 {(profile.showTafsir || ayah.tafsirSummary) && profile.showTafsir && (
-                  <div className="mt-3 p-3.5 rounded-lg bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800/80 text-xs text-stone-600 dark:text-stone-400 space-y-1">
+                  <div className="mt-3 p-3.5 rounded-lg bg-neutral-50 dark:bg-neutral-950/60 border border-neutral-200 dark:border-neutral-800/80 text-xs text-neutral-600 dark:text-neutral-400 space-y-1">
                     <div className="flex items-center justify-between text-amber-700 dark:text-amber-400 font-semibold">
                       <span>Tafsir & Contemplation:</span>
                       <button
@@ -699,7 +699,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
 
       {/* FIXED AUDIO RECITER PLAYER (Docked at the bottom of the dashboard) */}
       {currentSurah && (
-        <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-stone-950/95 backdrop-blur-md border-t border-stone-200 dark:border-stone-800 shadow-xl transition-colors">
+        <div className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-neutral-950/95 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 shadow-xl transition-colors">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
               {/* Left: Current Track Info */}
@@ -709,14 +709,14 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-stone-900 dark:text-stone-100 text-sm truncate">
+                    <span className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm truncate">
                       Surah {currentSurah.nameEnglish} · Ayah {activeAyahNumber}
                     </span>
                     <span className="text-[11px] text-amber-600 dark:text-amber-400 font-cinzel">
                       {currentSurah.nameArabic}
                     </span>
                   </div>
-                  <div className="text-xs text-stone-500 dark:text-stone-400 truncate">
+                  <div className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
                     Reciter: {currentReciter.name}
                   </div>
                 </div>
@@ -728,7 +728,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 <button
                   onClick={handlePrevAyah}
                   disabled={activeAyahNumber <= 1}
-                  className="p-2 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white disabled:opacity-40 transition-colors"
+                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white disabled:opacity-40 transition-colors"
                   title="Previous Verse"
                 >
                   <SkipBack className="w-4 h-4" />
@@ -737,7 +737,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 {/* Play / Pause Primary Button */}
                 <button
                   onClick={handleTogglePlayPause}
-                  className="w-11 h-11 rounded-full bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-950 hover:bg-stone-800 dark:hover:bg-white flex items-center justify-center shadow-md transition-all active:scale-95"
+                  className="w-11 h-11 rounded-full bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-950 hover:bg-neutral-800 dark:hover:bg-white flex items-center justify-center shadow-md transition-all active:scale-95"
                   title={isPlaying ? 'Pause' : 'Play Recitation'}
                 >
                   {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-0.5" />}
@@ -747,7 +747,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 <button
                   onClick={handleNextAyah}
                   disabled={activeAyahNumber >= (currentSurah.ayahs.length || 1)}
-                  className="p-2 text-stone-700 dark:text-stone-300 hover:text-stone-950 dark:hover:text-white disabled:opacity-40 transition-colors"
+                  className="p-2 text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white disabled:opacity-40 transition-colors"
                   title="Next Verse"
                 >
                   <SkipForward className="w-4 h-4" />
@@ -759,7 +759,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                   className={`p-2 rounded-lg transition-colors ${
                     repeatVerse
                       ? 'bg-amber-500 text-white'
-                      : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white'
+                      : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
                   }`}
                   title={repeatVerse ? 'Repeat Ayah Active (Click to disable)' : 'Repeat this Ayah for memorization'}
                 >
@@ -780,15 +780,15 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
               {/* Right: Audio Speed & Auto-Advance */}
               <div className="flex items-center gap-2 text-xs">
                 {/* Speed selector */}
-                <div className="flex items-center bg-stone-100 dark:bg-stone-800 rounded-md border border-stone-200 dark:border-stone-700 p-0.5">
+                <div className="flex items-center bg-neutral-100 dark:bg-neutral-800 rounded-md border border-neutral-200 dark:border-neutral-700 p-0.5">
                   {[0.75, 1, 1.25].map((spd) => (
                     <button
                       key={spd}
                       onClick={() => handleSpeedChange(spd)}
                       className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
                         playbackSpeed === spd
-                          ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 shadow-2xs'
-                          : 'text-stone-600 dark:text-stone-400'
+                          ? 'bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 shadow-2xs'
+                          : 'text-neutral-600 dark:text-neutral-400'
                       }`}
                     >
                       {spd}x
@@ -797,7 +797,7 @@ export const QuranCenterpiece: React.FC<QuranCenterpieceProps> = ({
                 </div>
 
                 {/* Auto advance checkbox */}
-                <label className="flex items-center gap-1.5 text-stone-600 dark:text-stone-400 select-none cursor-pointer">
+                <label className="flex items-center gap-1.5 text-neutral-600 dark:text-neutral-400 select-none cursor-pointer">
                   <input
                     type="checkbox"
                     checked={autoAdvance}

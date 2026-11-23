@@ -46,6 +46,8 @@ export const DEFAULT_PROFILE: UserProfileData = {
   recitationLyricsLanguage: 'arabic',
   preferredUrduReciter: 'shamshad',
   vocalClarityEnhancer: true,
+  ramadanPreviewMode: false,
+  ramadanPreviewDay: 27,
 };
 
 function enforceSingleRegionalLanguage(profile: UserProfileData): UserProfileData {
