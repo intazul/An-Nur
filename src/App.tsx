@@ -26,6 +26,7 @@ import { IslamChronicleView } from './components/IslamChronicleView';
 import { IslamicCalendarView } from './components/IslamicCalendarView';
 import { IslamicDayDetailView } from './components/IslamicDayDetailView';
 import { RamadanSanctuaryView } from './components/RamadanSanctuaryView';
+import { SunnahDayTimelineView } from './components/SunnahDayTimelineView';
 import { ALL_SURAHS } from './data/surahList';
 import {
   AudioBookmark,
@@ -67,7 +68,7 @@ import {
 import { ensureAllQuranTextsOffline } from './utils/offlineQuranStore';
 import { ensureAllTafsirsOffline } from './utils/offlineTafsirStore';
 import { fetchSurahDetail } from './utils/quranApi';
-import { getDailyPrayerTimes, PrayerStatus } from './utils/prayerTimes';
+import { getDailyPrayerTimes, isPrayerTickLocked, PrayerStatus } from './utils/prayerTimes';
 import { getAyahAudioUrlForLanguage } from './data/reciters';
 import { offlineSpeech } from './utils/offlineSpeechRecitation';
 import { audioClarity } from './utils/audioClarity';
@@ -93,7 +94,8 @@ type ActiveView =
   | 'islam_chronicle'
   | 'islamic_calendar'
   | 'islamic_day_detail'
-  | 'ramadan_sanctuary';
+  | 'ramadan_sanctuary'
+  | 'sunnah_day';
 
 export default function App() {
   // Active Screen
@@ -108,6 +110,7 @@ export default function App() {
   const [calendarJumpActive, setCalendarJumpActive] = useState<boolean>(false);
   const [dayDetailJumpActive, setDayDetailJumpActive] = useState<boolean>(false);
   const [ramadanJumpActive, setRamadanJumpActive] = useState<boolean>(false);
+  const [sunnahDayJumpActive, setSunnahDayJumpActive] = useState<boolean>(false);
   const [selectedCalendarDay, setSelectedCalendarDay] = useState<{
     year: number;
     month: number;
@@ -843,6 +846,10 @@ export default function App() {
 
   // Toggle Prayer check in Iman Record
   const handleTogglePrayer = (prayerKey: keyof DailyPrayers) => {
+    if (isPrayerTickLocked(prayerKey, prayerStatus, Boolean(imanRecord.prayers[prayerKey]))) {
+      return;
+    }
+
     const updatedPrayers: DailyPrayers = {
       ...imanRecord.prayers,
       [prayerKey]: !imanRecord.prayers[prayerKey],
@@ -864,8 +871,15 @@ export default function App() {
 
   // Update Iman Record
   const handleUpdateImanRecord = (record: ImanDayRecord) => {
-    setImanRecord(record);
-    saveImanRecord(record);
+    const sanitizedPrayers: DailyPrayers = { ...record.prayers };
+    (['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'] as (keyof DailyPrayers)[]).forEach((k) => {
+      if (!imanRecord.prayers[k] && sanitizedPrayers[k] && isPrayerTickLocked(k, prayerStatus, false)) {
+        sanitizedPrayers[k] = false;
+      }
+    });
+    const safeRecord: ImanDayRecord = { ...record, prayers: sanitizedPrayers };
+    setImanRecord(safeRecord);
+    saveImanRecord(safeRecord);
     setStreakInfo(calculateStreak());
   };
 
@@ -1079,6 +1093,7 @@ export default function App() {
               setDayDetailJumpActive(false);
               setCalendarJumpActive(false);
               setRamadanJumpActive(false);
+              setSunnahDayJumpActive(false);
               setInitialHifzMaskOverride(false);
               setTargetAyahOverride(null);
               if (profile.lastRead?.surahNumber) {
@@ -1099,6 +1114,7 @@ export default function App() {
               setDayDetailJumpActive(false);
               setCalendarJumpActive(false);
               setRamadanJumpActive(false);
+              setSunnahDayJumpActive(false);
               setInitialHifzMaskOverride(false);
               setTargetAyahOverride(null);
               setCurrentSurahNumber(profile.lastRead?.surahNumber || 1);
@@ -1122,6 +1138,7 @@ export default function App() {
               setDayDetailJumpActive(false);
               setCalendarJumpActive(false);
               setRamadanJumpActive(false);
+              setSunnahDayJumpActive(false);
               setInitialHifzMaskOverride(false);
               setTargetAyahOverride(null);
               setCurrentSurahNumber(sNum);
@@ -1140,6 +1157,7 @@ export default function App() {
             onOpenIslamChronicle={() => setActiveView('islam_chronicle')}
             onOpenIslamicCalendar={() => setActiveView('islamic_calendar')}
             onOpenRamadanSanctuary={() => setActiveView('ramadan_sanctuary')}
+            onOpenSunnahDay={() => setActiveView('sunnah_day')}
           />
         )}
 
@@ -1175,7 +1193,11 @@ export default function App() {
             onBackToDashboard={() => {
               setTargetAyahOverride(null);
               setInitialHifzMaskOverride(false);
-              if (dayDetailJumpActive) {
+              if (sunnahDayJumpActive) {
+                setSunnahDayJumpActive(false);
+                setIsFavoriteReading(false);
+                setActiveView('sunnah_day');
+              } else if (dayDetailJumpActive) {
                 setDayDetailJumpActive(false);
                 setIsFavoriteReading(false);
                 setActiveView('islamic_day_detail');
@@ -1393,6 +1415,7 @@ export default function App() {
           <ImanAnalysisView
             imanRecord={imanRecord}
             profile={profile}
+            prayerStatus={prayerStatus}
             streak={streakInfo.currentStreak}
             onUpdateImanRecord={handleUpdateImanRecord}
             onTogglePrayer={handleTogglePrayer}
@@ -1581,6 +1604,31 @@ export default function App() {
             onBackToDashboard={() => setActiveView('dashboard')}
             onOpenAyahInReader={(surahNum, ayahNum) => {
               setRamadanJumpActive(true);
+              setSunnahDayJumpActive(false);
+              setCalendarJumpActive(false);
+              setChronicleJumpActive(false);
+              setTimelineJumpActive(false);
+              setHubJumpActive(false);
+              setInitialHifzMaskOverride(false);
+              setIsFavoriteReading(true);
+              setCurrentSurahNumber(surahNum);
+              setTargetAyahOverride(ayahNum);
+              setActiveAyahNumber(ayahNum);
+              setStartInFullScreen(true);
+              setActiveView('reading');
+            }}
+          />
+        )}
+
+        {/* 18. The Prophetic Day — 24-Hour Golden Thread Sunnah Routine */}
+        {activeView === 'sunnah_day' && (
+          <SunnahDayTimelineView
+            prayerStatus={prayerStatus}
+            onBackToDashboard={() => setActiveView('dashboard')}
+            onOpenAyahInReader={(surahNum, ayahNum) => {
+              setSunnahDayJumpActive(true);
+              setDayDetailJumpActive(false);
+              setRamadanJumpActive(false);
               setCalendarJumpActive(false);
               setChronicleJumpActive(false);
               setTimelineJumpActive(false);
@@ -1653,6 +1701,7 @@ export default function App() {
         onClose={() => setIsImanTrackerOpen(false)}
         imanRecord={imanRecord}
         profile={profile}
+        prayerStatus={prayerStatus}
         onUpdateImanRecord={handleUpdateImanRecord}
         streak={streakInfo.currentStreak}
       />

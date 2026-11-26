@@ -20,15 +20,18 @@ import {
   Feather,
   BarChart3,
   Lightbulb,
+  Lock,
 } from 'lucide-react';
 import { DailyPrayers, ImanDayRecord, UserProfileData } from '../types/quran';
 import { playGentleChime } from '../utils/notifications';
 import { getPastDaysImanRecords, saveImanRecord } from '../utils/offlineStorage';
 import { calculateImanBreakdown } from '../utils/imanScore';
+import { isPrayerTickLocked, PrayerStatus } from '../utils/prayerTimes';
 
 interface ImanAnalysisViewProps {
   imanRecord: ImanDayRecord;
   profile: UserProfileData;
+  prayerStatus?: PrayerStatus;
   streak: number;
   onUpdateImanRecord: (record: ImanDayRecord) => void;
   onTogglePrayer: (prayerKey: keyof DailyPrayers) => void;
@@ -95,6 +98,7 @@ const REFLECTION_PROMPTS = [
 export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
   imanRecord,
   profile,
+  prayerStatus,
   streak,
   onUpdateImanRecord,
   onTogglePrayer,
@@ -507,18 +511,25 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                   <div className="flex items-center gap-1 mt-1">
                     {OBLIGATORY_PRAYERS.map((p) => {
                       const isDone = !!imanRecord.prayers[p.id];
+                      const isLocked = isPrayerTickLocked(p.id, prayerStatus, isDone);
                       return (
                         <button
                           key={p.id}
-                          onClick={() => onTogglePrayer(p.id)}
-                          className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all ${
+                          disabled={isLocked}
+                          onClick={() => {
+                            if (!isLocked) onTogglePrayer(p.id);
+                          }}
+                          className={`flex-1 py-1 text-[10px] font-bold rounded-lg transition-all flex items-center justify-center gap-0.5 ${
                             isDone
                               ? 'bg-black text-white dark:bg-white dark:text-black shadow-2xs'
+                              : isLocked
+                              ? 'bg-neutral-100 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-600 cursor-default opacity-65'
                               : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-300'
                           }`}
-                          title={`Toggle ${p.label}`}
+                          title={isLocked ? p.label : `Toggle ${p.label}`}
                         >
-                          {p.label.substring(0, 3)}
+                          <span>{p.label.substring(0, 3)}</span>
+                          {isLocked && <Lock className="w-2.5 h-2.5 opacity-70" />}
                         </button>
                       );
                     })}
@@ -655,28 +666,48 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
               <div className="space-y-2">
                 {OBLIGATORY_PRAYERS.map((prayer) => {
                   const isDone = !!imanRecord.prayers[prayer.id];
+                  const isLocked = isPrayerTickLocked(prayer.id, prayerStatus, isDone);
                   return (
                     <button
                       key={prayer.id}
-                      onClick={() => onTogglePrayer(prayer.id)}
+                      disabled={isLocked}
+                      onClick={() => {
+                        if (!isLocked) onTogglePrayer(prayer.id);
+                      }}
                       className={`w-full flex items-center justify-between p-3 rounded-2xl border transition-all text-left ${
                         isDone
                           ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-xs'
+                          : isLocked
+                          ? 'bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 cursor-default opacity-65'
                           : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         {isDone ? (
                           <CheckCircle2 className="w-5 h-5 text-white dark:text-black fill-transparent stroke-[2.5] shrink-0" />
+                        ) : isLocked ? (
+                          <Lock className="w-4 h-4 text-neutral-400 dark:text-neutral-600 shrink-0" />
                         ) : (
                           <Circle className="w-5 h-5 text-neutral-300 dark:text-neutral-700 shrink-0" />
                         )}
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-sm text-black dark:text-white">
+                            <span
+                              className={`font-bold text-sm ${
+                                isDone
+                                  ? 'text-white dark:text-black'
+                                  : 'text-black dark:text-white'
+                              }`}
+                            >
                               {prayer.label}
                             </span>
-                            <span className="font-quran text-xs text-neutral-600 dark:text-neutral-400">
+                            <span
+                              className={`font-quran text-xs ${
+                                isDone
+                                  ? 'text-white/80 dark:text-black/75'
+                                  : 'text-neutral-600 dark:text-neutral-400'
+                              }`}
+                            >
                               {prayer.arabic}
                             </span>
                           </div>
@@ -685,15 +716,21 @@ export const ImanAnalysisView: React.FC<ImanAnalysisViewProps> = ({
                           </span>
                         </div>
                       </div>
-                      <span
-                        className={`text-xs font-bold px-2.5 py-1 rounded-xl transition-colors ${
-                          isDone
-                            ? 'bg-white/20 text-white dark:bg-black/10 dark:text-black'
-                            : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
-                        }`}
-                      >
-                        {isDone ? 'Completed ✓' : 'Mark Done'}
-                      </span>
+                      {!isLocked ? (
+                        <span
+                          className={`text-xs font-bold px-2.5 py-1 rounded-xl transition-colors ${
+                            isDone
+                              ? 'bg-white/20 text-white dark:bg-black/10 dark:text-black'
+                              : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
+                          }`}
+                        >
+                          {isDone ? 'Completed ✓' : 'Mark Done'}
+                        </span>
+                      ) : (
+                        <span className="p-1.5 text-neutral-400 dark:text-neutral-600" aria-hidden="true">
+                          <Lock className="w-3.5 h-3.5" />
+                        </span>
+                      )}
                     </button>
                   );
                 })}

@@ -14,6 +14,7 @@ import {
   Globe2,
   Sun,
   ChevronRight,
+  Lock,
 } from 'lucide-react';
 import {
   CalculationMethod,
@@ -27,6 +28,7 @@ import {
   getYearlySeasonalDistribution,
   formatDurationHoursMins,
   playSyntheticAdhanPreview,
+  isPrayerTickLocked,
 } from '../utils/prayerTimes';
 import { ALL_QIBLA_CITIES, CityRegion, QiblaCity, findNearestQiblaCity } from '../data/qiblaCities';
 import { DailyPrayers } from '../types/quran';
@@ -758,6 +760,10 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     !isCustomDate && prayersRecord && isObligatory
                       ? prayersRecord[prayer.id as keyof DailyPrayers]
                       : false;
+                  const isLocked =
+                    isObligatory &&
+                    !isCustomDate &&
+                    isPrayerTickLocked(prayer.id, displayedStatus, Boolean(isDone));
                   const isHighlighted = !isCustomDate && prayer.isNext;
 
                   return (
@@ -775,17 +781,23 @@ export const PrayerTimesModal: React.FC<PrayerTimesModalProps> = ({
                     >
                       <div className="flex items-center gap-3">
                         {isObligatory && onTogglePrayer && !isCustomDate && (
-                          <button
-                            onClick={() => onTogglePrayer(prayer.id as keyof DailyPrayers)}
-                            className="p-1 -ml-1 text-inherit active:scale-90 transition-transform"
-                            title="Mark prayer complete"
-                          >
-                            {isDone ? (
-                              <CheckCircle2 className="w-5 h-5" />
-                            ) : (
-                              <Circle className="w-5 h-5 opacity-40" />
-                            )}
-                          </button>
+                          isLocked ? (
+                            <span className="p-1 -ml-1 text-inherit opacity-40" aria-hidden="true">
+                              <Lock className="w-4 h-4" />
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => onTogglePrayer(prayer.id as keyof DailyPrayers)}
+                              className="p-1 -ml-1 text-inherit active:scale-90 transition-transform"
+                              title="Mark prayer complete"
+                            >
+                              {isDone ? (
+                                <CheckCircle2 className="w-5 h-5" />
+                              ) : (
+                                <Circle className="w-5 h-5 opacity-40" />
+                              )}
+                            </button>
+                          )
                         )}
 
                         <div>

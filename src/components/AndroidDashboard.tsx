@@ -15,10 +15,11 @@ import {
   BookMarked,
   Layers,
   Moon,
+  Lock,
 } from 'lucide-react';
 import { FluidCircle } from './FluidCircle';
 import { DailyPrayers, ImanDayRecord, LastReadPosition, UserProfileData } from '../types/quran';
-import { PrayerStatus } from '../utils/prayerTimes';
+import { isPrayerTickLocked, PrayerStatus } from '../utils/prayerTimes';
 import { calculateImanBreakdown } from '../utils/imanScore';
 import { getRamadanStatus } from '../utils/hijriCalendar';
 import { loadRamadanLedger, summarizeRamadanLedger } from '../utils/ramadanLedger';
@@ -49,6 +50,7 @@ interface AndroidDashboardProps {
   onOpenIslamChronicle?: () => void;
   onOpenIslamicCalendar: () => void;
   onOpenRamadanSanctuary?: () => void;
+  onOpenSunnahDay?: () => void;
 }
 
 export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
@@ -74,6 +76,7 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
   onOpenIslamChronicle,
   onOpenIslamicCalendar,
   onOpenRamadanSanctuary,
+  onOpenSunnahDay,
 }) => {
   const imanBreakdown = calculateImanBreakdown(imanRecord, profile);
   const completedCount = imanBreakdown.completedFard;
@@ -239,19 +242,27 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
             .filter((p) => !p.isVoluntary)
             .map((prayer) => {
               const prayerKey = prayer.id as keyof DailyPrayers;
-              const done = imanRecord.prayers[prayerKey];
+              const done = Boolean(imanRecord.prayers[prayerKey]);
+              const locked = isPrayerTickLocked(prayer.id, prayerStatus, done);
               return (
                 <button
                   key={prayer.id}
-                  onClick={() => onTogglePrayer(prayerKey)}
-                  className={`btn-monolith flex flex-col items-center justify-between min-h-[70px] py-2.5 px-1 rounded-2xl border-[1.5px] text-center hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none ${
+                  disabled={locked}
+                  onClick={() => {
+                    if (!locked) onTogglePrayer(prayerKey);
+                  }}
+                  className={`flex flex-col items-center justify-between min-h-[70px] py-2.5 px-1 rounded-2xl border-[1.5px] text-center ${
                     done
-                      ? 'bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-[0_2px_0_0_rgba(0,0,0,0.4)] dark:shadow-[0_2px_0_0_rgba(255,255,255,0.4)]'
+                      ? 'btn-monolith bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-[0_2px_0_0_rgba(0,0,0,0.4)] dark:shadow-[0_2px_0_0_rgba(255,255,255,0.4)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none'
+                      : locked
+                      ? prayer.isNext
+                        ? 'bg-white dark:bg-black border-2 border-black/35 dark:border-white/35 text-black/55 dark:text-white/55 cursor-default'
+                        : 'bg-white dark:bg-black border-black/25 dark:border-white/25 text-black/45 dark:text-white/45 cursor-default'
                       : prayer.isNext
-                      ? 'bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white shadow-[0_3px_0_0_#000000] dark:shadow-[0_3px_0_0_#ffffff]'
-                      : 'bg-white dark:bg-black border-black/50 dark:border-white/50 text-black dark:text-white hover:border-black dark:hover:border-white shadow-[0_2px_0_0_rgba(0,0,0,0.22)] dark:shadow-[0_2px_0_0_rgba(255,255,255,0.22)]'
+                      ? 'btn-monolith bg-white dark:bg-black border-2 border-black dark:border-white text-black dark:text-white shadow-[0_3px_0_0_#000000] dark:shadow-[0_3px_0_0_#ffffff] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none'
+                      : 'btn-monolith bg-white dark:bg-black border-black/50 dark:border-white/50 text-black dark:text-white hover:border-black dark:hover:border-white shadow-[0_2px_0_0_rgba(0,0,0,0.22)] dark:shadow-[0_2px_0_0_rgba(255,255,255,0.22)] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none'
                   }`}
-                  title={`Toggle ${prayer.name} prayer`}
+                  title={locked ? prayer.name : `Toggle ${prayer.name} prayer`}
                 >
                   <span className="text-[11px] font-semibold tracking-tight leading-none">
                     {prayer.name}
@@ -261,20 +272,27 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
                     className={`w-4 h-4 rounded-full flex items-center justify-center border-[1.5px] transition-transform duration-200 ${
                       done
                         ? 'border-white/60 dark:border-black/50 bg-white/15 dark:bg-black/15 scale-105'
+                        : locked
+                        ? 'border-black/25 dark:border-white/25'
                         : prayer.isNext
                         ? 'border-black dark:border-white'
                         : 'border-black/45 dark:border-white/45'
                     }`}
                   >
-                    {done && <Check className="w-2.5 h-2.5 stroke-[3]" />}
-                    {!done && prayer.isNext && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-black dark:bg-white animate-pulse" />
+                    {done ? (
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    ) : locked ? (
+                      <Lock className="w-2.5 h-2.5 stroke-[2.2] opacity-65" />
+                    ) : (
+                      prayer.isNext && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-black dark:bg-white animate-pulse" />
+                      )
                     )}
                   </div>
 
                   <span
                     className={`text-[10px] tabular-nums font-semibold leading-none ${
-                      done ? 'opacity-90' : 'text-black/80 dark:text-white/80'
+                      done ? 'opacity-90' : locked ? 'opacity-75' : 'text-black/80 dark:text-white/80'
                     }`}
                   >
                     {prayer.timeString.split(' ')[0]}
@@ -515,6 +533,41 @@ export const AndroidDashboard: React.FC<AndroidDashboardProps> = ({
             </button>
           )}
         </div>
+
+        {onOpenSunnahDay && (
+          <button
+            onClick={onOpenSunnahDay}
+            className="btn-monolith group w-full min-h-[62px] px-4 py-3.5 rounded-2xl border-[1.5px] border-black dark:border-white bg-white dark:bg-black text-black dark:text-white shadow-[0_3px_0_0_#000000] dark:shadow-[0_3px_0_0_#ffffff] hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none flex items-center justify-between gap-3 text-left"
+            title="Follow the 24-Hour Prophetic Sunnah Day with Duas, Favorite Surahs & Sahih Hadiths"
+          >
+            <div className="flex items-center gap-3.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-black text-white dark:bg-white dark:text-black flex items-center justify-center shrink-0 relative group-hover:scale-105 transition-transform duration-200">
+                <span
+                  aria-hidden="true"
+                  className="w-[2px] h-5 rounded-full bg-gradient-to-b from-[#B8860B] via-[#F3D578] to-[#B8860B]"
+                />
+                <span
+                  aria-hidden="true"
+                  className="w-2.5 h-2.5 rounded-full bg-[#D4AF37] border border-[#FFF3C4] shadow-[0_0_6px_#D4AF37] absolute"
+                />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-black dark:text-white truncate">
+                    The Prophetic Day
+                  </span>
+                  <span className="text-[10px] font-bold text-[#9A7214] dark:text-[#E5C158] shrink-0">
+                    Golden Sunnah
+                  </span>
+                </div>
+                <span className="text-[10.5px] font-semibold text-black/70 dark:text-white/70 block truncate mt-0.5">
+                  Live Daily Routine · Duas · Favorite Surahs · Hadiths
+                </span>
+              </div>
+            </div>
+            <ChevronRight className="w-4 h-4 text-black dark:text-white shrink-0 group-hover:translate-x-1 transition-transform duration-200" />
+          </button>
+        )}
 
         {onOpenSacredHub && (
           <button

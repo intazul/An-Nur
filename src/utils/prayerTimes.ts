@@ -825,3 +825,34 @@ export function playSyntheticAdhanPreview(): void {
     console.warn('Web Audio adhan preview error:', e);
   }
 }
+
+const OBLIGATORY_PRAYER_IDS = new Set(['fajr', 'dhuhr', 'asr', 'maghrib', 'isha']);
+
+/**
+ * Returns true when an obligatory prayer has not yet reached its time today and is not already ticked.
+ * Voluntary prayers (tahajjud, duha) remain unlocked.
+ */
+export function isPrayerTickLocked(
+  prayerKey: string,
+  prayerStatus: PrayerStatus | undefined,
+  isCurrentlyDone: boolean
+): boolean {
+  if (isCurrentlyDone) return false;
+  if (!OBLIGATORY_PRAYER_IDS.has(prayerKey)) return false;
+  if (!prayerStatus) return false;
+  const item = prayerStatus.prayers.find((p) => p.id === prayerKey && !p.isVoluntary);
+  if (!item) return false;
+  return !item.passed;
+}
+
+/**
+ * Returns current minutes-from-midnight (0..1439) in the user's selected prayer location timezone.
+ */
+export function getLocationCurrentMinutes(
+  prayerStatus: PrayerStatus | undefined,
+  date: Date = new Date()
+): number {
+  const clock = resolveLocationClock(date, prayerStatus?.timezone, prayerStatus?.lng);
+  return clock.currentMinutes;
+}
+

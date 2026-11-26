@@ -8,16 +8,19 @@ import {
   Sparkles,
   Save,
   Heart,
+  Lock,
 } from 'lucide-react';
 import { DailyPrayers, ImanDayRecord, UserProfileData } from '../types/quran';
 import { playGentleChime } from '../utils/notifications';
 import { calculateImanBreakdown } from '../utils/imanScore';
+import { isPrayerTickLocked, PrayerStatus } from '../utils/prayerTimes';
 
 interface ImanTrackerModalProps {
   isOpen: boolean;
   onClose: () => void;
   imanRecord: ImanDayRecord;
   profile?: UserProfileData;
+  prayerStatus?: PrayerStatus;
   onUpdateImanRecord: (record: ImanDayRecord) => void;
   streak: number;
 }
@@ -35,6 +38,7 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
   onClose,
   imanRecord,
   profile,
+  prayerStatus,
   onUpdateImanRecord,
   streak,
 }) => {
@@ -47,6 +51,9 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
   const currentDhikr = DHIKR_PRESETS[selectedDhikrIndex];
 
   const handleTogglePrayer = (key: keyof DailyPrayers) => {
+    if (isPrayerTickLocked(key, prayerStatus, Boolean(imanRecord.prayers[key]))) {
+      return;
+    }
     const updatedPrayers: DailyPrayers = {
       ...imanRecord.prayers,
       [key]: !imanRecord.prayers[key],
@@ -180,14 +187,18 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
               {obligatoryPrayers.map((prayer) => {
-                const done = imanRecord.prayers[prayer.id];
+                const done = Boolean(imanRecord.prayers[prayer.id]);
+                const locked = isPrayerTickLocked(prayer.id, prayerStatus, done);
                 return (
                   <button
                     key={prayer.id}
+                    disabled={locked}
                     onClick={() => handleTogglePrayer(prayer.id)}
                     className={`flex items-center justify-between p-3 rounded-xl border text-left transition-all ${
                       done
                         ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white font-bold shadow-xs'
+                        : locked
+                        ? 'bg-neutral-50 dark:bg-neutral-900/50 border-neutral-200 dark:border-neutral-800 text-neutral-400 dark:text-neutral-600 cursor-default opacity-65'
                         : 'bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-black dark:hover:border-white text-neutral-800 dark:text-neutral-200'
                     }`}
                   >
@@ -197,6 +208,8 @@ export const ImanTrackerModal: React.FC<ImanTrackerModalProps> = ({
                     </div>
                     {done ? (
                       <CheckCircle2 className="w-5 h-5" />
+                    ) : locked ? (
+                      <Lock className="w-4 h-4 opacity-55" />
                     ) : (
                       <Circle className="w-5 h-5 opacity-40" />
                     )}
