@@ -10,13 +10,16 @@ import {
   Sparkles,
   CheckCircle2,
   Heart,
+  History,
   Loader2,
+  ScrollText,
 } from 'lucide-react';
 import { Ayah, SurahDetail, UserProfileData } from '../types/quran';
 import { getPreciseVerseTafsir, PreciseTafsir } from '../utils/verseTafsir';
 import { getRelatedHadith } from '../utils/hadithDatabase';
 import { getCachedVerseTafsirSync, getVerseTafsirOffline } from '../utils/offlineTafsirStore';
 import { transliterateUrduToRoman } from '../utils/urduTransliteration';
+import { getVerseRevelationContext } from '../data/quranRevelationHistory';
 
 interface TafsirModalProps {
   isOpen: boolean;
@@ -108,6 +111,7 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
   );
 
   const hadith = ayah.relatedHadith || getRelatedHadith(surah.number, ayah.numberInSurah);
+  const revelationContext = getVerseRevelationContext(surah.number, ayah.numberInSurah);
 
   const handleCopyAll = () => {
     let text = `${ayah.textArabic}\n\n`;
@@ -116,6 +120,12 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
       text += `Assamese: ${ayah.textAssamese}\n\n`;
     } else if (useUrdu && ayah.textUrdu) {
       text += `Urdu (Transliteration): ${transliterateUrduToRoman(ayah.textUrdu)}\n\n`;
+    }
+    text += `Historical Context: Revealed #${revelationContext.surahHistory.revelationOrder} · ${revelationContext.surahHistory.phase} (${revelationContext.surahHistory.approximateEra})\n`;
+    if (revelationContext.verseOccasion) {
+      text += `Sabab al-Nuzul (${revelationContext.verseOccasion.title}): ${revelationContext.verseOccasion.situation}\nStudy Insight: ${revelationContext.verseOccasion.studyInsight}\n\n`;
+    } else {
+      text += `Surah Background: ${revelationContext.surahHistory.historicalSummary}\n\n`;
     }
     if (ibnKathirEn) {
       text += `Tafsir Ibn Kathir (English):\n${ibnKathirEn}\n\n`;
@@ -252,6 +262,83 @@ export const TafsirModal: React.FC<TafsirModalProps> = ({
                 </div>
               )}
             </div>
+          </div>
+
+          {/* 1B. HISTORICAL CONTEXT & REVELATION OCCASION (ASBAB AL-NUZUL) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-neutral-950 border border-black/20 dark:border-white/20 shadow-xs space-y-3">
+            <div className="flex items-start justify-between gap-2 pb-2 border-b border-black/10 dark:border-white/15">
+              <div className="flex items-center gap-2 min-w-0">
+                <History className="w-4 h-4 text-black dark:text-white stroke-[2.4] shrink-0" />
+                <div className="min-w-0">
+                  <h4 className="text-xs sm:text-sm font-bold text-black dark:text-white font-cinzel tracking-tight leading-tight">
+                    Historical Context &amp; Revelation
+                  </h4>
+                  <p className="text-[10.5px] font-semibold text-neutral-600 dark:text-neutral-400 truncate mt-0.5">
+                    {revelationContext.surahHistory.approximateEra}
+                  </p>
+                </div>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-neutral-100 dark:bg-neutral-900 border border-black/15 dark:border-white/20 text-black dark:text-white text-[10px] font-bold shrink-0">
+                Revealed #{revelationContext.surahHistory.revelationOrder} · {revelationContext.surahHistory.phase}
+              </span>
+            </div>
+
+            {revelationContext.verseOccasion ? (
+              <div className="space-y-2.5">
+                <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-black/15 dark:border-white/15 space-y-1.5">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-black dark:text-white flex items-center gap-1">
+                      <ScrollText className="w-3 h-3" />
+                      <span>
+                        Sabab al-Nuzul (Ayah {revelationContext.verseOccasion.fromAyah}
+                        {revelationContext.verseOccasion.toAyah > revelationContext.verseOccasion.fromAyah
+                          ? `–${revelationContext.verseOccasion.toAyah}`
+                          : ''}
+                        )
+                      </span>
+                    </span>
+                    <span className="text-[10px] font-semibold text-neutral-600 dark:text-neutral-400">
+                      {revelationContext.verseOccasion.whenRevealed}
+                    </span>
+                  </div>
+                  <h5 className="text-xs sm:text-[13px] font-bold text-black dark:text-white leading-snug">
+                    {revelationContext.verseOccasion.title}
+                  </h5>
+                  <p className="text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed font-normal select-text">
+                    {revelationContext.verseOccasion.situation}
+                  </p>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-white dark:bg-black border border-black/15 dark:border-white/15 space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 block">
+                    Why This Helps Study This Verse:
+                  </span>
+                  <p className="text-xs font-medium text-neutral-900 dark:text-neutral-100 leading-relaxed">
+                    {revelationContext.verseOccasion.studyInsight}
+                  </p>
+                  <span className="inline-block text-[10px] font-mono font-bold text-neutral-600 dark:text-neutral-400 pt-0.5">
+                    Source: {revelationContext.verseOccasion.hadithSource}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2 text-xs">
+                <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-black/10 dark:border-white/15 space-y-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-700 dark:text-neutral-300 block">
+                    Situation of the Prophet (ﷺ) &amp; Community:
+                  </span>
+                  <p className="text-neutral-900 dark:text-neutral-100 font-medium leading-relaxed">
+                    {revelationContext.surahHistory.prophetSituation}
+                  </p>
+                </div>
+                <p className="text-neutral-800 dark:text-neutral-200 leading-relaxed select-text">
+                  {revelationContext.surahHistory.historicalSummary}
+                </p>
+                <div className="flex items-center justify-between gap-2 flex-wrap pt-1 text-[10.5px] text-neutral-600 dark:text-neutral-400 font-semibold">
+                  <span>Themes: {revelationContext.surahHistory.keyThemes}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* 2. COMPLETE OFFLINE TAFSIR IBN KATHIR & REGIONAL TAFSIR */}

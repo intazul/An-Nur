@@ -920,3 +920,282 @@ export function ensureBackgroundUrduAudioSync(
 
   return backgroundUrduSyncPromise;
 }
+
+export interface RecitationAudioSyncProgress {
+  arabicReciterId: string;
+  arabicCachedCount: number;
+  urduCachedCount: number;
+  completedSurahsCount: number;
+  totalAyahsCount: number;
+  percent: number;
+  isComplete: boolean;
+  currentSurahName?: string;
+}
+
+/**
+ * Synchronously checks if all Arabic Qari MP3s for a Surah are cached locally.
+ */
+export function isSurahArabicAudioOfflineSync(
+  surahNumber: number,
+  ayahCount: number,
+  arabicReciterId: string = 'alafasy',
+  arabicSubfolder?: string
+): boolean {
+  if (!audioCacheWarmed || ayahCount <= 0) return false;
+  const folder =
+    arabicSubfolder ||
+    (arabicReciterId === 'abdulbasit'
+      ? 'Abdul_Basit_Murattal_64kbps'
+      : arabicReciterId === 'sudais'
+      ? 'Abdurrahmaan_As-Sudais_192kbps'
+      : arabicReciterId === 'husary'
+      ? 'Husary_128kbps'
+      : arabicReciterId === 'minshawi'
+      ? 'Minshawy_Murattal_128kbps'
+      : arabicReciterId === 'shuraim'
+      ? 'Saood_ash-Shuraym_128kbps'
+      : arabicReciterId === 'ghamadi'
+      ? 'Ghamadi_40kbps'
+      : 'Alafasy_128kbps');
+
+  const sStr = String(surahNumber).padStart(3, '0');
+  for (let a = 1; a <= ayahCount; a++) {
+    const aStr = String(a).padStart(3, '0');
+    const url = `https://everyayah.com/data/${folder}/${sStr}${aStr}.mp3`;
+    if (!cachedAudioUrlSet.has(url)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Synchronously checks if BOTH Arabic Qari MP3s and Shamshad Ali Khan Urdu MP3s
+ * are cached locally for sequential offline Arabic + Urdu playback.
+ */
+export function isSurahDualAudioOfflineSync(
+  surahNumber: number,
+  ayahCount: number,
+  arabicReciterId: string = 'alafasy'
+): boolean {
+  return (
+    isSurahArabicAudioOfflineSync(surahNumber, ayahCount, arabicReciterId) &&
+    isSurahUrduAudioOfflineSync(surahNumber, ayahCount)
+  );
+}
+
+/**
+ * Computes combined offline cache progress for Arabic Qari + Male Urdu MP3s across all 114 Surahs.
+ */
+export async function getRecitationAudioCacheProgress(
+  arabicReciterId: string = 'alafasy'
+): Promise<RecitationAudioSyncProgress> {
+  if (!audioCacheWarmed) {
+    await warmAudioCacheIndex();
+  }
+  const { ALL_SURAHS } = await import('../data/surahList');
+  const { getAyahAudioUrlForLanguage } = await import('../data/reciters');
+
+  let arabicCachedCount = 0;
+  let urduCachedCount = 0;
+  let completedSurahsCount = 0;
+
+  for (const meta of ALL_SURAHS) {
+    let surahAr = 0;
+    let surahUr = 0;
+    for (let a = 1; a <= meta.numberOfAyahs; a++) {
+      const arUrl = getAyahAudioUrlForLanguage(meta.number, a, 'ar', arabicReciterId, 'shamshad');
+      const urUrl = getAyahAudioUrlForLanguage(meta.number, a, 'ur', arabicReciterId, 'shamshad');
+      if (cachedAudioUrlSet.has(arUrl)) surahAr++;
+      if (cachedAudioUrlSet.has(urUrl)) surahUr++;
+    }
+    arabicCachedCount += surahAr;
+    urduCachedCount += surahUr;
+    if (surahAr === meta.numberOfAyahs && surahUr === meta.numberOfAyahs) {
+      completedSurahsCount++;
+    }
+  }
+
+  const combinedTotal = TOTAL_QURAN_AYAHS * 2;
+  const combinedCached = arabicCachedCount + urduCachedCount;
+  const percent = Math.min(100, Math.round((combinedCached / combinedTotal) * 100));
+
+  return {
+    arabicReciterId,
+    arabicCachedCount,
+    urduCachedCount,
+    completedSurahsCount,
+    totalAyahsCount: TOTAL_QURAN_AYAHS,
+    percent,
+    isComplete:
+      arabicCachedCount >= TOTAL_QURAN_AYAHS && urduCachedCount >= TOTAL_QURAN_AYAHS,
+  };
+}
+
+/**
+ * Caches BOTH Arabic Qari MP3s and Shamshad Ali Khan Urdu MP3s for a specific Surah.
+ * Skips any verses already present in CacheStorage.
+ */
+export async function cacheSurahArabicAndUrduAudio(
+  surahNumber: number,
+  ayahCount: number,
+  arabicReciterId: string = 'alafasy',
+  urduReciterId: string = 'shamshad',
+  signal?: AbortSignal,
+  concurrency: number = 4
+): Promise<boolean> {
+  if (typeof window === 'undefined' || !('caches' in window)) return false;
+  if (typeof navigator !== 'undefined' && !navigator.onLine) return false;
+
+  if (!audioCacheWarmed) {
+    await warmAudioCacheIndex();
+  }
+
+  const { getAyahAudioUrlForLanguage } = await import('../data/reciters');
+  const uncachedUrls: string[] = [];
+
+  for (let a = 1; a <= ayahCount; a++) {
+    const arUrl = getAyahAudioUrlForLanguage(surahNumber, a, 'ar', arabicReciterId, urduReciterId);
+    const urUrl = getAyahAudioUrlForLanguage(surahNumber, a, 'ur', arabicReciterId, urduReciterId);
+    if (!cachedAudioUrlSet.has(arUrl)) uncachedUrls.push(arUrl);
+    if (!cachedAudioUrlSet.has(urUrl)) uncachedUrls.push(urUrl);
+  }
+
+  if (uncachedUrls.length === 0) return true;
+
+  for (let i = 0; i < uncachedUrls.length; i += concurrency) {
+    if (signal?.aborted) return false;
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return false;
+    const chunk = uncachedUrls.slice(i, i + concurrency);
+    await Promise.all(chunk.map((u) => cacheAudioUrl(u)));
+  }
+
+  return uncachedUrls.every((u) => cachedAudioUrlSet.has(u));
+}
+
+/**
+ * Downloads/caches ALL 114 Surahs (6,236 verses) of BOTH Arabic Qari MP3s AND Male Urdu MP3s
+ * into persistent CacheStorage, prioritizing active/favorite/core Surahs first.
+ */
+export async function downloadAllArabicAndUrduOffline(
+  prioritySurahs: number[] = [],
+  arabicReciterId: string = 'alafasy',
+  urduReciterId: string = 'shamshad',
+  onProgress?: (info: RecitationAudioSyncProgress) => void,
+  signal?: AbortSignal,
+  concurrency: number = 6
+): Promise<RecitationAudioSyncProgress> {
+  if (!audioCacheWarmed) {
+    await warmAudioCacheIndex();
+  }
+
+  const { ALL_SURAHS } = await import('../data/surahList');
+  const orderedNumbers = Array.from(
+    new Set([
+      ...prioritySurahs.filter((n) => n >= 1 && n <= 114),
+      1, 36, 55, 56, 67, 108, 112, 113, 114,
+      ...ALL_SURAHS.map((s) => s.number),
+    ])
+  );
+
+  const initial = await getRecitationAudioCacheProgress(arabicReciterId);
+  onProgress?.(initial);
+  if (initial.isComplete) return initial;
+
+  for (const surahNum of orderedNumbers) {
+    if (signal?.aborted) break;
+    if (typeof navigator !== 'undefined' && !navigator.onLine) break;
+    const meta = ALL_SURAHS.find((s) => s.number === surahNum);
+    if (!meta) continue;
+
+    if (isSurahDualAudioOfflineSync(meta.number, meta.numberOfAyahs, arabicReciterId)) {
+      continue;
+    }
+
+    await cacheSurahArabicAndUrduAudio(
+      meta.number,
+      meta.numberOfAyahs,
+      arabicReciterId,
+      urduReciterId,
+      signal,
+      concurrency
+    );
+    const snap = await getRecitationAudioCacheProgress(arabicReciterId);
+    onProgress?.({ ...snap, currentSurahName: meta.nameEnglish });
+    emitUrduAudioProgress({
+      cachedCount: snap.urduCachedCount,
+      totalCount: TOTAL_QURAN_AYAHS,
+      completedSurahsCount: Math.max(snap.completedSurahsCount, 0),
+      percent: Math.min(100, Math.round((snap.urduCachedCount / TOTAL_QURAN_AYAHS) * 100)),
+      isComplete: snap.urduCachedCount >= TOTAL_QURAN_AYAHS,
+      currentSurahName: meta.nameEnglish,
+    });
+  }
+
+  const finalSnap = await getRecitationAudioCacheProgress(arabicReciterId);
+  onProgress?.(finalSnap);
+  return finalSnap;
+}
+
+let backgroundRecitationSyncPromise: Promise<void> | null = null;
+let backgroundRecitationSyncReciter: string | null = null;
+const recitationProgressListeners = new Set<(info: RecitationAudioSyncProgress) => void>();
+
+export function subscribeRecitationAudioProgress(
+  listener: (info: RecitationAudioSyncProgress) => void
+): () => void {
+  recitationProgressListeners.add(listener);
+  return () => {
+    recitationProgressListeners.delete(listener);
+  };
+}
+
+function emitRecitationAudioProgress(info: RecitationAudioSyncProgress): void {
+  recitationProgressListeners.forEach((fn) => {
+    try {
+      fn(info);
+    } catch {
+      // ignore
+    }
+  });
+}
+
+/**
+ * Starts a non-blocking, resumable background sync of BOTH Arabic Qari MP3s and Shamshad Urdu MP3s
+ * across all 114 Surahs so all recitations play 100% offline.
+ */
+export function ensureBackgroundRecitationSync(
+  prioritySurahs: number[] = [],
+  arabicReciterId: string = 'alafasy',
+  urduReciterId: string = 'shamshad'
+): Promise<void> {
+  if (typeof window === 'undefined' || !('caches' in window)) {
+    return Promise.resolve();
+  }
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    return Promise.resolve();
+  }
+  if (backgroundRecitationSyncPromise && backgroundRecitationSyncReciter === arabicReciterId) {
+    return backgroundRecitationSyncPromise;
+  }
+
+  backgroundRecitationSyncReciter = arabicReciterId;
+  backgroundRecitationSyncPromise = (async () => {
+    try {
+      await downloadAllArabicAndUrduOffline(
+        prioritySurahs,
+        arabicReciterId,
+        urduReciterId,
+        (info) => emitRecitationAudioProgress(info),
+        undefined,
+        4
+      );
+    } finally {
+      if (backgroundRecitationSyncReciter === arabicReciterId) {
+        backgroundRecitationSyncPromise = null;
+      }
+    }
+  })();
+
+  return backgroundRecitationSyncPromise;
+}

@@ -19,10 +19,18 @@ import {
   Minimize2,
   Eye,
   EyeOff,
+  History,
+  ScrollText,
+  X,
 } from 'lucide-react';
 import { ALL_SURAHS } from '../data/surahList';
 import { Ayah, LastReadPosition, SurahDetail, UserProfileData, WaqfSignInfo } from '../types/quran';
 import { getRelatedHadith } from '../utils/hadithDatabase';
+import {
+  getSurahOccasions,
+  getSurahRevelationHistory,
+  getVerseRevelationContext,
+} from '../data/quranRevelationHistory';
 import { getVerseWaqfSigns } from '../data/tajweedSigns';
 import {
   getThematicSlidePages,
@@ -91,6 +99,8 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [expandedHadithAyah, setExpandedHadithAyah] = useState<number | null>(null);
+  const [expandedHistoryAyah, setExpandedHistoryAyah] = useState<number | null>(null);
+  const [isSurahHistoryOpen, setIsSurahHistoryOpen] = useState<boolean>(false);
   const [selectedWaqfSign, setSelectedWaqfSign] = useState<WaqfSignInfo | null>(null);
   const [selectedParagraphAyah, setSelectedParagraphAyah] = useState<number | null>(null);
   const [isHifzMaskEnabled, setIsHifzMaskEnabled] = useState<boolean>(initialHifzMask);
@@ -403,6 +413,49 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
   const activeHadith = (currentSurah && activeVerseAyah)
     ? (activeVerseAyah.relatedHadith || getRelatedHadith(currentSurah.number, activeVerseAyah.numberInSurah))
     : null;
+  const surahHistory = useMemo(
+    () => (currentSurah ? getSurahRevelationHistory(currentSurah.number) : null),
+    [currentSurah?.number]
+  );
+  const surahOccasions = useMemo(
+    () => (currentSurah ? getSurahOccasions(currentSurah.number) : []),
+    [currentSurah?.number]
+  );
+  const activeVerseHistory = useMemo(() => {
+    if (!currentSurah || !activeVerseAyah) return null;
+    return getVerseRevelationContext(currentSurah.number, activeVerseAyah.numberInSurah);
+  }, [currentSurah?.number, activeVerseAyah?.numberInSurah]);
+  const thematicPageOccasion = useMemo(() => {
+    if (!currentSurah || !currentThematicPage) return null;
+    return (
+      surahOccasions.find(
+        (occ) =>
+          occ.fromAyah <= currentThematicPage.toAyah &&
+          occ.toAyah >= currentThematicPage.fromAyah
+      ) || null
+    );
+  }, [currentSurah?.number, currentThematicPage, surahOccasions]);
+
+  const jumpToAyahInCurrentSurah = (targetAyahNum: number) => {
+    if (!currentSurah) return;
+    if (isThematicMode && thematicSlidePages.length > 0) {
+      const pIdx = thematicSlidePages.findIndex(
+        (p) => targetAyahNum >= p.fromAyah && targetAyahNum <= p.toAyah
+      );
+      if (pIdx !== -1) setCurrentParagraphIndex(pIdx);
+    } else if (isParagraphMode && mushafPages.length > 0) {
+      const pageIdx = mushafPages.findIndex((page) =>
+        page.some((a) => a.numberInSurah === targetAyahNum)
+      );
+      if (pageIdx !== -1) setCurrentPageIndex(pageIdx);
+    } else if (isCardsMode) {
+      const cIdx = Math.max(0, Math.min(currentSurah.ayahs.length - 1, targetAyahNum - 1));
+      setCurrentCardIndex(cIdx);
+      setExpandedHistoryAyah(targetAyahNum);
+    }
+    handleAyahVisible(targetAyahNum);
+    setIsSurahHistoryOpen(false);
+  };
 
   // Credit every unique Ayah viewed/read today in Thematic, Mushaf, or Cards mode toward the main Iman level
   useEffect(() => {
@@ -478,6 +531,18 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {/* Revelation History & Asbab al-Nuzul Drawer Trigger */}
+            {currentSurah && (
+              <button
+                onClick={() => setIsSurahHistoryOpen(true)}
+                className="p-1.5 text-black dark:text-white rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                title="Surah Revelation History & Asbab al-Nuzul"
+                aria-label="Revelation History"
+              >
+                <History className="w-4 h-4" />
+              </button>
+            )}
+
             {/* Hifz Memory Mask Toggle */}
             <button
               onClick={toggleHifzMask}
@@ -526,20 +591,31 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
       ) : (
         /* Minimal Floating Header when in Fullscreen Distraction-Free Mode */
         <div className="shrink-0 px-3.5 py-1.5 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 min-w-0">
             <button
               onClick={onBackToDashboard}
-              className="p-1 rounded-lg text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              className="p-1 rounded-lg text-black dark:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 shrink-0"
               title="Back"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <span className="font-cinzel font-bold text-black dark:text-white text-xs">
-              Surah {currentSurah?.nameEnglish}
-            </span>
+            <button
+              onClick={() => setIsSurahHistoryOpen(true)}
+              className="flex items-center gap-1.5 min-w-0 text-left hover:opacity-80 transition-opacity"
+              title="Tap for Surah Revelation History & Historical Context"
+            >
+              <span className="font-cinzel font-bold text-black dark:text-white text-xs truncate">
+                Surah {currentSurah?.nameEnglish}
+              </span>
+              {surahHistory && (
+                <span className="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded bg-neutral-100 dark:bg-neutral-800 text-[9.5px] font-bold text-neutral-700 dark:text-neutral-300 shrink-0">
+                  #{surahHistory.revelationOrder} · {surahHistory.phase}
+                </span>
+              )}
+            </button>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 shrink-0">
             <span className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400">
               {isThematicMode
                 ? `Page ${currentParagraphIndex + 1} of ${thematicSlidePages.length}`
@@ -547,6 +623,15 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 ? `Page ${currentPageIndex + 1} of ${mushafPages.length}`
                 : `Ayah ${currentCardIndex + 1} of ${currentSurah?.numberOfAyahs || 1}`}
             </span>
+            {currentSurah && (
+              <button
+                onClick={() => setIsSurahHistoryOpen(true)}
+                className="p-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white transition-colors"
+                title="Revelation History & Asbab al-Nuzul"
+              >
+                <History className="w-3.5 h-3.5" />
+              </button>
+            )}
             <button
               onClick={toggleHifzMask}
               className={`p-1 rounded-lg transition-colors ${
@@ -683,11 +768,21 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                   )}
                 </button>
 
+                {/* Historical Context / Asbab al-Nuzul button */}
+                <button
+                  onClick={() => setIsSurahHistoryOpen(true)}
+                  className="px-2 py-0.5 rounded-lg border border-black/25 dark:border-white/25 bg-white dark:bg-black text-black dark:text-white font-bold text-[10px] hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center gap-1"
+                  title="View Historical Context & Asbab al-Nuzul for this Surah/Passage"
+                >
+                  <History className="w-3 h-3" />
+                  <span>{thematicPageOccasion ? 'Nuzul' : 'History'}</span>
+                </button>
+
                 {/* Tafsir button */}
                 <button
                   onClick={() => onOpenTafsir(currentThematicPage.allAyahs[0])}
                   className="px-2 py-0.5 rounded-lg bg-black text-white dark:bg-white dark:text-black font-bold text-[10px] shadow-2xs hover:opacity-90 transition-opacity"
-                  title="Open In-Depth Tafsir for this section"
+                  title="Open In-Depth Tafsir & Verse History"
                 >
                   Tafsir
                 </button>
@@ -1158,19 +1253,31 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
             }`}
           >
             {/* Slide Top Bar */}
-            <div className="flex items-center justify-between pb-2 mb-1.5 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-800 font-cinzel text-xs font-bold text-black dark:text-white">
-                  Ayah {activeVerseAyah.numberInSurah} of {currentSurah.numberOfAyahs}
-                </span>
-              </div>
-
+            <div className="flex items-center justify-end pb-2 mb-1.5 border-b border-neutral-200 dark:border-neutral-800 shrink-0">
               <div className="flex items-center gap-1">
+                {/* HISTORICAL REVELATION CONTEXT BUTTON */}
+                <button
+                  onClick={() =>
+                    setExpandedHistoryAyah(
+                      expandedHistoryAyah === activeVerseAyah.numberInSurah ? null : activeVerseAyah.numberInSurah
+                    )
+                  }
+                  className={`flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-lg transition-colors border ${
+                    expandedHistoryAyah === activeVerseAyah.numberInSurah
+                      ? 'bg-black text-white dark:bg-white dark:text-black border-black dark:border-white'
+                      : 'bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white border-black/15 dark:border-white/15 hover:border-black dark:hover:border-white'
+                  }`}
+                  title="View When & Why Revealed (Asbab al-Nuzul)"
+                >
+                  <History className="w-3.5 h-3.5" />
+                  <span className="hidden xs:inline">Nuzul</span>
+                </button>
+
                 {/* IN-DEPTH TAFSIR VIEW BUTTON */}
                 <button
                   onClick={() => onOpenTafsir(activeVerseAyah)}
                   className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold rounded-lg bg-black text-white hover:bg-neutral-800 dark:bg-white dark:text-black dark:hover:bg-neutral-200 transition-colors shadow-2xs"
-                  title="View In-Depth Verse Tafsir"
+                  title="View In-Depth Verse Tafsir & Historical Setting"
                 >
                   <BookOpen className="w-3.5 h-3.5" />
                   <span>Tafsir</span>
@@ -1359,6 +1466,52 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
                 );
               })()}
 
+              {/* Expandable Historical Situation & Asbab al-Nuzul */}
+              {expandedHistoryAyah === activeVerseAyah.numberInSurah && activeVerseHistory && (
+                <div className="p-3 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-black/20 dark:border-white/20 space-y-2 text-xs shrink-0 animate-in fade-in">
+                  <div className="flex items-center justify-between gap-2 text-black dark:text-white font-bold">
+                    <div className="flex items-center gap-1.5">
+                      <History className="w-3.5 h-3.5" />
+                      <span>
+                        {activeVerseHistory.verseOccasion
+                          ? activeVerseHistory.verseOccasion.title
+                          : `Revealed #${activeVerseHistory.surahHistory.revelationOrder} · ${activeVerseHistory.surahHistory.phase}`}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400 shrink-0">
+                      {activeVerseHistory.verseOccasion
+                        ? activeVerseHistory.verseOccasion.whenRevealed
+                        : activeVerseHistory.surahHistory.approximateEra.split('·')[0]}
+                    </span>
+                  </div>
+
+                  {activeVerseHistory.verseOccasion ? (
+                    <>
+                      <p className="text-neutral-900 dark:text-neutral-100 leading-relaxed font-normal">
+                        {activeVerseHistory.verseOccasion.situation}
+                      </p>
+                      <div className="p-2 rounded-lg bg-white dark:bg-black border border-black/10 dark:border-white/15 text-[11px] text-neutral-900 dark:text-neutral-200 space-y-1">
+                        <p>
+                          <strong>Study Insight:</strong> {activeVerseHistory.verseOccasion.studyInsight}
+                        </p>
+                        <span className="block text-[10px] font-mono text-neutral-600 dark:text-neutral-400">
+                          {activeVerseHistory.verseOccasion.hadithSource}
+                        </span>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-neutral-900 dark:text-neutral-100 leading-relaxed font-medium">
+                        {activeVerseHistory.surahHistory.prophetSituation}
+                      </p>
+                      <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed text-[11.5px]">
+                        {activeVerseHistory.surahHistory.historicalSummary}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+
               {/* Expandable Related Hadith */}
               {expandedHadithAyah === activeVerseAyah.numberInSurah && activeHadith && (
                 <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-300 dark:border-neutral-700 space-y-1 text-xs shrink-0 animate-in fade-in">
@@ -1474,6 +1627,121 @@ export const AndroidReadingView: React.FC<AndroidReadingViewProps> = ({
         onClose={() => setSelectedWaqfSign(null)}
         sign={selectedWaqfSign}
       />
+
+      {/* Surah Revelation History & Asbab al-Nuzul Drawer Modal */}
+      {isSurahHistoryOpen && currentSurah && surahHistory && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in"
+          onClick={() => setIsSurahHistoryOpen(false)}
+        >
+          <div
+            className="w-full max-w-md max-h-[90vh] bg-white dark:bg-black text-black dark:text-white rounded-t-3xl sm:rounded-3xl border-t sm:border border-black/20 dark:border-white/20 shadow-2xl flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-black/15 dark:border-white/15 flex items-start justify-between gap-3 shrink-0">
+              <div className="min-w-0 space-y-1">
+                <div className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
+                  <History className="w-3.5 h-3.5 text-black dark:text-white" />
+                  <span>
+                    Revealed #{surahHistory.revelationOrder} · {surahHistory.phase}
+                  </span>
+                </div>
+                <h3 className="text-base font-bold font-cinzel text-black dark:text-white leading-tight truncate">
+                  Surah {currentSurah.nameEnglish} · Historical Setting
+                </h3>
+                <p className="text-[11px] font-semibold text-neutral-600 dark:text-neutral-400 truncate">
+                  {surahHistory.approximateEra}
+                </p>
+              </div>
+              <button
+                onClick={() => setIsSurahHistoryOpen(false)}
+                className="p-2 rounded-xl bg-black text-white dark:bg-white dark:text-black shrink-0 active:scale-95 transition-transform"
+                aria-label="Close revelation history"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 select-text">
+              <div className="p-3.5 rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-black/15 dark:border-white/15 space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 block">
+                  Prophetic Situation at Revelation
+                </span>
+                <p className="text-xs sm:text-[13px] font-bold text-black dark:text-white leading-relaxed">
+                  {surahHistory.prophetSituation}
+                </p>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-400 block">
+                  Why This Surah Came Down
+                </span>
+                <p className="text-xs sm:text-[13px] text-neutral-800 dark:text-neutral-200 leading-relaxed">
+                  {surahHistory.historicalSummary}
+                </p>
+                <div className="pt-1 text-[11px] text-neutral-600 dark:text-neutral-400 font-semibold">
+                  Themes: {surahHistory.keyThemes} · ({surahHistory.sourceReference})
+                </div>
+              </div>
+
+              {surahOccasions.length > 0 && (
+                <div className="space-y-2.5 pt-2 border-t border-black/10 dark:border-white/15">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-black dark:text-white flex items-center gap-1.5">
+                      <ScrollText className="w-3.5 h-3.5" />
+                      <span>Specific Occasions (Asbab al-Nuzul)</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-neutral-500">
+                      {surahOccasions.length} {surahOccasions.length === 1 ? 'Event' : 'Events'}
+                    </span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {surahOccasions.map((occ) => (
+                      <div
+                        key={occ.id}
+                        className="p-3.5 rounded-2xl bg-white dark:bg-neutral-950 border border-black/20 dark:border-white/20 space-y-2"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="px-2 py-0.5 rounded-md bg-black text-white dark:bg-white dark:text-black text-[10px] font-bold">
+                            Ayah {occ.fromAyah}
+                            {occ.toAyah > occ.fromAyah ? `–${occ.toAyah}` : ''}
+                          </span>
+                          <span className="text-[10px] font-semibold text-neutral-500 dark:text-neutral-400 text-right">
+                            {occ.whenRevealed}
+                          </span>
+                        </div>
+                        <h4 className="text-xs sm:text-[13px] font-bold text-black dark:text-white leading-snug">
+                          {occ.title}
+                        </h4>
+                        <p className="text-xs text-neutral-800 dark:text-neutral-200 leading-relaxed">
+                          {occ.situation}
+                        </p>
+                        <div className="p-2.5 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-[11px] text-neutral-900 dark:text-neutral-200 leading-relaxed">
+                          <strong>Study Key:</strong> {occ.studyInsight}
+                        </div>
+                        <div className="flex items-center justify-between gap-2 pt-0.5">
+                          <span className="text-[10px] font-mono text-neutral-600 dark:text-neutral-400 truncate">
+                            {occ.hadithSource}
+                          </span>
+                          <button
+                            onClick={() => jumpToAyahInCurrentSurah(occ.fromAyah)}
+                            className="px-2.5 py-1 rounded-lg bg-black text-white dark:bg-white dark:text-black text-[10.5px] font-bold shrink-0 active:scale-95 transition-transform"
+                          >
+                            Read Ayah {occ.fromAyah}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

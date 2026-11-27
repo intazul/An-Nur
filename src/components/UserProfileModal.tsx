@@ -25,11 +25,13 @@ import {
   sendPushReminder,
 } from '../utils/notifications';
 import {
+  downloadAllArabicAndUrduOffline,
   downloadAllQuranAudioOffline,
   downloadAllSurahsTextAndTafsir,
   downloadAllUrduAudioOffline,
   downloadCoreAudioOffline,
   getOfflineCacheStats,
+  RecitationAudioSyncProgress,
   UrduAudioSyncProgress,
 } from '../utils/offlineStorage';
 
@@ -48,6 +50,8 @@ interface UserProfileModalProps {
   onRefreshDownloadedSurahs?: () => void;
   urduAudioSyncProgress?: UrduAudioSyncProgress | null;
   onUrduAudioSyncUpdate?: (snap: UrduAudioSyncProgress) => void;
+  recitationSyncProgress?: RecitationAudioSyncProgress | null;
+  onRecitationSyncUpdate?: (snap: RecitationAudioSyncProgress) => void;
   initialTab?: 'profile' | 'bookmarks' | 'offline' | 'reminders';
 }
 
@@ -66,6 +70,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   onRefreshDownloadedSurahs,
   urduAudioSyncProgress,
   onUrduAudioSyncUpdate,
+  recitationSyncProgress,
+  onRecitationSyncUpdate,
   initialTab = 'profile',
 }) => {
   const [activeTab, setActiveTab] = useState<'profile' | 'bookmarks' | 'offline' | 'reminders'>(initialTab);
@@ -77,6 +83,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   // Batch offline downloading state
   const [isDownloadingAllText, setIsDownloadingAllText] = useState(false);
   const [isDownloadingUrduAudio, setIsDownloadingUrduAudio] = useState(false);
+  const [isDownloadingDualAudio, setIsDownloadingDualAudio] = useState(false);
   const [isDownloadingCoreAudio, setIsDownloadingCoreAudio] = useState(false);
   const [isDownloadingAllAudio, setIsDownloadingAllAudio] = useState(false);
   const downloadAbortRef = React.useRef<AbortController | null>(null);
@@ -202,6 +209,54 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
     } finally {
       downloadAbortRef.current = null;
       setIsDownloadingUrduAudio(false);
+      setDownloadProgress(null);
+    }
+  };
+
+  const handleDownloadAllArabicAndUrdu = async () => {
+    const controller = new AbortController();
+    downloadAbortRef.current = controller;
+    setIsDownloadingDualAudio(true);
+    setDownloadProgress({
+      current:
+        (recitationSyncProgress?.arabicCachedCount || 0) +
+        (recitationSyncProgress?.urduCachedCount || 0),
+      total: 12472,
+      label: 'Caching Arabic Qari + Male Urdu MP3s (All 114 Surahs)...',
+      percent: recitationSyncProgress?.percent || 0,
+    });
+
+    try {
+      const priority = [
+        profile.lastRead?.surahNumber || 1,
+        ...(profile.favoriteSurahs || []),
+      ];
+      const finalSnap = await downloadAllArabicAndUrduOffline(
+        priority,
+        profile.preferredReciter,
+        profile.preferredUrduReciter || 'shamshad',
+        (info) => {
+          onRecitationSyncUpdate?.(info);
+          setDownloadProgress({
+            current: info.arabicCachedCount + info.urduCachedCount,
+            total: info.totalAyahsCount * 2,
+            label: info.currentSurahName
+              ? `Arabic + Urdu · ${info.currentSurahName} (${info.completedSurahsCount}/114 Surahs)`
+              : `Arabic + Urdu MP3s (${info.completedSurahsCount}/114 Surahs)`,
+            percent: info.percent,
+          });
+        },
+        controller.signal,
+        6
+      );
+      onRecitationSyncUpdate?.(finalSnap);
+      playGentleChime();
+      refreshStats();
+    } catch (err) {
+      console.error('Arabic + Urdu offline download failed:', err);
+    } finally {
+      downloadAbortRef.current = null;
+      setIsDownloadingDualAudio(false);
       setDownloadProgress(null);
     }
   };
@@ -674,6 +729,51 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </button>
                 </div>
 
+                {/* 1a. All 114 Surahs Arabic Qari + Male Urdu MP3s (Dual Sequential Mode) */}
+                <div className="p-3.5 rounded-2xl border border-black dark:border-white bg-black/[0.04] dark:bg-white/[0.06] flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold text-black dark:text-white flex items-center gap-1.5 flex-wrap">
+                      <span>All 114 Arabic + Urdu Recitation MP3s</span>
+                      {recitationSyncProgress && (
+                        <span className="px-1.5 py-0.5 rounded bg-black text-white dark:bg-white dark:text-black text-[10px] font-mono tabular-nums">
+                          {recitationSyncProgress.isComplete
+                            ? '100% Offline'
+                            : `${recitationSyncProgress.completedSurahsCount}/114 Surahs`}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-neutral-700 dark:text-neutral-400 font-medium leading-tight mt-0.5">
+                      Saves your chosen Arabic Qari + Shamshad Ali Khan Urdu MP3s for all 6,236 verses so Arabic + Urdu plays 100% offline.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleDownloadAllArabicAndUrdu}
+                    disabled={
+                      isDownloadingAllText ||
+                      isDownloadingUrduAudio ||
+                      isDownloadingDualAudio ||
+                      isDownloadingCoreAudio ||
+                      isDownloadingAllAudio
+                    }
+                    className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
+                  >
+                    {isDownloadingDualAudio ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : recitationSyncProgress?.isComplete ? (
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    ) : (
+                      <Volume2 className="w-3.5 h-3.5" />
+                    )}
+                    <span>
+                      {isDownloadingDualAudio
+                        ? 'Caching...'
+                        : recitationSyncProgress?.isComplete
+                        ? 'All Cached'
+                        : 'All 114 Ar+Ur'}
+                    </span>
+                  </button>
+                </div>
+
                 {/* 1b. All 114 Surahs Male Human Urdu Recitation MP3s (Shamshad Ali Khan) */}
                 <div className="p-3.5 rounded-2xl border border-black/25 dark:border-white/25 bg-neutral-50 dark:bg-neutral-900/60 flex items-center justify-between gap-3">
                   <div className="min-w-0 flex-1">
@@ -693,7 +793,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   </div>
                   <button
                     onClick={handleDownloadAllUrduAudio}
-                    disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
+                    disabled={isDownloadingAllText || isDownloadingUrduAudio || isDownloadingDualAudio || isDownloadingCoreAudio || isDownloadingAllAudio}
                     className="px-3.5 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black font-bold text-xs shadow-xs hover:bg-neutral-900 dark:hover:bg-neutral-100 disabled:opacity-50 shrink-0 flex items-center gap-1.5 transition-all active:scale-95"
                   >
                     {isDownloadingUrduAudio ? (

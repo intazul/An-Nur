@@ -171,7 +171,7 @@ export default defineConfig(() => {
               options: {
                 cacheName: 'annur-quran-audio-v1',
                 expiration: {
-                  maxEntries: 20000,
+                  maxEntries: 35000,
                   maxAgeSeconds: 60 * 60 * 24 * 365,
                 },
                 cacheableResponse: {

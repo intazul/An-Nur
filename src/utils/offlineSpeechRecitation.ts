@@ -25,9 +25,10 @@ export interface OfflineSpeechCallbacks {
   onStart?: () => void;
 }
 
-export type OfflineRecitationLanguage = 'en' | 'ur';
+export type OfflineRecitationLanguage = 'ar' | 'en' | 'ur';
 
 export type OfflineVoiceTier =
+  | 'native_ar'
   | 'native_en'
   | 'native_ur'
   | 'phonetic_hi'
@@ -513,6 +514,16 @@ class OfflineSpeechRecitationController {
       }
     };
 
+    if (language === 'ar') {
+      const arVoices = primaryPool.filter((v) => {
+        const l = v.lang.toLowerCase();
+        const n = v.name.toLowerCase();
+        return l.startsWith('ar') || n.includes('arabic');
+      });
+      addMatches(arVoices, 'native_ar');
+      return candidates;
+    }
+
     if (language === 'en') {
       const enGbUs = primaryPool.filter((v) => {
         const l = v.lang.toLowerCase();
@@ -589,6 +600,13 @@ class OfflineSpeechRecitationController {
         isOfflineCapable: false,
       };
     }
+    if (language === 'ar') {
+      return {
+        tier,
+        label: `Offline Arabic (${voice.name})`,
+        isOfflineCapable: voice.localService,
+      };
+    }
     if (language === 'en') {
       return {
         tier,
@@ -629,6 +647,9 @@ class OfflineSpeechRecitationController {
     language: OfflineRecitationLanguage,
     tier: OfflineVoiceTier
   ): string {
+    if (language === 'ar') {
+      return rawText.trim();
+    }
     if (language === 'en') {
       return preprocessEnglishText(rawText);
     }
@@ -653,7 +674,9 @@ class OfflineSpeechRecitationController {
 
     const cleanText =
       text.trim() ||
-      (options.language === 'ur'
+      (options.language === 'ar'
+        ? 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'
+        : options.language === 'ur'
         ? 'شروع اللہ کا نام لے کر جو بڑا مہربان نہایت رحم والا ہے'
         : 'In the name of Allah, the Entirely Merciful, the Especially Merciful.');
 
@@ -668,7 +691,7 @@ class OfflineSpeechRecitationController {
     this.elapsedBeforePause = 0;
     this.sessionSeq += 1;
 
-    const charsPerSec = options.language === 'en' ? 13.5 : 10.5;
+    const charsPerSec = options.language === 'en' ? 13.5 : options.language === 'ar' ? 11.5 : 10.5;
     const baseSeconds = Math.max(2.6, cleanText.length / charsPerSec);
     this.estimatedDuration = baseSeconds / this.playbackSpeed;
 
@@ -780,7 +803,12 @@ class OfflineSpeechRecitationController {
         const utterance = new SpeechSynthesisUtterance(clauseText);
         utterance.voice = chosen.voice;
         utterance.lang =
-          chosen.voice.lang || (this.currentLanguage === 'ur' ? 'ur-PK' : 'en-US');
+          chosen.voice.lang ||
+          (this.currentLanguage === 'ar'
+            ? 'ar-SA'
+            : this.currentLanguage === 'ur'
+            ? 'ur-PK'
+            : 'en-US');
         utterance.rate = clarityRate;
         utterance.pitch = pitch;
         utterance.volume = 1.0;

@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Clock,
   Heart,
+  ListChecks,
   Moon,
   ScrollText,
   Shield,
@@ -353,6 +354,38 @@ export const SunnahDayTimelineView: React.FC<SunnahDayTimelineViewProps> = ({
                   ))}
                 </div>
               </section>
+
+              {/* 1B. Minute Physical, Household & Spoken Sunnah Details */}
+              {selectedStage.minuteDetails && selectedStage.minuteDetails.length > 0 && (
+                <section className="space-y-2.5">
+                  <div className="flex items-center gap-2">
+                    <ListChecks className="w-4 h-4 text-[#B8860B] dark:text-[#E5C158]" />
+                    <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-black dark:text-white">
+                      Minute Sunnah Details (Exact Etiquettes)
+                    </h3>
+                  </div>
+                  <div className="space-y-2.5">
+                    {selectedStage.minuteDetails.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3.5 rounded-2xl bg-white dark:bg-neutral-950 border border-[#D4AF37]/45 space-y-1.5"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="text-xs font-bold text-black dark:text-white leading-snug">
+                            {item.aspect}
+                          </h4>
+                        </div>
+                        <p className="text-xs font-medium text-neutral-700 dark:text-neutral-300 leading-relaxed">
+                          {item.detail}
+                        </p>
+                        <span className="inline-block text-[10.5px] font-bold text-[#8F680C] dark:text-[#E5C158]">
+                          {item.reference}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
               {/* 2. Authentic Duas & Adhkar */}
               {selectedStage.duas.length > 0 && (

@@ -28,6 +28,12 @@ export interface SunnahHadithReference {
   text: string;
 }
 
+export interface SunnahMinuteEtiquette {
+  aspect: string;
+  detail: string;
+  reference: string;
+}
+
 export interface PropheticDayStage {
   id: string;
   order: number;
@@ -50,6 +56,7 @@ export interface PropheticDayStage {
     | 'quran_fortress'
     | 'sleep_peace';
   stepsToDo: string[];
+  minuteDetails: SunnahMinuteEtiquette[];
   duas: SunnahDuaItem[];
   favoriteActs: SunnahFavoriteAct[];
   favoriteSurahs: SunnahFavoriteSurah[];
@@ -84,10 +91,33 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Āl ‘Imrān 3:190 · Witr Surahs 87, 109, 112',
     iconKey: 'moon_stars',
     stepsToDo: [
-      'Sit up, wipe the trace of sleep from the face with the hands, and immediately praise Allah.',
-      'Clean the teeth with a Miswak before speaking or reciting.',
-      'Look toward the sky and recite the closing ten verses of Surah Āl ‘Imrān (3:190–200).',
-      'Perform Wudu and begin with two light Rak‘ahs, then pray pairs of Tahajjud (up to 11 Rak‘ahs total) and seal the night with Witr.',
+      'Sit up, wipe the trace of sleep from the face with both hands, recite the waking Dua, and scrub the teeth immediately with a Miswak.',
+      'Look up toward the sky and slowly recite the closing ten verses of Surah Āl ‘Imrān (3:190–200).',
+      'Enter the washroom with the left foot first saying the protection Dua; exit right foot first saying Ghufrānak.',
+      'Perform Wudu mindfully (~1 mudd of water, starting right limbs, running wet fingers through beard, fingers, and toes), then open Tahajjud with two short Rak‘ahs.',
+      'Pray measured pairs (2+2 or 4+4) pausing at each verse, rest briefly if drowsy, and close the night with Witr + Subḥānal-Malikil-Quddūs (3×).',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Wiping Sleep & Immediate Miswak',
+        detail: 'Before speaking or eating, he sat up, rubbed sleep from his eyes/face, looked to the sky reciting 3:190–200, and brushed lengthwise across teeth and tongue with an Arak twig.',
+        reference: 'Sahih al-Bukhari 183 · Sahih al-Bukhari 245 · Sahih Muslim 255',
+      },
+      {
+        aspect: 'Washroom Foot Order & Moderation',
+        detail: 'Entered left foot first whispering “Allāhumma innī a‘ūdhu bika minal-khubuthi wal-khabā’ith”; exited right foot first saying “Ghufrānak”; washed privately with left hand alone and shielded from view.',
+        reference: 'Sahih al-Bukhari 142 · Sunan Abi Dawud 30 · Jami‘ at-Tirmidhi 7',
+      },
+      {
+        aspect: 'Exact Wudu Mechanics (Takhlīl & Water)',
+        detail: 'Said Bismillāh, washed hands 3× before dipping into vessel, rinsed mouth & nose together 3× inhaling deeply & blowing out with left hand, washed right limbs before left, interlocked wet fingers/toes (takhlīl), passed wet fingers upward through his beard, and used only ~1 mudd (~0.6 L) of water without wasting even by a river.',
+        reference: 'Sahih al-Bukhari 201 · Sunan Abi Dawud 142 · Sunan Ibn Majah 425',
+      },
+      {
+        aspect: 'Pacing Tahajjud & Witr Closing',
+        detail: 'Began with 2 brief Rak‘ahs, recited with slow pauses (stopping at every Ayah—making mercy verses a plea for mercy and warning verses a plea for refuge), and after Witr Salam said “Subḥānal-Malikil-Quddūs” three times, raising and extending his voice on the third.',
+        reference: 'Sahih Muslim 767 · Sahih Muslim 772 · Sunan Abi Dawud 1430',
+      },
     ],
     duas: [
       {
@@ -96,6 +126,20 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
         transliteration: 'Al-ḥamdu lillāhi alladhī aḥyānā ba‘da mā amātanā wa ilayhin-nushūr.',
         translation: 'All praise is for Allah who gave us life after causing us to die, and to Him is the resurrection.',
         reference: 'Sahih al-Bukhari 6312',
+      },
+      {
+        title: 'Entering & Exiting the Washroom',
+        arabic: 'بِسْمِ اللَّهِ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ  ·  (الخروج): غُفْرَانَكَ',
+        transliteration: 'Entry (left foot): Bismillāh, Allāhumma innī a‘ūdhu bika minal-khubuthi wal-khabā’ith. · Exit (right foot): Ghufrānak.',
+        translation: 'In Allah’s Name; O Allah, I seek refuge in You from male and female impure spirits. · Upon exit: I seek Your forgiveness.',
+        reference: 'Sahih al-Bukhari 142 · Sunan Abi Dawud 30 · Jami‘ at-Tirmidhi 7',
+      },
+      {
+        title: 'Upon Completing Wudu (Eight Gates of Paradise)',
+        arabic: 'أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ الْمُتَطَهِّرِينَ',
+        transliteration: 'Ash-hadu an lā ilāha illallāhu waḥdahū lā sharīka lah, wa ash-hadu anna Muḥammadan ‘abduhū wa rasūluh. Allāhummaj-‘alnī minat-tawwābīna waj-‘alnī minal-mutaṭahhirīn.',
+        translation: 'I bear witness none is worthy of worship except Allah alone... O Allah, make me among those who constantly repent and those who purify themselves.',
+        reference: 'Sahih Muslim 234 · Jami‘ at-Tirmidhi 55',
       },
       {
         title: 'Opening Supplication in Night Prayer (Tahajjud)',
@@ -164,10 +208,32 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Surah 109 & 112 in Sunnah · Friday: 32 & 76',
     iconKey: 'sunrise_prayer',
     stepsToDo: [
-      'When Fajr Adhan sounds, pray 2 concise Sunnah Rak‘ahs at home.',
-      'After the 2 Sunnah Rak‘ahs at home, rest briefly on your right side before heading out (if time allows).',
-      'Walk calmly to the Masjid reciting the Dua for Light.',
-      'Pray 2 Rak‘ahs Fard Fajr attentively with long Qur’an recitation, then begin post-Salah Tasbih.',
+      'Repeat every phrase of the Fajr Adhan softly (saying Lā ḥawla wa lā quwwata illā billāh on Ḥayya ‘alaṣ-Ṣalāh), then send Salawat and say the Wasilah Dua.',
+      'Pray the 2 brief Sunnah Rak‘ahs at home with Al-Kāfirūn and Al-Ikhlāṣ so swiftly ‘A’ishah wondered if he had recited Al-Fatihah.',
+      'Lie briefly on your right side resting calmly, then walk tranquilly to the Masjid without running—even if Iqamah has begun.',
+      'Step into the Masjid right foot first asking for Allah’s gates of mercy, pray Fajr attentively (60–100 verses aloud), then sit in Dhikr.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Putting on Shoes (Right Foot First)',
+        detail: 'Always slipped his right foot into his sandal first and took off the left foot first, saying: “Let the right be the first to be put on and the last to be taken off.”',
+        reference: 'Sahih al-Bukhari 5856 · Sahih Muslim 2097',
+      },
+      {
+        aspect: 'Masjid Entry & Exit Foot Etiquette',
+        detail: 'Entered the Masjid right foot first reciting “Allāhummaftaḥ lī abwāba raḥmatik” (Open the gates of Your mercy); exited left foot first asking “Allāhumma innī as’aluka min faḍlik” (I ask You of Your bounty).',
+        reference: 'Sahih Muslim 713 · Sunan Abi Dawud 465',
+      },
+      {
+        aspect: 'Walking Pace & Gentle Demeanor',
+        detail: 'Even when Iqamah sounded, he forbade running out of breath: “Walk calmly and with dignity (*sakīnah* and *waqār*); whatever portion of prayer you catch, pray it, and complete what you missed.”',
+        reference: 'Sahih al-Bukhari 636 · Sahih Muslim 602',
+      },
+      {
+        aspect: 'Right-Side Pause Between Sunnah & Fard',
+        detail: 'He never mingled voluntary Fajr Sunnah directly with Fard; at home he spoke briefly with his family if awake or rested briefly on his right side waiting for Bilal’s call.',
+        reference: 'Sahih al-Bukhari 626 · Sahih Muslim 736',
+      },
     ],
     duas: [
       {
@@ -244,10 +310,27 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Sayyidul Istighfar · 3 Quls 3× · Āyat al-Kursī',
     iconKey: 'sun_horizon',
     stepsToDo: [
-      'Remain seated in your prayer spot after Fajr engaged in Dhikr and Qur’an until the sun rises.',
-      'Recite Sayyidul Istighfar, Āyat al-Kursī, and the Three Quls (3× each).',
-      'Ask Allah for beneficial knowledge, pure lawful provision, and accepted deeds.',
-      'About 15 minutes after sunrise, pray 2 Rak‘ahs of Ishraq and begin the early morning with purpose.',
+      'After Salam, remain seated facing the congregation, say Astaghfirullāh 3× and Allāhumma antas-Salām before moving.',
+      'Sit cross-legged (*tarabbu‘*) in your prayer place remembering Allah, reading Qur’an, or teaching until the sun rises clearly.',
+      'Recite Sayyidul Istighfar, Subḥānallāhi wa biḥamdih (100×), Āyat al-Kursī, and the Three Quls (3× each).',
+      'Once the sun rises a spear’s height above the horizon (~15 minutes after sunrise), pray 2 Rak‘ahs of Ishraq.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Post-Salah Facing & Posture',
+        detail: 'Stayed briefly facing Qiblah just long enough for “Allāhumma antas-Salām wa minkas-salām, tabārakta yā Dhal-Jalāli wal-Ikrām,” then turned toward the people to sit cross-legged in Dhikr.',
+        reference: 'Sahih Muslim 591 · Sahih Muslim 592 · Sahih Muslim 670',
+      },
+      {
+        aspect: 'Counting Dhikr on the Right Fingers',
+        detail: 'Yusayrah (RA) reported he instructed women (and companions) to count Tasbih, Tahlil, and Taqdis on their right fingertips, explaining: “For they will be questioned and made to speak on the Day of Judgment.”',
+        reference: 'Sunan Abi Dawud 1501 · Jami‘ at-Tirmidhi 3583',
+      },
+      {
+        aspect: 'No Prayer During Exact Sunrise Window',
+        detail: 'Avoided praying voluntary Salah during the ~12–15 minutes while the sun’s edge is rising until it climbs cleanly above the horizon.',
+        reference: 'Sahih Muslim 827 · Sahih Muslim 831',
+      },
     ],
     duas: [
       {
@@ -317,9 +400,32 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Charity for 360 joints · Surah Aḍ-Ḍuḥā 93',
     iconKey: 'sun_beam',
     stepsToDo: [
-      'When the morning sun rises high and warms the earth, pray 2, 4, or 8 Rak‘ahs of Salat ad-Duha.',
-      'Maintain cleanliness, trim/neaten appearance, and apply pleasant fragrance (he loved musk/oud).',
-      'Speak with warmth, renew repentance (100× Istighfar in sittings), and offer charity or a kind word.',
+      'When morning warmth grows, pray 2, 4, or 8 Rak‘ahs of Salat ad-Duha.',
+      'Groom carefully starting with the right side: bathe, comb and oil hair/beard, wear clean simple garments (white preferred), and apply musk/oud perfume.',
+      'Check fingernails/mustache/cleanliness on Fridays and mornings, greet every person warmly with a calm smile, and keep speech measured.',
+      'Say Istighfar 70–100× across morning gatherings and give daily charity through kind words and helpful deeds.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Combing, Oiling & Beginning Right-First',
+        detail: '‘A’ishah (RA) said: “The Messenger of Allah (ﷺ) loved to start from the right in wearing sandals, combing his hair, purifying himself, and in all his honorable affairs.” He oiled his hair frequently and parted it cleanly.',
+        reference: 'Sahih al-Bukhari 168 · Ash-Shama’il al-Muhammadiyyah 31',
+      },
+      {
+        aspect: 'Clothing Length, Color & Never Refusing Perfume',
+        detail: 'Wore his lower garment mid-shin (above ankles out of humility), favored clean white linen/cotton robes, kept a silver ring on his left/right little finger, and never refused offered perfume or cushioned pillows.',
+        reference: 'Jami‘ at-Tirmidhi 994 · Sahih al-Bukhari 5892 · Ash-Shama’il 52',
+      },
+      {
+        aspect: 'Walking Gait & Never Turning Half-Headed',
+        detail: 'Walked briskly with firm balanced steps leaning gently forward as though descending a slight slope, kept gaze lowered toward the ground more than skyward, and when someone called him, turned his entire body—never glancing awkwardly over one shoulder.',
+        reference: 'Ash-Shama’il al-Muhammadiyyah 118–121',
+      },
+      {
+        aspect: 'Speech Rhythm & Gentle Smiling',
+        detail: 'Never spoke fast or rambled; articulated clearly enough that a listener could count every word, repeated crucial points three times so listeners grasped them, and his laughter was a quiet radiant smile (*tabassum*)—never loud roaring guffaws.',
+        reference: 'Sahih al-Bukhari 3567 · Sahih al-Bukhari 95 · Jami‘ at-Tirmidhi 3641',
+      },
     ],
     duas: [
       {
@@ -389,10 +495,32 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Khidmat at home · Qaylulah nap · Surah Al-‘Aṣr 103',
     iconKey: 'briefcase_heart',
     stepsToDo: [
-      'Recite the Dua of trust when stepping out or entering your home.',
-      'Help family members humbly at home without arrogance (mending, organizing, serving food).',
-      'Show truthfulness, gentle speech, and a warm smile in livelihood, study, and neighborly dealings.',
-      'Keep your tongue moist with Dhikr and take a brief pre-Dhuhr/early midday rest (Qaylulah) if fatigued.',
+      'Say the travel/door Dua when stepping out right-foot-first and the entry Dua when entering home with Salam.',
+      'Serve family members without pride: sew tears, repair sandals, assist with housework, and share small joys.',
+      'Greet everyone first—including young children in the street—never belittle small gifts, and speak gently without harsh blame.',
+      'Enjoy a light nutritious morning/midday bite (dates, barley, honey-water) and take a brief midday rest (Qaylulah) to recharge for night prayer.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Domestic Service (Khidmat al-Ahl)',
+        detail: 'Far from demanding royal service at home, he patched his own thobe, mended his own leather sandals, tied his camel, swept his room, fed animals, and ate alongside household helpers.',
+        reference: 'Sahih al-Bukhari 676 · Musnad Ahmad 24903 · Sahih al-Bukhari 6039',
+      },
+      {
+        aspect: 'Greeting Children & Answering Everyone',
+        detail: 'Anas (RA) passed young playing children with him and saw the Prophet (ﷺ) gently greet the children first with As-Salāmu ‘Alaykum and touch their cheeks tenderly. He never pulled his hand away from a handshake before the other person let go.',
+        reference: 'Sahih al-Bukhari 6247 · Jami‘ at-Tirmidhi 2490',
+      },
+      {
+        aspect: 'Ten Years Without One Scolding Word',
+        detail: 'Anas ibn Malik (RA) testified: “I served the Prophet (ﷺ) for ten full years. By Allah, he never once said ‘Uff’ to me, never asked ‘Why did you do that?’ nor ‘Why didn’t you do that?’”',
+        reference: 'Sahih al-Bukhari 6038 · Sahih Muslim 2309',
+      },
+      {
+        aspect: 'Qaylulah (Midday Renewal Nap)',
+        detail: 'Took a brief midday rest around pre-Dhuhr or just after Dhuhr, saying: “Take the Qaylulah nap, for devils do not take the midday nap”—giving strength for calm Tahajjud at night.',
+        reference: 'Al-Mu‘jam al-Awsat 28 · Sahih al-Adab al-Mufrad',
+      },
     ],
     duas: [
       {
@@ -462,10 +590,32 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: '4 before & 4 after Dhuhr · Fridays: Al-Kahf 18',
     iconKey: 'sun_zenith',
     stepsToDo: [
-      'Repeat the words of the Adhan quietly as the Mu’adhdhin calls, then ask Allah for Al-Wasilah for the Prophet (ﷺ).',
-      'Make heartfelt Dua between the Adhan and Iqamah.',
-      'Pray 4 Sunnah Rak‘ahs before Dhuhr, then 4 Fard Rak‘ahs in tranquility, then 2 (or 4) Sunnah Rak‘ahs after.',
-      'On Fridays: prioritize early Ghusl, perfume, walking calmly to Jumu‘ah, listening silently, and reading Surah Al-Kahf.',
+      'Repeat every phrase of the Adhan, send Salawat, recite the Wasilah Dua, and make earnest private Dua before Iqamah.',
+      'Pray 4 calm Sunnah Rak‘ahs before Dhuhr, 4 Fard in congregation, then 2 (or 4) Sunnah Rak‘ahs after.',
+      'If standing for Fard Prayer, keep eyes gently lowered to the spot of prostration without glancing around.',
+      'On Fridays: wash completely (Ghusl), trim nails/mustache, wear best clean robe + fragrance, arrive early walking calmly, listen silently to Khutbah, and recite Surah Al-Kahf.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Straightening Lines Shoulder-to-Shoulder',
+        detail: 'Turned to examine the prayer rows before Takbir saying: “Straighten your rows, stand shoulder-to-shoulder and foot-to-foot, lest Allah divide your hearts.”',
+        reference: 'Sahih al-Bukhari 717 · Sahih Muslim 433',
+      },
+      {
+        aspect: 'Balanced Tranquility (Ṭuma’nīnah) in Every Posture',
+        detail: 'Paused calmly until every bone settled in bowing (*Rukū‘* — back flat enough water would rest still on it), standing up straight after Rukū‘, sitting straight between the two Sujūd, and lowering his knees/hands gently without dropping like a camel.',
+        reference: 'Sahih al-Bukhari 792 · Sunan Abi Dawud 858 · Sahih Muslim 498',
+      },
+      {
+        aspect: 'No Interlocking Fingers Walking to Salah',
+        detail: 'Advised companions on their way to prayer not to lace fingers together (a sign of restlessness/fitnah), keeping hands relaxed until standing before Allah.',
+        reference: 'Sunan Abi Dawud 562 · Jami‘ at-Tirmidhi 386',
+      },
+      {
+        aspect: 'Friday Secret Hour & Silent Khutbah Focus',
+        detail: 'Warned against saying even “Be quiet!” to a neighbor during the Friday sermon—keeping total attentive silence for the Khutbah and seeking the hidden Friday hour of answered Dua.',
+        reference: 'Sahih al-Bukhari 934 · Sahih al-Bukhari 935',
+      },
     ],
     duas: [
       {
@@ -528,9 +678,27 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Angels gather at Fajr & ‘Asr · Al-Baqarah 2:238',
     iconKey: 'afternoon_clock',
     stepsToDo: [
-      'Pray 4 optional Sunnah Rak‘ahs before ‘Asr when able, then hasten to 4 Fard ‘Asr without delay.',
-      'Recite Āyat al-Kursī and Tasbih Fatimah (33+33+34) right after finishing prayer.',
-      'Before Maghrib on Fridays: dedicate the final afternoon hour before sunset to quiet, tearful Dua.',
+      'Optionally pray 4 gentle Sunnah Rak‘ahs before ‘Asr, then establish 4 Fard ‘Asr in its prime bright window.',
+      'Complete Tasbih Fatimah (33·33·34) and Āyat al-Kursī silently with deep awareness before standing.',
+      'Check lovingly on family households, visit any sick neighbor, comfort widows/poor, and attend gatherings with humility.',
+      'On Fridays right before Maghrib, sit facing the Qiblah absorbed in tearful personal Dua until sunset.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Daily Visits Across Every Household',
+        detail: 'After ‘Asr, he regularly walked round visiting the apartments of his wives, inquiring calmly about each household’s well-being before spending the night in that evening’s scheduled home.',
+        reference: 'Sahih al-Bukhari 5216 · Sunan Abi Dawud 2135',
+      },
+      {
+        aspect: 'Sitting Wherever Space Remained (Never Front-Row Privilege)',
+        detail: 'When joining companions sitting in circles, he sat cleanly wherever space opened rather than demanding a throne or special elevated seat—so strangers walking in had to ask “Which one of you is Muhammad?”',
+        reference: 'Sahih al-Bukhari 63 · Sunan Abi Dawud 4824',
+      },
+      {
+        aspect: 'Sick Visitation & Holding Cool Hands on Forehead',
+        detail: 'Whenever visiting the sick, he sat right by their head asking “Lā ba’sa, ṭahūrun in shā Allāh” (No harm; a purification if Allah wills), placed his cool palm gently on their forehead and chest, and stayed briefly so not to tire them.',
+        reference: 'Sahih al-Bukhari 5656 · Sahih al-Bukhari 5659',
+      },
     ],
     duas: [
       {
@@ -600,9 +768,27 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Evening Adhkar · Surah 109 & 112 in Sunnah',
     iconKey: 'sunset_shield',
     stepsToDo: [
-      'As night spreads at sunset, keep children indoors, close doors and cover vessels mentioning Bismillah.',
-      'Pray 3 Fard Rak‘ahs of Maghrib promptly at sunset, followed by 2 Sunnah Rak‘ahs.',
-      'Recite Evening Adhkar, Āyat al-Kursī, and the Three Quls (3× each) for night-long tranquility.',
+      'Just as sunset settles, bring children indoors, shut exterior doors, tie water-skins, and cover dishes mentioning “Bismillāh.”',
+      'If breaking a fast, eat fresh ripe dates (*ruṭab*)—or dry dates—or sip pure water before praying Maghrib.',
+      'Pray 3 Fard Rak‘ahs of Maghrib promptly right after sunset, then pray 2 Sunnah Rak‘ahs at home.',
+      'Complete Evening Adhkar: Amsaynā, Sayyidul Istighfar, Three Quls (3×), Āyat al-Kursī, and protection in Allah’s perfect words.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Odd Numbers Breaking Fast & Pre-Prayer Lightness',
+        detail: 'Anas (RA) saw him break fast before praying Maghrib with a few fresh dates (or dry dates, or a few sips of water) without delaying Maghrib prayer.',
+        reference: 'Sunan Abi Dawud 2356 · Jami‘ at-Tirmidhi 696',
+      },
+      {
+        aspect: 'Why Doors & Food Vessels Need Bismillāh at Dusk',
+        detail: 'Instructed that when night falls, whispering *Bismillāh* while shutting doors and laying even a small twig across uncovered pots seals them spiritually—nothing breaks what was shut with Allah’s Name.',
+        reference: 'Sahih al-Bukhari 3304 · Sahih Muslim 2012',
+      },
+      {
+        aspect: 'Praying Voluntary Rak‘ahs at Home',
+        detail: 'Turned his homes into places of light by praying Maghrib’s 2 Sunnahs inside his house rather than treating homes like dark graves devoid of worship.',
+        reference: 'Sahih al-Bukhari 1180 · Sahih Muslim 777',
+      },
     ],
     duas: [
       {
@@ -672,10 +858,32 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Shared platter · Never faulted food · Moderation',
     iconKey: 'utensils_family',
     stepsToDo: [
-      'Wash hands, sit humbly on the floor or table together, say Bismillah, and eat with the right hand from what is nearest.',
-      'Eat moderately—leaving a third of the stomach for food, a third for water, and a third for easy breathing.',
-      'Never criticize any meal; praise Allah sincerely after finishing.',
-      'Share warm, truthful conversation with family members before ‘Isha.',
+      'Wash hands before and after meals, sit humbly upright (never reclining luxuriously), and share food together over one mat/table.',
+      'Say Bismillāh aloud enough to remind others, eat strictly with the right hand using three fingers from the outer edges inward—never from the center mound.',
+      'Lick fingers clean and wipe the dish clean before leaving so blessing is not wasted, never blow onto hot food, and never criticize any dish.',
+      'Drink seated in 3 separate gentle sips—removing the cup from the lips to breathe between sips and saying Alḥamdulillāh at the end.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Seated Posture & Three Fingers Only',
+        detail: 'Never ate leaning lazily on a cushion: sat modestly on his knees/left foot or squatting upright saying “I sit as a servant sits and eat as a servant eats,” lifting modest bites using thumb, index, and middle fingers.',
+        reference: 'Sahih al-Bukhari 5399 · Sahih Muslim 2032',
+      },
+      {
+        aspect: 'Eating From Edges Inward & Licking Fingers Clean',
+        detail: 'Taught: “Blessing descends into the middle of the food—so eat from its outer edges toward the center,” and instructed licking fingers and wiping the dish clean because “You do not know in which morsel the blessing lies.”',
+        reference: 'Jami‘ at-Tirmidhi 1805 · Sahih Muslim 2033 · Sahih Muslim 2034',
+      },
+      {
+        aspect: 'Drinking in 3 Separate Breaths (Never Blowing Into Cup)',
+        detail: 'Never chugged water in one gulp or breathed into the vessel; drank seated in three paused breaths—starting Bismillāh, saying Alḥamdulillāh, praising it, and forbidding blowing onto hot food/drinks.',
+        reference: 'Sahih Muslim 2028 · Jami‘ at-Tirmidhi 1885 · Jami‘ at-Tirmidhi 1888',
+      },
+      {
+        aspect: 'Prophetic Favorite Foods & Milk Dua',
+        detail: 'Loved chilled sweet water, barley porridge (*talbīnah*) soothing sadness, fresh dates paired with cool cucumber or melon, olive oil, vinegar, pumpkin (*dubbā’*), honey mixed in morning cool water, and after drinking milk prayed: “O Allah, bless us in it and increase us from it.”',
+        reference: 'Sahih al-Bukhari 5440 · Sahih al-Bukhari 5417 · Jami‘ at-Tirmidhi 3455',
+      },
     ],
     duas: [
       {
@@ -684,6 +892,13 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
         transliteration: 'Bismillāh. (If forgotten: Bismillāhi awwalahū wa ākhirah.)',
         translation: 'In the Name of Allah. (If forgotten at first: In the Name of Allah at its beginning and its end.)',
         reference: 'Sahih al-Bukhari 5376 · Sunan Abi Dawud 3767',
+      },
+      {
+        title: 'When Drinking Milk',
+        arabic: 'اللَّهُمَّ بَارِكْ لَنَا فِيهِ وَزِدْنَا مِنْهُ',
+        transliteration: 'Allāhumma bārik lanā fīhi wa zidnā minh.',
+        translation: 'O Allah, bless it for us and grant us even more of it.',
+        reference: 'Jami‘ at-Tirmidhi 3455 · Sunan Abi Dawud 3730',
       },
       {
         title: 'Upon Finishing a Meal',
@@ -745,9 +960,21 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Half-night Qiyam reward · Surah 95 / 91',
     iconKey: 'night_prayer',
     stepsToDo: [
-      'Pray 4 Fard Rak‘ahs of ‘Isha calmly—ideally in congregation—followed by 2 Sunnah Rak‘ahs.',
-      'Recite the Prophet’s beloved supplication seeking help in remembrance, gratitude, and excellence in worship.',
-      'Refrain from pointless late-night conversation or distractions after ‘Isha so the night remains restful for Tahajjud and Fajr.',
+      'Stay awake until ‘Isha (he disliked sleeping beforehand lest ‘Isha be missed), praying 4 Fard Rak‘ahs with moderate soothing recitation.',
+      'Pray 2 Sunnah Rak‘ahs after ‘Isha, ask Allah to aid your remembrance and worship, and make an early quiet night.',
+      'Speak only of beneficial family warmth, guests, or necessary counsel—avoiding pointless late-night chatter.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Gentle Empathy for Workers in Congregational Recitation',
+        detail: 'When leading ‘Isha, chose refreshing medium Surahs (91, 92, 95); when Mu‘adh recited Al-Baqarah tiring a laborer, the Prophet cautioned: “Are you putting people to trial, Mu‘adh?”—and whenever a baby cried during prayer, he shortened his recitation so the mother wouldn’t panic.',
+        reference: 'Sahih al-Bukhari 705 · Sahih al-Bukhari 709',
+      },
+      {
+        aspect: 'Suhbah & Ending Any Gathering With Kaffārat al-Majlis',
+        detail: 'Before dispersing from any night family or companion gathering, whispered “Subḥānaka Allāhumma wa biḥamdika, ash-hadu an lā ilāha illā anta, astaghfiruka wa atūbu ilayk”—erasing slips in the sitting.',
+        reference: 'Jami‘ at-Tirmidhi 3433 · Sunan Abi Dawud 4859',
+      },
     ],
     duas: [
       {
@@ -810,11 +1037,28 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Surah 32, 67, 2:255, 2:285–286 & 3 Quls',
     iconKey: 'quran_fortress',
     stepsToDo: [
-      'Perform fresh Wudu as you would for Salah.',
-      'Dust off your bed three times with the edge of a cloth while mentioning Allah.',
-      'Recite Surah As-Sajdah (32), Surah Al-Mulk (67), Āyat al-Kursī (2:255), and the closing 2 verses of Al-Baqarah (2:285–286).',
-      'Cup your palms together, recite Al-Ikhlāṣ, Al-Falaq, and An-Nās, gently blow into your hands, and wipe over head, face, and body 3×.',
-      'Recite Tasbih Fatimah (33× SubḥānAllāh, 33× Alḥamdulillāh, 34× Allāhu Akbar) and clear your heart of malice toward all believers.',
+      'Perform fresh Wudu as you would for Salah and brush gently with Miswak or oral hygiene.',
+      'Sweep/dust the bed sheet three times with the inside hem of your garment while saying Bismillāh.',
+      'Recite Surah As-Sajdah (32), Surah Al-Mulk (67), Āyat al-Kursī (2:255), Al-Baqarah 2:285–286, and Surah Al-Kāfirūn (109).',
+      'Join cupped palms together, blow lightly into them, recite 112, 113, and 114, and wipe head, face, and body 3×.',
+      'Count Tasbih Fatimah (33·33·34) on your fingers and consciously pardon every person who wronged you today.',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Shaking Out the Mattress 3× With Garment Edge',
+        detail: 'Never dropped straight onto a bed uninspected: dusted the bedding three times with the inner edge of his lower robe saying Bismillāh so nothing hidden remained beneath.',
+        reference: 'Sahih al-Bukhari 6320 · Sahih Muslim 2714',
+      },
+      {
+        aspect: 'Three-Pass Palm Wiping Order (Head & Front First)',
+        detail: 'Cupped both palms upright before his mouth, breathed softly (*nafth*), recited Al-Ikhlāṣ, Al-Falaq, and An-Nās, then rubbed gently starting from crown of the head and face downward as far as hands could reach—repeating 3 full times.',
+        reference: 'Sahih al-Bukhari 5017 · Sahih Muslim 2192',
+      },
+      {
+        aspect: 'Apply Ithmid Kohl (3× Right, 3× Left) Before Rest',
+        detail: 'Kept a kohl applicator (*mukḥulah*) by his bedside and frequently applied cooling antimony (*Ithmid*) three times in each eye before sleeping to nourish eyesight and eyelashes.',
+        reference: 'Jami‘ at-Tirmidhi 1757 · Sunan Ibn Majah 3497',
+      },
     ],
     duas: [
       {
@@ -905,9 +1149,27 @@ export const PROPHETIC_DAY_STAGES: PropheticDayStage[] = [
     briefHighlight: 'Right side · Final Dua of Fitrah · Az-Zumar 39:42',
     iconKey: 'sleep_peace',
     stepsToDo: [
-      'Dim lights and turn off open lamps/appliances before lying down.',
-      'Lie on your right side with your right palm gently beneath your right cheek.',
-      'Make your final spoken words the Prophetic Dua of surrender—seeking waking for Tahajjud or passing upon Fitrah.',
+      'Extinguish fires, dim open lights, lock doors, and leave water/milk jars cleanly covered.',
+      'Lie down upon your right side—never flat on the stomach—placing your right palm gently beneath your right cheek.',
+      'Keep a covered cup of clean water and a Miswak close by your bedside for Tahajjud.',
+      'Make your very last spoken words the Prophetic surrender Dua: “Bismika Allāhumma amūtu wa aḥyā” and “Allāhumma aslamtu nafsī ilayk.”',
+    ],
+    minuteDetails: [
+      {
+        aspect: 'Exact Sleeping Posture (Right Side · Palm Under Cheek)',
+        detail: 'Slept on a modest leather mat stuffed with palm fibers—resting on his right side with knees lightly relaxed and his right palm tucked squarely beneath his right cheek; forbade sleeping face-down on the stomach.',
+        reference: 'Sahih al-Bukhari 6314 · Sunan Abi Dawud 5045 · Jami‘ at-Tirmidhi 2768',
+      },
+      {
+        aspect: 'Bedside Preparation for Midnight Waking',
+        detail: 'Always kept three things ready near his sleeping mat: covered water for Wudu, his Miswak twig, and a comb—so waking in the dark last third of night took zero friction.',
+        reference: 'Sahih al-Bukhari 245 · Musnad Ahmad',
+      },
+      {
+        aspect: 'Waking Startled or Turning Over at Night',
+        detail: 'Whenever turning over at night he whispered: “Lā ilāha illallāhul-Wāḥidul-Qahhār, Rabbus-samāwāti wal-arḍi wa mā baynahumal-‘Azīzul-Ghaffār”; and if seeing a bad dream, puffed lightly 3× left, sought refuge in Allah, never told anyone, and turned to the other side.',
+        reference: 'An-Nasa’i al-Kubra 10620 (Sahih) · Sahih Muslim 2261',
+      },
     ],
     duas: [
       {
